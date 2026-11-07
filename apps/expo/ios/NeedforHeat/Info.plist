@@ -63,10 +63,6 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>20031</string>
-	<key>FirebaseDynamicLinksCustomDomains</key>
-	<array>
-		<string>https://energietransitiewindesheim.page.link/</string>
-	</array>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
@@ -77,16 +73,6 @@
 		<false/>
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
-		<key>NSExceptionDomains</key>
-		<dict>
-			<key>applinks:energietransitiewindesheim.page.link</key>
-			<dict>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-				<key>NSIncludesSubdomains</key>
-				<true/>
-			</dict>
-		</dict>
 	</dict>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>This app needs Bluetooth to connect to the sensor.</string>

@@ -1,5 +1,4 @@
 apply plugin: "com.android.application"
-apply plugin: 'com.google.gms.google-services'
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 
@@ -94,7 +93,7 @@ android {
 
     namespace "nl.windesheim.energietransitie.needforheat"
     defaultConfig {
-        applicationId 'nl.windesheim.energietransitie.needforheat'
+        applicationId 'nl.energiegedrag.needforheat'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 20031

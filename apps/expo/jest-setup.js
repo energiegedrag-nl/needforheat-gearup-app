@@ -2,7 +2,7 @@
 
 import { NativeModules as RNNativeModules } from "react-native";
 jest.mock("react-native/Libraries/EventEmitter/NativeEventEmitter");
-jest.mock("@react-native-firebase/dynamic-links");
+jest.mock("expo-notifications");
 jest.mock("react-native/Libraries/LayoutAnimation/LayoutAnimation.js");
 jest.mock("react-native/Libraries/Animated/NativeAnimatedHelper.js");
 jest.useFakeTimers("legacy");

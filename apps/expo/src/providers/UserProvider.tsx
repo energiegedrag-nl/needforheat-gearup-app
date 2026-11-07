@@ -8,7 +8,7 @@ import { URL, URLSearchParams } from "react-native-url-polyfill";
 import { setAuthToken } from "@/constants";
 import useActivateAccount from "@/hooks/account/useActivateAccount";
 import useTranslation from "@/hooks/translation/useTranslation";
-import useDynamicLinks from "@/hooks/useDynamicLinks";
+import useAppLinks from "@/hooks/useAppLinks";
 import useUser from "@/hooks/user/useUser";
 import { Maybe } from "@/types";
 import { AccountResponse } from "@/types/api";
@@ -38,16 +38,21 @@ export default function UserProvider({ children }: PropsWithChildren<unknown>) {
   const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
 
-  useDynamicLinks(async link => {
+  useAppLinks(async link => {
+    // Get token out of url (prod_token or test_token query parameter).
+    // Links without a token (e.g. a plain nfh:// or a development URL) are not activation links: ignore them.
+    let accountToken: string | null = null;
     try {
-      // Get token out of url (prod_token or test_token query parameter)
-      const url = new URL(link.url);
-      const urlParams = new URLSearchParams(url.search);
-      const accountToken = urlParams.get("prod_token") || urlParams.get("test_token");
+      const urlParams = new URLSearchParams(new URL(link).search);
+      accountToken = urlParams.get("prod_token") || urlParams.get("test_token");
+    } catch {
+      return;
+    }
+    if (!accountToken) {
+      return;
+    }
 
-      if (!accountToken) {
-        throw new Error();
-      }
+    try {
 
       Burnt.alert({
         title: t("providers.user_provider.activate.title"),

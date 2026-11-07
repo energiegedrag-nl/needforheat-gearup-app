@@ -43,13 +43,12 @@
         <data android:scheme="nfh"/>
         <data android:scheme="need-for-heat"/>
       </intent-filter>
-      <intent-filter>
+      <!-- Verified https links (Android App Links); verification file: https://energiegedrag.nl/.well-known/assetlinks.json -->
+      <intent-filter android:autoVerify="true">
         <action android:name="android.intent.action.VIEW"/>
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
-        <data android:host="energietransitiewindesheim.page.link" android:scheme="https"/>
-        <data android:scheme="nfh"/>
-        <data android:scheme="need-for-heat"/>
+        <data android:scheme="https" android:host="energiegedrag.nl" android:pathPrefix="/nfh/"/>
       </intent-filter>
     </activity>
      <meta-data

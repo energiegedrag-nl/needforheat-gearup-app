@@ -1,5 +1,3 @@
-declare module "react-native-esp-idf-provisioning";
-
 declare interface ObjectConstructor extends Omit<ObjectConstructor, "keys" | "entries"> {
   /**
    * Returns the names of the enumerable string properties and methods of an object.

@@ -102,7 +102,13 @@
       ],
       "expo-font",
       "expo-localization",
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "@orbital-systems/react-native-esp-idf-provisioning",
+        {
+          "transport": "ble"
+        }
+      ]
     ],
     "extra": {
       "eas": {

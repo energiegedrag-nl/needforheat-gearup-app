@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Alert, Platform, View } from "react-native";
 import BluetoothStateManager from "react-native-bluetooth-state-manager";
-import EspIdfProvisioning from "react-native-esp-idf-provisioning";
 import { openSettings } from "react-native-permissions";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
@@ -15,6 +14,7 @@ import useBluetoothState from "@/hooks/bluetooth/useBluetoothState";
 import { useDisableBackButton } from "@/hooks/useDisableBackButton";
 import { BleDeviceType } from "@/types";
 import { HomeStackParamList } from "@/types/navigation";
+import { getBleDevices } from "@/utils/espProvisioning";
 import { withTimeout } from "@/utils/withTimeout";
 
 const useStyles = makeStyles(theme => ({
@@ -146,7 +146,7 @@ export default function SearchDeviceScreen({ navigation, route }: SearchDeviceSc
 
     try {
       // Scan at most 30 seconds for devices
-      const devices = await withTimeout<BleDeviceType[]>(30, EspIdfProvisioning.getBleDevices(""));
+      const devices = await withTimeout<BleDeviceType[]>(30, getBleDevices(""));
       setDevices(devices);
     } catch {
       setIsError(true);

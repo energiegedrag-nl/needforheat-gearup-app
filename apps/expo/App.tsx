@@ -2,13 +2,13 @@ import NetInfo from "@react-native-community/netinfo";
 import { makeStyles } from "@rneui/themed";
 import { onlineManager } from "@tanstack/react-query";
 import { useFonts } from "expo-font";
+import * as Notifications from "expo-notifications";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import i18n from "i18next";
 import { useEffect, useState } from "react";
 import { initReactI18next } from "react-i18next";
 import { Dimensions, View } from "react-native";
-import PushNotification from "react-native-push-notification";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import AppRouter from "./src/components/routers/AppRouter";
@@ -68,9 +68,12 @@ export default function App() {
     fetchTimeZone();
   }, []);
 
-  if (!fontsLoaded) return null;
+  useEffect(() => {
+    // Clear the app icon badge when the app opens.
+    Notifications.setBadgeCountAsync(0).catch(() => {});
+  }, []);
 
-  PushNotification.setApplicationIconBadgeNumber(0);
+  if (!fontsLoaded) return null;
 
   return (
     <Providers>

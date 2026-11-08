@@ -10,6 +10,8 @@ on:
 jobs:
   build:
     name: EAS Build
+    # Only when this repository has an Expo account: set repository variable EAS_ENABLED=true and secret EXPO_TOKEN.
+    if: ${{ vars.EAS_ENABLED == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 180
     steps:
@@ -21,12 +23,12 @@ jobs:
           fi
 
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 22.x
           cache: yarn
 
       - name: Setup EAS

@@ -72,9 +72,12 @@ export const DEFAULT_SIGNATURE_ROUNDING: RoundingRules = {
 export function parseRoundingRules(text: string | null | undefined): RoundingRules {
   if (!text) return {};
   try {
-    const parsed = JSON.parse(text);
+    const parsed: Record<string, unknown> = JSON.parse(text) ?? {};
     const out: RoundingRules = {};
-    for (const [name, rule] of Object.entries(parsed ?? {})) if (isValidRule(rule)) out[name] = rule;
+    for (const name of Object.keys(parsed)) {
+      const rule = parsed[name];
+      if (isValidRule(rule)) out[name] = rule;
+    }
     return out;
   } catch {
     return {};

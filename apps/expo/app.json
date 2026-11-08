@@ -102,12 +102,6 @@
       "expo-font",
       "expo-localization",
       "expo-secure-store",
-      [
-        "@orbital-systems/react-native-esp-idf-provisioning",
-        {
-          "transport": "ble"
-        }
-      ],
       "@maplibre/maplibre-react-native"
     ]
   }

@@ -30,7 +30,7 @@ This document lists desired functional improvements for the NeedForHeat GearUp a
     - Reduce payload size for smaller QR codes (e.g., version 2/3), suitable for e-ink displays or challenging scanning conditions.
     - Support higher error correction levels for reliability.
     - Increase `pop` entropy (e.g., up to 147 bits vs. current 30 bits) for enhanced security.
-  - Reduces name collision risks (e.g., 1 in 100,000 for 256 device types) compared to current format. Corresponding changes are required in the [needforheat-generic-firmware](https://github.com/energietransitie/needforheat-generic-firmware) to generate and handle these QR-code payloads, including BASE45 encoding and decoding logic ([BASE45 RFC](https://datatracker.ietf.org/doc/rfc9285/)).
+  - Reduces name collision risks (e.g., 1 in 100,000 for 256 device types) compared to current format. Corresponding changes are required in the [needforheat-generic-firmware](https://github.com/energiegedrag-nl/needforheat-generic-firmware) to generate and handle these QR-code payloads, including BASE45 encoding and decoding logic ([BASE45 RFC](https://datatracker.ietf.org/doc/rfc9285/)).
 
 ### Static Content
 - **Redesign Static Content for Relative Links**:

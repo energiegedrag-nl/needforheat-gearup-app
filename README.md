@@ -5,6 +5,8 @@
 
 This repository contains the source code for the GearUp version of the NeedForHeat (NFH) app for both Android and iOS. The app helps users to install and connect one or more NFH measurement devices that start collecting monitoring data related to home heating.
 
+> **Own deployment.** This repository is maintained by [energiegedrag-nl](https://github.com/energiegedrag-nl) and deployed under `energiegedrag.nl`. To run your own instance, replace `energiegedrag-nl` by your GitHub organisation and `energiegedrag.nl` by your domain (hosts used: `api.<domain>`, `manuals.<domain>`), consistently in configuration and build settings.
+
 ## Table of contents<!-- omit in toc -->
 - [General info](#general-info)
 - [Installing the app](#installing-the-app)
@@ -99,15 +101,15 @@ If you use this repository in your research or work, please cite the following p
 **Note:** This is a pre-print submitted on 8 Sep 2025 and has not yet been peer-reviewed. For the full paper, see [https://arxiv.org/abs/2509.06927](https://arxiv.org/abs/2509.06927).
 
 ## Credits
-This version of the NeedForHeat app was created with the help of:
+Author:
+* Henri ter Hofte · [@henriterhofte](https://github.com/henriterhofte)
 
+This repository continues [energietransitie/needforheat-gearup-app](https://github.com/energietransitie/needforheat-gearup-app), made by the Research group Energy Transition at Windesheim University of Applied Sciences.
+Thanks to the authors and contributors of the original:
 * Harris Mesic - [@Labhatorian](https://github.com/Labhatorian)
 * Niels Even - [@Niels995](https://github.com/Niels995)
 * Thomas Buijs - [@ThomasBuh](https://github.com/ThomasBuh)
 * Meriyem Bilgili - [@MeriyemBilgili](https://github.com/MeriyemBilgili)
-
-Thanks also go to the developers of previous versions of NeedForHeat and WarmteWachter, the predecessor of this app:
-
 * Jort Driegen · [@jortdr](https://github.com/jortdr)
 * Nick Koster · [@NormalNickYT](https://github.com/NormalNickYT)
 * Robin Leuninge · [@RobinLeuninge](https://github.com/orgs/energietransitie/people/RobinLeuninge)
@@ -124,11 +126,7 @@ Thanks also go to the developers of previous versions of NeedForHeat and WarmteW
 * Rowan van der Zande - [@RowanvdZ](https://github.com/RowanvdZ)
 * Ward Pieters - [@wardpieters](https://github.com/wardpieters)
 * Wietske Veneberg · [@WVeneberg](https://github.com/WVeneberg)
-
-Product owners:
-
-- Henri ter Hofte - [@henriterhofte](https://github.com/henriterhofte)
-- (Formely) Nick van Ravenzwaaij - [@n-vr](https://github.com/n-vr)
+* (Formely) Nick van Ravenzwaaij - [@n-vr](https://github.com/n-vr)
 
 We use and gratefully acknowlegde the efforts of the makers of the following source code and libraries:
 
@@ -198,3 +196,7 @@ We use and gratefully acknowlegde the efforts of the makers of the following sou
 ---
 
 This `README` uses [badges](https://github.com/badges/shields/blob/master/LICENSE), by [Shield.io](https://github.com/badges), licensed under [CC0 v1.0 Universal](https://github.com/badges/shields/blob/master/LICENSE)
+
+### AI assistance
+
+Since November 2026, parts of the maintenance of this repository have been done with [Claude Code](https://claude.com/claude-code) (Anthropic), under the author's direction and review. Commits made this way carry a `Co-Authored-By: Claude …` trailer. The author remains responsible for all content.

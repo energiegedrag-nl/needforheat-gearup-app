@@ -17,7 +17,6 @@ Items that touch several repositories are written out in full in one *lead* repo
 - [ ] <a id="freeze"></a>**Freeze after scanning a device and switching apps.** The screen freezes when the user leaves the app during device scan or reset and comes back. Review the device reset instructions too. Reproduction (Android): after provisioning, do not tap 'back to home', use other apps for hours, return: the app no longer responds. On iOS a second provisioning without restarting the app sometimes fails. State is kept in the app or the provisioning library; re-test after the switch to the orbital-systems library. Also affects: needforheat-generic-firmware. *(Trello #772)*
 - [ ] <a id="monitor"></a>**Finish data-flow monitoring per source.** Show per source whether data is still arriving on schedule (upload interval plus margin), with details on tap (last and next upload, reset), a clear progress indicator, and correct handling of several devices of the same type. Quick win: a plain list of the latest measurements per device, so users can see their sensors work. Also affects: needforheat-server-api. *(Trello #1041, #1096, #1042, #1119, #1117, #1040)*
 - [ ] <a id="urls"></a>**One place for default URLs.** Default manual, FAQ and privacy links are still hard-coded to the old Windesheim domains; put defaults in one configuration value. Design rule: the domain (for example `energiegedrag.nl`) is the only build-time setting in app and firmware; derive `api.` and `manuals.` from it and get everything else at run time. *(Trello #572, #824)*
-- [ ] <a id="h3noise"></a>**Weather location: H3 level 5 with random noise.** The app now sends the centre of the H3 level-4 cell (about 1,770 km²) of the home. A later re-identification analysis (AnonyMate) shows that level 5 after adding random noise (σ ≈ 10 km) to the location gives more accurate weather and is just as safe. Change both screens accordingly and update the privacy text. Design rules: GPS only as a hint for the pin, show no street address, then show the hexagon so the user can confirm. Also affects: needforheat-generic-firmware. *(Trello #689)*
 - [ ] → Upgrade to ESP-IDF 5.5 (WPA3, Wi-Fi 6) — see [needforheat-generic-firmware](https://github.com/energiegedrag-nl/needforheat-generic-firmware/blob/main/TODO.md#idf) *(Trello #806)*
 - [ ] → Re-use devices and update a changed proof of possession — see [needforheat-server-api](https://github.com/energiegedrag-nl/needforheat-server-api/blob/main/TODO.md#reuse) *(Trello #671, #836, #959)*
 
@@ -45,6 +44,7 @@ Items that touch several repositories are written out in full in one *lead* repo
 
 ## Recently done
 
+- [x] Weather location: H3 level 5 after random noise (σ ≈ 10 km, offset fixed per installation) instead of level 4
 - [x] Local-first heat performance signature for one home (AnonyMate method; BAG via PDOK and 3DBAG without keys, EP-online with a run-time key), rounded before upload
 - [x] Android APK workflow without an Expo account; bundle id nl.energiegedrag.app
 - [x] Firebase removed (#1011), Google API key no longer used (#677), info links from campaign (#773) — open PRs, see top item

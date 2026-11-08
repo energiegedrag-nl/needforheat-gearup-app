@@ -2,7 +2,7 @@ import { describe, expect, it } from "@jest/globals";
 
 import referenceData from "./rvo_voorbeeldwoningen_2022_grondgebonden.json";
 import fixtures from "./signature.fixtures.json";
-import { computeSignature, METHODS, normaliseDwellingType, normaliseLabel, ReferenceData, roundSignature } from "./signature";
+import { computeSignature, METHODS, normaliseDwellingType, normaliseLabel, ReferenceData } from "./signature";
 
 const refs = referenceData as unknown as ReferenceData;
 const DECIMALS = { H__W_K_1: 2, C__Wh_K_1: 1, tau__h: 3, Asol__m2: 3, Ainf__cm2: 1 } as const;
@@ -36,9 +36,4 @@ describe("helpers", () => {
     expect(normaliseDwellingType("Appartement")).toBeNull();
   });
 
-  it("rounds to the given steps", () => {
-    const sig = computeSignature((fixtures.cases as any[])[2].input, "passend", refs)!;
-    const r = roundSignature(sig, { H__W_K_1: 25 });
-    expect(r.H__W_K_1 % 25).toBe(0);
-  });
 });

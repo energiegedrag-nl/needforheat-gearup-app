@@ -11,7 +11,8 @@ import Timeline from "@/components/common/Timeline";
 import Box from "@/components/elements/Box";
 import useAPIKey from "@/hooks/API/useAPIKey";
 import useTranslation from "@/hooks/translation/useTranslation";
-import { fetchDwelling, heatSignature, roundSignature } from "@/lib/heatSignature";
+import { fetchDwelling, heatSignature } from "@/lib/heatSignature";
+import { parseRoundingRules, roundForUpload } from "@/lib/privacy/rounding";
 import { useDisableBackButton } from "@/hooks/useDisableBackButton";
 import { EnergyQuery } from "@/types/api";
 import { HomeStackParamList } from "@/types/navigation";
@@ -97,16 +98,17 @@ export default function BuildingProfileProgressScreen({ navigation, route }: Bui
     const add = (name: string, value: string | number) =>
       measurements.push({ value: String(value), property: { name }, time: currentLocaleTimeInUnix });
     try {
+      // Everything computed here is rounded with the campaign's rules (or the defaults) before upload;
+      // values without a rule are not uploaded. Not uploaded either: tau (= C / H, so it would narrow
+      // the rounded values down) and the method used (it reveals whether a label exists).
+      const rules = parseRoundingRules(dataSource.item.Rounding);
+      const values: Record<string, number> = {};
       const signature = heatSignature(dwelling.input, "passend");
       if (signature) {
-        // Rounded before it leaves the phone: a signature is a quasi-identifier.
-        const rounded = roundSignature(signature);
-        add("heat_tr_building_cond__W_K_1", rounded.H__W_K_1);
-        add("th_mass_building__Wh_K_1", rounded.C__Wh_K_1);
-        add("th_inertia_building__h", rounded.tau__h);
-        add("aperture_sol__m2", rounded.Asol__m2);
-        add("aperture_inf__cm2", rounded.Ainf__cm2);
-        add("heat_signature_method__cat", signature.methode_gebruikt__cat);
+        values.heat_tr_building_cond__W_K_1 = signature.H__W_K_1;
+        values.th_mass_building__Wh_K_1 = signature.C__Wh_K_1;
+        values.aperture_sol__m2 = signature.Asol__m2;
+        values.aperture_inf__cm2 = signature.Ainf__cm2;
       }
 
       const formulas = dataSource.item.Formula;
@@ -147,9 +149,11 @@ export default function BuildingProfileProgressScreen({ navigation, route }: Bui
           const result = await evaluate(cleanFormula, variables);
           if (result === undefined || result === null) continue;
           const propertyMatch = formula.match(/\[(.*?)\]/); // Property name between square brackets
-          add(propertyMatch ? propertyMatch[1] : "unknown", result.toString());
+          const number = Number(result);
+          if (propertyMatch && Number.isFinite(number)) values[propertyMatch[1]] = number;
         }
       }
+      for (const [name, value] of Object.entries(roundForUpload(values, rules))) add(name, value);
       if (!measurements.length) throw new Error("nothing calculated");
       setisCalculating(true);
     } catch {

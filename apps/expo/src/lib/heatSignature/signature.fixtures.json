@@ -1,0 +1,460 @@
+{
+ "bron": "AnonyMate signature.compute (anonymate-nl/anonymate), gegenereerd voor needforheat-gearup-app",
+ "cases": [
+  {
+   "input": {
+    "name": "vrijstaand 1930 zonder label",
+    "bouwjaar__yr": 1930,
+    "oppervlakte__m2": 150,
+    "woningtype__cat": "vrijstaand",
+    "pand_woningen__0": 1,
+    "aaneengebouwd__bool": false,
+    "daktype__cat": "slanted",
+    "bouwlagen__0": 2,
+    "opp_buitenmuur__m2": 180,
+    "opp_grond__m2": 90,
+    "opp_dak_plat__m2": 0,
+    "opp_dak_schuin__m2": 110,
+    "opp_scheidingsmuur__m2": 0
+   },
+   "expected": {
+    "nta8800": {
+     "H__W_K_1": 962.3,
+     "C__Wh_K_1": 7500.0,
+     "tau__h": 7.794,
+     "Asol__m2": 25.175,
+     "Ainf__cm2": 379.9,
+     "woningtype_gebruikt__cat": "vrijstaand",
+     "isolatieniveau__0": 0.0
+    },
+    "mwa": {
+     "H__W_K_1": 647.11,
+     "C__Wh_K_1": 7500.0,
+     "tau__h": 11.59,
+     "Asol__m2": 20.969,
+     "Ainf__cm2": 190.0,
+     "woningtype_gebruikt__cat": "vrijstaand",
+     "isolatieniveau__0": 0.0
+    },
+    "best": {
+     "H__W_K_1": 417.99,
+     "C__Wh_K_1": 7500.0,
+     "tau__h": 17.943,
+     "Asol__m2": 14.907,
+     "Ainf__cm2": 190.0,
+     "woningtype_gebruikt__cat": "vrijstaand",
+     "isolatieniveau__0": 1.0
+    },
+    "ep": {
+     "H__W_K_1": null,
+     "C__Wh_K_1": null,
+     "tau__h": null,
+     "Asol__m2": null,
+     "Ainf__cm2": null,
+     "woningtype_gebruikt__cat": null,
+     "isolatieniveau__0": null
+    },
+    "ep_3dbag": {
+     "H__W_K_1": null,
+     "C__Wh_K_1": null,
+     "tau__h": null,
+     "Asol__m2": null,
+     "Ainf__cm2": null,
+     "woningtype_gebruikt__cat": null,
+     "isolatieniveau__0": null
+    },
+    "passend": {
+     "H__W_K_1": 417.99,
+     "C__Wh_K_1": 7500.0,
+     "tau__h": 17.943,
+     "Asol__m2": 14.907,
+     "Ainf__cm2": 190.0,
+     "woningtype_gebruikt__cat": "vrijstaand",
+     "isolatieniveau__0": 1.0,
+     "methode_gebruikt__cat": "best"
+    }
+   }
+  },
+  {
+   "input": {
+    "name": "tussenwoning 1978 label C oud",
+    "bouwjaar__yr": 1978,
+    "oppervlakte__m2": 110,
+    "woningtype__cat": "tussenwoning",
+    "pand_woningen__0": 1,
+    "aaneengebouwd__bool": true,
+    "daktype__cat": "slanted",
+    "bouwlagen__0": 3,
+    "opp_buitenmuur__m2": 70,
+    "opp_grond__m2": 50,
+    "opp_dak_plat__m2": 0,
+    "opp_dak_schuin__m2": 60,
+    "opp_scheidingsmuur__m2": 150,
+    "energielabel__cat": "C"
+   },
+   "expected": {
+    "nta8800": {
+     "H__W_K_1": 190.3,
+     "C__Wh_K_1": 11000.0,
+     "tau__h": 57.802,
+     "Asol__m2": 9.046,
+     "Ainf__cm2": 190.8,
+     "woningtype_gebruikt__cat": "tussenwoning",
+     "isolatieniveau__0": 0.0
+    },
+    "mwa": {
+     "H__W_K_1": 155.25,
+     "C__Wh_K_1": 11000.0,
+     "tau__h": 70.854,
+     "Asol__m2": 8.89,
+     "Ainf__cm2": 95.4,
+     "woningtype_gebruikt__cat": "tussenwoning",
+     "isolatieniveau__0": 0.0
+    },
+    "best": {
+     "H__W_K_1": 159.52,
+     "C__Wh_K_1": 11000.0,
+     "tau__h": 68.957,
+     "Asol__m2": 8.141,
+     "Ainf__cm2": 95.4,
+     "woningtype_gebruikt__cat": "tussenwoning",
+     "isolatieniveau__0": 1.0
+    },
+    "ep": {
+     "H__W_K_1": null,
+     "C__Wh_K_1": null,
+     "tau__h": null,
+     "Asol__m2": null,
+     "Ainf__cm2": null,
+     "woningtype_gebruikt__cat": null,
+     "isolatieniveau__0": null
+    },
+    "ep_3dbag": {
+     "H__W_K_1": null,
+     "C__Wh_K_1": null,
+     "tau__h": null,
+     "Asol__m2": null,
+     "Ainf__cm2": null,
+     "woningtype_gebruikt__cat": null,
+     "isolatieniveau__0": null
+    },
+    "passend": {
+     "H__W_K_1": 159.52,
+     "C__Wh_K_1": 11000.0,
+     "tau__h": 68.957,
+     "Asol__m2": 8.141,
+     "Ainf__cm2": 95.4,
+     "woningtype_gebruikt__cat": "tussenwoning",
+     "isolatieniveau__0": 1.0,
+     "methode_gebruikt__cat": "best"
+    }
+   }
+  },
+  {
+   "input": {
+    "name": "hoekwoning 1998 NTA-label",
+    "bouwjaar__yr": 1998,
+    "oppervlakte__m2": 125,
+    "woningtype__cat": "hoekwoning",
+    "pand_woningen__0": 1,
+    "aaneengebouwd__bool": true,
+    "daktype__cat": "plat",
+    "bouwlagen__0": 2,
+    "opp_buitenmuur__m2": 120,
+    "opp_grond__m2": 60,
+    "opp_dak_plat__m2": 62,
+    "opp_dak_schuin__m2": 0,
+    "opp_scheidingsmuur__m2": 75,
+    "energielabel__cat": "A",
+    "warmtebehoefte__kWh_m_2_a_1": 95.0,
+    "nta8800__bool": true,
+    "compactheid__m2_m_2": 1.9,
+    "label_oppervlakte__m2": 118
+   },
+   "expected": {
+    "nta8800": {
+     "H__W_K_1": 140.15,
+     "C__Wh_K_1": 15625.0,
+     "tau__h": 111.487,
+     "Asol__m2": 7.573,
+     "Ainf__cm2": 95.0,
+     "woningtype_gebruikt__cat": "hoekwoning",
+     "isolatieniveau__0": 0.0
+    },
+    "mwa": {
+     "H__W_K_1": 125.16,
+     "C__Wh_K_1": 15625.0,
+     "tau__h": 124.84,
+     "Asol__m2": 7.497,
+     "Ainf__cm2": 47.5,
+     "woningtype_gebruikt__cat": "hoekwoning",
+     "isolatieniveau__0": 0.0
+    },
+    "best": {
+     "H__W_K_1": 135.46,
+     "C__Wh_K_1": 15625.0,
+     "tau__h": 115.346,
+     "Asol__m2": 7.806,
+     "Ainf__cm2": 47.5,
+     "woningtype_gebruikt__cat": "hoekwoning",
+     "isolatieniveau__0": 1.11
+    },
+    "ep": {
+     "H__W_K_1": 124.21,
+     "C__Wh_K_1": 14750.0,
+     "tau__h": 118.752,
+     "Asol__m2": 7.198,
+     "Ainf__cm2": 44.8,
+     "woningtype_gebruikt__cat": "hoekwoning",
+     "isolatieniveau__0": 1.11
+    },
+    "ep_3dbag": {
+     "H__W_K_1": 125.5,
+     "C__Wh_K_1": 14750.0,
+     "tau__h": 117.531,
+     "Asol__m2": 7.232,
+     "Ainf__cm2": 44.8,
+     "woningtype_gebruikt__cat": "hoekwoning",
+     "isolatieniveau__0": 1.11
+    },
+    "passend": {
+     "H__W_K_1": 124.21,
+     "C__Wh_K_1": 14750.0,
+     "tau__h": 118.752,
+     "Asol__m2": 7.198,
+     "Ainf__cm2": 44.8,
+     "woningtype_gebruikt__cat": "hoekwoning",
+     "isolatieniveau__0": 1.11,
+     "methode_gebruikt__cat": "ep"
+    }
+   }
+  },
+  {
+   "input": {
+    "name": "2-onder-1-kap 2010 A++",
+    "bouwjaar__yr": 2010,
+    "oppervlakte__m2": 140,
+    "woningtype__cat": null,
+    "pand_woningen__0": 1,
+    "aaneengebouwd__bool": true,
+    "daktype__cat": "slanted",
+    "bouwlagen__0": 2,
+    "opp_buitenmuur__m2": 150,
+    "opp_grond__m2": 70,
+    "opp_dak_plat__m2": 5,
+    "opp_dak_schuin__m2": 85,
+    "opp_scheidingsmuur__m2": 60,
+    "energielabel__cat": "A++",
+    "warmtebehoefte__kWh_m_2_a_1": 55.0,
+    "nta8800__bool": true,
+    "compactheid__m2_m_2": 2.1,
+    "label_oppervlakte__m2": 135
+   },
+   "expected": {
+    "nta8800": {
+     "H__W_K_1": 171.82,
+     "C__Wh_K_1": 17500.0,
+     "tau__h": 101.849,
+     "Asol__m2": 11.006,
+     "Ainf__cm2": 70.9,
+     "woningtype_gebruikt__cat": "twee_onder_een_kap",
+     "isolatieniveau__0": 0.0
+    },
+    "mwa": {
+     "H__W_K_1": 153.84,
+     "C__Wh_K_1": 17500.0,
+     "tau__h": 113.756,
+     "Asol__m2": 10.879,
+     "Ainf__cm2": 35.5,
+     "woningtype_gebruikt__cat": "twee_onder_een_kap",
+     "isolatieniveau__0": 0.0
+    },
+    "best": {
+     "H__W_K_1": 119.34,
+     "C__Wh_K_1": 17500.0,
+     "tau__h": 146.641,
+     "Asol__m2": 8.658,
+     "Ainf__cm2": 35.5,
+     "woningtype_gebruikt__cat": "twee_onder_een_kap",
+     "isolatieniveau__0": 2.685
+    },
+    "ep": {
+     "H__W_K_1": 109.77,
+     "C__Wh_K_1": 16875.0,
+     "tau__h": 153.734,
+     "Asol__m2": 7.997,
+     "Ainf__cm2": 34.2,
+     "woningtype_gebruikt__cat": "twee_onder_een_kap",
+     "isolatieniveau__0": 2.685
+    },
+    "ep_3dbag": {
+     "H__W_K_1": 109.14,
+     "C__Wh_K_1": 16875.0,
+     "tau__h": 154.622,
+     "Asol__m2": 7.918,
+     "Ainf__cm2": 34.2,
+     "woningtype_gebruikt__cat": "twee_onder_een_kap",
+     "isolatieniveau__0": 2.685
+    },
+    "passend": {
+     "H__W_K_1": 109.77,
+     "C__Wh_K_1": 16875.0,
+     "tau__h": 153.734,
+     "Asol__m2": 7.997,
+     "Ainf__cm2": 34.2,
+     "woningtype_gebruikt__cat": "twee_onder_een_kap",
+     "isolatieniveau__0": 2.685,
+     "methode_gebruikt__cat": "ep"
+    }
+   }
+  },
+  {
+   "input": {
+    "name": "tussenwoning 1960 onbekend type, zonder dakdata",
+    "bouwjaar__yr": 1960,
+    "oppervlakte__m2": 95,
+    "woningtype__cat": null,
+    "pand_woningen__0": 1,
+    "aaneengebouwd__bool": true,
+    "daktype__cat": null,
+    "bouwlagen__0": null,
+    "opp_buitenmuur__m2": 60,
+    "opp_grond__m2": 48,
+    "opp_dak_plat__m2": 0,
+    "opp_dak_schuin__m2": 55,
+    "opp_scheidingsmuur__m2": 140
+   },
+   "expected": {
+    "nta8800": {
+     "H__W_K_1": 420.8,
+     "C__Wh_K_1": 9500.0,
+     "tau__h": 22.576,
+     "Asol__m2": 11.951,
+     "Ainf__cm2": 171.9,
+     "woningtype_gebruikt__cat": "tussenwoning",
+     "isolatieniveau__0": 0.0
+    },
+    "mwa": {
+     "H__W_K_1": 284.4,
+     "C__Wh_K_1": 9500.0,
+     "tau__h": 33.403,
+     "Asol__m2": 10.323,
+     "Ainf__cm2": 85.9,
+     "woningtype_gebruikt__cat": "tussenwoning",
+     "isolatieniveau__0": 0.0
+    },
+    "best": {
+     "H__W_K_1": 212.66,
+     "C__Wh_K_1": 9500.0,
+     "tau__h": 44.671,
+     "Asol__m2": 8.236,
+     "Ainf__cm2": 85.9,
+     "woningtype_gebruikt__cat": "tussenwoning",
+     "isolatieniveau__0": 1.0
+    },
+    "ep": {
+     "H__W_K_1": null,
+     "C__Wh_K_1": null,
+     "tau__h": null,
+     "Asol__m2": null,
+     "Ainf__cm2": null,
+     "woningtype_gebruikt__cat": null,
+     "isolatieniveau__0": null
+    },
+    "ep_3dbag": {
+     "H__W_K_1": null,
+     "C__Wh_K_1": null,
+     "tau__h": null,
+     "Asol__m2": null,
+     "Ainf__cm2": null,
+     "woningtype_gebruikt__cat": null,
+     "isolatieniveau__0": null
+    },
+    "passend": {
+     "H__W_K_1": 212.66,
+     "C__Wh_K_1": 9500.0,
+     "tau__h": 44.671,
+     "Asol__m2": 8.236,
+     "Ainf__cm2": 85.9,
+     "woningtype_gebruikt__cat": "tussenwoning",
+     "isolatieniveau__0": 1.0,
+     "methode_gebruikt__cat": "best"
+    }
+   }
+  },
+  {
+   "input": {
+    "name": "appartementenpand",
+    "bouwjaar__yr": 1985,
+    "oppervlakte__m2": 80,
+    "woningtype__cat": null,
+    "pand_woningen__0": 12,
+    "aaneengebouwd__bool": true,
+    "daktype__cat": "plat",
+    "bouwlagen__0": 4,
+    "opp_buitenmuur__m2": 900,
+    "opp_grond__m2": 400,
+    "opp_dak_plat__m2": 400,
+    "opp_dak_schuin__m2": 0,
+    "opp_scheidingsmuur__m2": 0
+   },
+   "expected": {
+    "nta8800": {
+     "H__W_K_1": null,
+     "C__Wh_K_1": null,
+     "tau__h": null,
+     "Asol__m2": null,
+     "Ainf__cm2": null,
+     "woningtype_gebruikt__cat": null,
+     "isolatieniveau__0": null
+    },
+    "mwa": {
+     "H__W_K_1": null,
+     "C__Wh_K_1": null,
+     "tau__h": null,
+     "Asol__m2": null,
+     "Ainf__cm2": null,
+     "woningtype_gebruikt__cat": null,
+     "isolatieniveau__0": null
+    },
+    "best": {
+     "H__W_K_1": null,
+     "C__Wh_K_1": null,
+     "tau__h": null,
+     "Asol__m2": null,
+     "Ainf__cm2": null,
+     "woningtype_gebruikt__cat": null,
+     "isolatieniveau__0": null
+    },
+    "ep": {
+     "H__W_K_1": null,
+     "C__Wh_K_1": null,
+     "tau__h": null,
+     "Asol__m2": null,
+     "Ainf__cm2": null,
+     "woningtype_gebruikt__cat": null,
+     "isolatieniveau__0": null
+    },
+    "ep_3dbag": {
+     "H__W_K_1": null,
+     "C__Wh_K_1": null,
+     "tau__h": null,
+     "Asol__m2": null,
+     "Ainf__cm2": null,
+     "woningtype_gebruikt__cat": null,
+     "isolatieniveau__0": null
+    },
+    "passend": {
+     "H__W_K_1": null,
+     "C__Wh_K_1": null,
+     "tau__h": null,
+     "Asol__m2": null,
+     "Ainf__cm2": null,
+     "woningtype_gebruikt__cat": null,
+     "isolatieniveau__0": null,
+     "methode_gebruikt__cat": null
+    }
+   }
+  }
+ ]
+}

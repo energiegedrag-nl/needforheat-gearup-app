@@ -326,6 +326,10 @@
             "calculating": {
               "message": "Error calculating data. Try again or contact support."
             },
+            "unsuitable": {
+              "title": "Not yet suitable for this home",
+              "message": "The building profile currently only works for single-family homes: detached, semi-detached, corner or terraced. Your address is in a building with several homes, such as an apartment. The app does not support that yet. Nothing was sent; you can continue with the other steps in the app."
+            },
             "sending": {
               "message": "Error sending data. Ensure you have internet/Wi-Fi or contact support."
             }

@@ -326,6 +326,10 @@
             "calculating": {
               "message": "Fout bij het berekenen. Probeer opnieuw of neem contact op met de helpdesk."
             },
+            "unsuitable": {
+              "title": "Nog niet geschikt voor deze woning",
+              "message": "Het gebouwprofiel werkt nu alleen voor eengezinswoningen: vrijstaand, twee-onder-een-kap, hoek- of tussenwoning. Uw adres ligt in een gebouw met meerdere woningen, zoals een appartement. Daarvoor is de app nog niet geschikt. Er is niets verstuurd; u kunt verder met de andere stappen in de app."
+            },
             "sending": {
               "message": "Fout bij het verzenden van gegevens. Zorg voor internet/wifi of neem contact op met de helpdesk."
             }

@@ -434,18 +434,3 @@ export function normaliseDwellingType(s: string | null | undefined): DwellingTyp
   return null;
 }
 
-/**
- * Round a signature before it leaves the phone. Published signatures are quasi-identifiers
- * (anyone can compute them for every home), so campaigns should choose steps with AnonyMate's
- * rounding analysis; these defaults are only a starting point.
- */
-export const DEFAULT_ROUNDING = { H__W_K_1: 10, C__Wh_K_1: 500, tau__h: 5, Asol__m2: 0.5, Ainf__cm2: 10 };
-
-export function roundSignature(sig: Signature, steps: Partial<typeof DEFAULT_ROUNDING> = DEFAULT_ROUNDING) {
-  const out: Record<string, number> = {};
-  for (const [k, step] of Object.entries({ ...DEFAULT_ROUNDING, ...steps })) {
-    const v = sig[k as keyof typeof DEFAULT_ROUNDING];
-    out[k] = Math.round(v / step) * step;
-  }
-  return out as typeof DEFAULT_ROUNDING;
-}

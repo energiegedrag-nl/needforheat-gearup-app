@@ -17,6 +17,8 @@ export const TypeSchema = z.object({
   ID: z.number(),
   Name: z.string(),
   Formula: z.string().optional().nullable(),
+  // Rounding rules per property (JSON), set by the campaign; see lib/privacy/rounding.
+  Rounding: z.string().optional().nullable(),
 });
 
 export type DeviceTypeResponse = z.infer<typeof deviceTypeSchema>;

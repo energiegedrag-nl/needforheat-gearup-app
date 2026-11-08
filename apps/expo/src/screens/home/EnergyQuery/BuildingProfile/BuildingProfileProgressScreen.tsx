@@ -40,6 +40,8 @@ export default function BuildingProfileProgressScreen({ navigation, route }: Bui
 
   const [isCalculating, setisCalculating] = useState<boolean>(false);
   const [isCalculatingError, setisCalculatingError] = useState<boolean>(false);
+  // The home is not one the app can calculate yet (not single-family, e.g. an apartment).
+  const [isUnsuitable, setIsUnsuitable] = useState<boolean>(false);
 
   const [isSucces, setisSucces] = useState<boolean>(false);
   const [isSuccesError, setisSuccesError] = useState<boolean>(false);
@@ -65,7 +67,7 @@ export default function BuildingProfileProgressScreen({ navigation, route }: Bui
       description: t("screens.home_stack.energy_query.building_profile_progress.alert.calculating.message"),
       finished: isCalculating,
       loading: !isCalculating,
-      error: isCalculatingError,
+      error: isCalculatingError || isUnsuitable,
     },
     {
       title: t("screens.home_stack.energy_query.building_profile_progress.alert.sending.title"),
@@ -88,6 +90,14 @@ export default function BuildingProfileProgressScreen({ navigation, route }: Bui
     } catch {
       setShowButton(true);
       setisBAGReceivedError(true);
+      return;
+    }
+
+    // Only single-family homes for now: the method needs a single-family building (RVO reference dwellings).
+    // Stop with a clear message and send nothing, instead of reporting a calculation error.
+    if (dwelling.input.pand_woningen__0 !== 1) {
+      setIsUnsuitable(true);
+      setShowButton(true);
       return;
     }
 
@@ -228,6 +238,11 @@ export default function BuildingProfileProgressScreen({ navigation, route }: Bui
           <StatusMessage
             label={t("screens.home_stack.energy_query.building_profile_progress.fail.title")}
             message={t("screens.home_stack.energy_query.building_profile_progress.fail.3dbag.message")}
+          />
+        ) : isUnsuitable ? (
+          <StatusMessage
+            label={t("screens.home_stack.energy_query.building_profile_progress.fail.unsuitable.title")}
+            message={t("screens.home_stack.energy_query.building_profile_progress.fail.unsuitable.message")}
           />
         ) : isCalculatingError ? (
           <StatusMessage

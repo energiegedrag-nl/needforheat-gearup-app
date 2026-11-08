@@ -101,8 +101,7 @@
       ],
       "expo-font",
       "expo-localization",
-      "expo-secure-store",
-      "@maplibre/maplibre-react-native"
+      "expo-secure-store"
     ]
   }
 }

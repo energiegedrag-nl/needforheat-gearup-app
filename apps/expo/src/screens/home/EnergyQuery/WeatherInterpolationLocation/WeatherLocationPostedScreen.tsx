@@ -13,6 +13,7 @@ import useTranslation from "@/hooks/translation/useTranslation";
 import useMeasurements from "@/hooks/upload/useMeasurements";
 import { UserLocation } from "@/types/energyquery";
 import { HomeStackParamList } from "@/types/navigation";
+import { WEATHER_H3_RESOLUTION } from "@/utils/weatherLocation";
 import { readableDateTime, toLocalDateTime } from "@/utils/tools";
 
 type WeatherLocationPostedScreenProps = NativeStackScreenProps<HomeStackParamList, "WeatherLocationPostedScreen">;
@@ -43,7 +44,7 @@ export default function WeatherLocationPostedScreen({ navigation }: WeatherLocat
         const longitude = parseFloat(longitudeMeasurement.value);
 
         //H3
-        const cell = latLngToCell(latitude, longitude, 4);
+        const cell = latLngToCell(latitude, longitude, WEATHER_H3_RESOLUTION);
         const cellBoundaries = cellToBoundary(cell, true);
         const cellBoundariesGeoJson: FeatureCollection = {
           type: "FeatureCollection",

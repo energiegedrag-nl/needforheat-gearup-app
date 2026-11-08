@@ -34,13 +34,15 @@ type BagData = { vboId: string; pandId: string | null; oppervlakte?: number; bou
 export async function fetchBag(vboId: string): Promise<BagData> {
   const vbo = await getJson(`${BAG_OGC}/verblijfsobject/items?f=json&identificatie=${vboId}`);
   const props = vbo?.features?.[0]?.properties ?? {};
+  // "pand.href" links to the building by its internal feature id (a UUID), not by the 16-digit BAG id,
+  // so follow the link itself; the building's properties carry the BAG id ("identificatie").
   const pandHref: string | undefined = (props["pand.href"] ?? [])[0];
-  const pandId = pandHref ? (pandHref.match(/(\d{16})/)?.[1] ?? null) : null;
   let pand: Record<string, unknown> = {};
-  if (pandId) {
-    const p = await getJson(`${BAG_OGC}/pand/items?f=json&identificatie=${pandId}`);
-    pand = p?.features?.[0]?.properties ?? {};
+  if (pandHref) {
+    const p = await getJson(`${pandHref}${pandHref.includes("?") ? "&" : "?"}f=json`);
+    pand = p?.properties ?? p?.features?.[0]?.properties ?? {};
   }
+  const pandId = typeof pand.identificatie === "string" ? pand.identificatie : null;
   return {
     vboId,
     pandId,

@@ -1,0 +1,64 @@
+name: Android APK
+# Builds an installable APK without an Expo account (for sideloading), on request or for a v* tag.
+# Signing: with the repository secrets ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD,
+# ANDROID_KEY_ALIAS and ANDROID_KEY_PASSWORD the APK is signed with that release key; without them
+# it keeps the debug key of the React Native template (fine for testing, not for distribution).
+# The SHA-256 of the signing certificate is shown in the job summary (for .well-known/assetlinks.json).
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Install dependencies
+        run: yarn --frozen-lockfile
+      - name: Environment
+        run: |
+          echo "API_URL=${{ vars.NFH_API_URL || 'https://api.energiegedrag.nl/v3' }}" > .env
+          echo "MANUAL_URL=${{ vars.NFH_MANUAL_URL || 'https://manuals.energiegedrag.nl' }}" >> .env
+      - name: Generate native project
+        working-directory: apps/expo
+        run: npx expo prebuild --platform android --clean --no-install
+      - name: Build release APK
+        working-directory: apps/expo/android
+        run: ./gradlew assembleRelease --no-daemon
+      - name: Sign with release key (if configured)
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          APK=$(ls apps/expo/android/app/build/outputs/apk/release/*.apk | head -1)
+          BT=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
+          if [ -n "$KEYSTORE_B64" ]; then
+            echo "$KEYSTORE_B64" | base64 -d > release.keystore
+            "$BT/apksigner" sign --ks release.keystore --ks-pass env:KEYSTORE_PASSWORD \
+              --ks-key-alias "$KEY_ALIAS" --key-pass env:KEY_PASSWORD "$APK"
+            rm release.keystore
+            echo "Signed with the release key." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "No release key configured: signed with the template debug key (testing only)." >> "$GITHUB_STEP_SUMMARY"
+          fi
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          "$BT/apksigner" verify --print-certs "$APK" | grep -E "SHA-256|DN" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          mkdir -p out && cp "$APK" "out/energiegedrag-$(git rev-parse --short HEAD).apk"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: out/*.apk
+          retention-days: 30

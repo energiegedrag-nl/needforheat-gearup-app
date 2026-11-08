@@ -1,20 +1,19 @@
-import { GOOGLE_MAPS_API_KEY } from "@env";
 import Geolocation, { GeolocationResponse } from "@react-native-community/geolocation";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Button, Icon, makeStyles, useTheme } from "@rneui/themed";
 import { openSettings } from "expo-linking";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Alert, Platform, Text, View } from "react-native";
-import Geocoder from "react-native-geocoding";
+import { Alert, Text, View } from "react-native";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
-import MapView, { Region } from "react-native-maps";
 
 import Box from "@/components/elements/Box";
+import OpenMap, { OpenMapRef, Region } from "@/components/map/OpenMap";
 import { NL_ADDRESS_REGEX } from "@/constants";
 import usePreciseLocationPermission from "@/hooks/location/usePreciseLocationPermission";
 import useTranslation from "@/hooks/translation/useTranslation";
 import { UserLocation } from "@/types/energyquery";
 import { HomeStackParamList } from "@/types/navigation";
+import { geocodeAddress, reverseGeocode } from "@/utils/geocoding";
 
 type HomeAddressSelectScreenProps = NativeStackScreenProps<HomeStackParamList, "HomeAddressSelectScreen">;
 
@@ -23,8 +22,8 @@ export default function HomeAddressSelectScreen({ navigation, route }: HomeAddre
   const { theme } = useTheme();
   const { t } = useTranslation();
   const style = useStyles();
-  const refMap = useRef<MapView>(null);
-  const [hasLocationPermission, setLocationPermission] = useState<boolean>(false);
+  const refMap = useRef<OpenMapRef>(null);
+  const [, setLocationPermission] = useState<boolean>(false);
   const [location, setLocation] = useState<UserLocation>({
     latitude: 52.501076707906,
     longitude: 6.079587294142308,
@@ -32,8 +31,6 @@ export default function HomeAddressSelectScreen({ navigation, route }: HomeAddre
     longitudeDelta: 4,
   });
   const [selectedAddress, setSelectedAddress] = useState<string>("");
-
-  Geocoder.init(GOOGLE_MAPS_API_KEY);
 
   const setAdressChange = async (address: string) => {
     setSelectedAddress(address);
@@ -43,15 +40,15 @@ export default function HomeAddressSelectScreen({ navigation, route }: HomeAddre
   const updateAddress = async () => {
     try {
       if (selectedAddress !== "") {
-        const response = await Geocoder.from(selectedAddress);
-        if (response.results.length === 0) {
+        const found = await geocodeAddress(selectedAddress);
+        if (!found) {
           console.log("Address not found");
           return;
         }
 
         // Address found, update the marker's location
-        const { lat, lng } = response.results[0].geometry.location;
-        getAddressFromCoordinates(lat, lng);
+        const { latitude: lat, longitude: lng } = found;
+        setSelectedAddress(found.address);
         setLocation({
           latitude: lat,
           longitude: lng,
@@ -79,9 +76,8 @@ export default function HomeAddressSelectScreen({ navigation, route }: HomeAddre
 
   const getAddressFromCoordinates = async (latitude: number, longitude: number) => {
     try {
-      const response = await Geocoder.from(latitude, longitude);
-      const address = response.results[0].formatted_address;
-      setSelectedAddress(address);
+      const address = await reverseGeocode(latitude, longitude);
+      setSelectedAddress(address ?? "");
     } catch (error) {
       console.error("Error fetching address: ", error);
       setSelectedAddress(""); // Als er een fout optreedt, leeg het adres
@@ -261,38 +257,30 @@ export default function HomeAddressSelectScreen({ navigation, route }: HomeAddre
           <Text style={style.subtitle}>{t("screens.home_stack.energy_query.homeaddress_screen.subtitle")}</Text>
         </View>
         <View style={style.mapcontainer}>
-          <MapView
+          <OpenMap
             ref={refMap}
             region={location}
             showsUserLocation
-            showsMyLocationButton
-            showsBuildings
-            showsScale
             pitchEnabled={false}
             style={style.map}
             onRegionChangeComplete={handleRegionChangeCompleted}
-            zoomControlEnabled
           />
-          {Platform.OS === "ios" ? (
-            <View style={style.zoomControlsiOS}>
-              <TouchableOpacity onPress={handleZoomIn} style={style.zoomButton}>
-                <Icon name="add" color="white" size={30} />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={handleZoomOut} style={style.zoomButton}>
-                <Icon name="remove" color="white" size={30} />
-              </TouchableOpacity>
-            </View>
-          ) : null}
+          <View style={style.zoomControlsiOS}>
+            <TouchableOpacity onPress={handleZoomIn} style={style.zoomButton}>
+              <Icon name="add" color="white" size={30} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleZoomOut} style={style.zoomButton}>
+              <Icon name="remove" color="white" size={30} />
+            </TouchableOpacity>
+          </View>
           <View pointerEvents="none">
             <Icon name="location-pin" color="red" size={40} style={{ marginBottom: 30 }} />
           </View>
-          {Platform.OS === "ios" || !hasLocationPermission ? (
-            <View style={Platform.OS === "ios" ? style.myLocationiOS : style.myLocationAndroid}>
-              <TouchableOpacity onPress={onPressMyLocation}>
-                <Icon name="my-location" color="white" size={Platform.OS === "ios" ? 40 : 30} />
-              </TouchableOpacity>
-            </View>
-          ) : null}
+          <View style={style.myLocationiOS}>
+            <TouchableOpacity onPress={onPressMyLocation}>
+              <Icon name="my-location" color="white" size={40} />
+            </TouchableOpacity>
+          </View>
         </View>
         <Box style={{ flexDirection: "column", width: "100%" }}>
           <Text style={style.label}>Address</Text>

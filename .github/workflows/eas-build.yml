@@ -10,6 +10,8 @@ on:
 jobs:
   build:
     name: EAS Build
+    # Only when this repository has an Expo account: set repository variable EAS_ENABLED=true and secret EXPO_TOKEN.
+    if: ${{ vars.EAS_ENABLED == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 180
     steps:
@@ -21,12 +23,12 @@ jobs:
           fi
 
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 22.x
           cache: yarn
 
       - name: Setup EAS
@@ -35,9 +37,6 @@ jobs:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - uses: webfactory/ssh-agent@v0.7.0
-        with:
-          ssh-private-key: ${{ secrets.GH_SSH_KEY }}
 
       - name: Install dependencies
         run: yarn install --production
@@ -45,7 +44,6 @@ jobs:
       - name: Setup environment file
         run: |
           echo "API_URL=${{ secrets.NFH_API_URL }}" > .env
-          echo "GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}" >> .env
           echo "MANUAL_URL=${{ secrets.MANUAL_URL }}" >> .env
 
       - name: Build app

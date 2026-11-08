@@ -3,11 +3,11 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Button, Icon, makeStyles, useTheme } from "@rneui/themed";
 import { openSettings } from "expo-linking";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Alert, Platform, Text, View } from "react-native";
+import { Alert, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import MapView, { Region } from "react-native-maps";
 
 import Box from "@/components/elements/Box";
+import OpenMap, { OpenMapRef, Region } from "@/components/map/OpenMap";
 import usePreciseLocationPermission from "@/hooks/location/usePreciseLocationPermission";
 import useTranslation from "@/hooks/translation/useTranslation";
 import { UserLocation } from "@/types/energyquery";
@@ -20,8 +20,8 @@ export default function HomeSelectScreen({ navigation, route }: HomeSelectScreen
   const { theme } = useTheme();
   const { t } = useTranslation();
   const style = useStyles();
-  const refMap = useRef<MapView>(null);
-  const [hasLocationPermission, setLocationPermission] = useState<boolean>(false);
+  const refMap = useRef<OpenMapRef>(null);
+  const [, setLocationPermission] = useState<boolean>(false);
   const [location, setLocation] = useState<UserLocation>({
     latitude: 52.501076707906,
     longitude: 6.079587294142308,
@@ -173,38 +173,30 @@ export default function HomeSelectScreen({ navigation, route }: HomeSelectScreen
           <Text style={style.subtitle}>{t("screens.home_stack.energy_query.homeselect_screen.subtitle")}</Text>
         </View>
         <View style={style.mapcontainer}>
-          <MapView
+          <OpenMap
             ref={refMap}
             region={location}
             showsUserLocation
-            showsMyLocationButton
-            showsBuildings
-            showsScale
             pitchEnabled={false}
             style={style.map}
             onRegionChangeComplete={handleRegionChangeCompleted}
-            zoomControlEnabled
           />
-          {Platform.OS === "ios" ? (
-            <View style={style.zoomControlsiOS}>
-              <TouchableOpacity onPress={handleZoomIn} style={style.zoomButton}>
-                <Icon name="add" color="white" size={30} />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={handleZoomOut} style={style.zoomButton}>
-                <Icon name="remove" color="white" size={30} />
-              </TouchableOpacity>
-            </View>
-          ) : null}
+          <View style={style.zoomControlsiOS}>
+            <TouchableOpacity onPress={handleZoomIn} style={style.zoomButton}>
+              <Icon name="add" color="white" size={30} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleZoomOut} style={style.zoomButton}>
+              <Icon name="remove" color="white" size={30} />
+            </TouchableOpacity>
+          </View>
           <View pointerEvents="none">
             <Icon name="location-pin" color="red" size={40} style={{ marginBottom: 30 }} />
           </View>
-          {Platform.OS === "ios" || !hasLocationPermission ? (
-            <View style={Platform.OS === "ios" ? style.myLocationiOS : style.myLocationAndroid}>
-              <TouchableOpacity onPress={onPressMyLocation}>
-                <Icon name="my-location" color="white" size={Platform.OS === "ios" ? 40 : 30} />
-              </TouchableOpacity>
-            </View>
-          ) : null}
+          <View style={style.myLocationiOS}>
+            <TouchableOpacity onPress={onPressMyLocation}>
+              <Icon name="my-location" color="white" size={40} />
+            </TouchableOpacity>
+          </View>
         </View>
         <Box style={{ flexDirection: "row", marginTop: 16, width: "100%" }}>
           <Button

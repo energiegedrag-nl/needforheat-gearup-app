@@ -98,32 +98,6 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 20031
         versionName "3.3.0"
-
-        def envFile = file('../../../../.env')
-        def envVariables = [:]
-
-        // Read and parse the .env file
-        envFile.withReader { reader ->
-            reader.eachLine { line ->
-                try {
-                    // Split each line into key-value pairs
-                    def (key, value) = line.split('=', 2) // Limiting split to 2 parts in case value contains '='
-
-                    // Trim whitespace from key and value
-                    key = key.trim()
-                    value = value.trim()
-
-                    envVariables[key] = value
-                } catch (Exception e) {
-                    println("Error parsing line: $line. ${e.message}")
-                }
-            }
-        }
-
-        // Access the required environment variable
-        def googleMapsApiKey = envVariables['GOOGLE_MAPS_API_KEY']
-        manifestPlaceholders = [google_maps_api_key: googleMapsApiKey]
-        println "Manifest placeholders: ${manifestPlaceholders}"
     }
 
     signingConfigs {

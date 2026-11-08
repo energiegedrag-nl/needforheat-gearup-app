@@ -65,6 +65,9 @@ target 'NeedforHeat' do
       end
     end
 
+    # MapLibre (maps on OpenStreetMap data)
+    $MLRN.post_install(installer)
+
     react_native_post_install(
       installer,
       config[:reactNativePath],

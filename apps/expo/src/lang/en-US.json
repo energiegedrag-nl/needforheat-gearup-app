@@ -253,7 +253,7 @@
         },
         "weather_location_result_screen": {
           "title": "Weather zone to send",
-          "subtitle": "Is your home located in this weather zone?",
+          "subtitle": "This is the weather zone for your home. For your privacy the location is shifted at random (usually less than 10 to 20 km), so your home need not lie inside it. Is this zone in your region?",
           "send_button": "Yes (send zone)",
           "back_button": "No (go back)",
           "marker": "Selected location",

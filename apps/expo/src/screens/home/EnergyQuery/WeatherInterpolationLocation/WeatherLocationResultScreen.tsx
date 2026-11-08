@@ -2,7 +2,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Button, Icon, makeStyles, useTheme } from "@rneui/themed";
 import * as Burnt from "burnt";
 import { FeatureCollection } from "geojson";
-import { latLngToCell, cellToBoundary, cellToLatLng, CoordPair } from "h3-js";
+import { cellToBoundary, CoordPair } from "h3-js";
 import { useEffect, useRef, useState } from "react";
 import { Alert, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -14,6 +14,7 @@ import useTranslation from "@/hooks/translation/useTranslation";
 import { EnergyQuery } from "@/types/api";
 import { UserLocation } from "@/types/energyquery";
 import { HomeStackParamList } from "@/types/navigation";
+import { getNoiseOffset, NoiseOffset, weatherCell, weatherCellCentre } from "@/utils/weatherLocation";
 
 type WeatherLocationResultScreenProps = NativeStackScreenProps<HomeStackParamList, "WeatherLocationResultScreen">;
 
@@ -26,9 +27,13 @@ export default function WeatherLocationResultScreen({ navigation, route }: Weath
   const [locationState, setLocationState] = useState<UserLocation>(location);
   const [disableButtons, setDisableButtons] = useState<boolean>(false);
 
-  //H3
-  const cell = latLngToCell(location.latitude, location.longitude, 4);
-  const resultLocation = cellToLatLng(cell);
+  //H3: level 5 after a random offset (σ ≈ 10 km) that is drawn once per installation; see utils/weatherLocation.
+  const [offset, setOffset] = useState<NoiseOffset | null>(null);
+  useEffect(() => {
+    getNoiseOffset().then(setOffset);
+  }, []);
+  const cell = weatherCell(location.latitude, location.longitude, offset ?? { north_km: 0, east_km: 0 });
+  const resultLocation = weatherCellCentre(cell);
   const cellBoundaries = cellToBoundary(cell, true);
   const cellBoundariesGeoJson: FeatureCollection = {
     type: "FeatureCollection",
@@ -47,6 +52,7 @@ export default function WeatherLocationResultScreen({ navigation, route }: Weath
 
   //Region Buttons
   const onSend = async () => {
+    if (!offset) return; // noise offset not loaded yet
     setDisableButtons(true);
     Burnt.alert({
       title: t("screens.home_stack.energy_query.weather_location_result_screen.alert.sending.title"),
@@ -178,7 +184,7 @@ export default function WeatherLocationResultScreen({ navigation, route }: Weath
 
   useEffect(() => {
     setLocationState(getRegionForCoordinates(cellBoundaries));
-  }, []);
+  }, [cell]);
 
   return (
     <>

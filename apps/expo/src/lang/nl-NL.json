@@ -253,7 +253,7 @@
         },
         "weather_location_result_screen": {
           "title": "Te verzenden weerzone",
-          "subtitle": "Staat uw huis in deze weerzone?",
+          "subtitle": "Dit is de weerzone voor uw woning. Voor uw privacy verschuiven we de locatie willekeurig (meestal minder dan 10 tot 20 km), dus uw huis hoeft er niet precies in te liggen. Ligt deze zone in uw regio?",
           "send_button": "Ja (verzenden)",
           "back_button": "Nee (opnieuw)",
           "marker": "Geselecteerde locatie",

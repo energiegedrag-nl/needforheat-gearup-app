@@ -8,6 +8,7 @@ Items that touch several repositories are written out in full in one *lead* repo
 
 - [ ] <a id="appmerge"></a>**Merge the Firebase, maps and info-link changes.** PRs #1–#3 remove Firebase and Google services and use the campaign's info links. Regenerate `yarn.lock` (needs a machine with enough memory), build an APK and test invitation links, provisioning and the map. *(Trello #1011, #773, #677)*
 - [ ] <a id="wpa3"></a>**Allow WPA2/WPA3 networks in the Wi-Fi list.** The app rejects networks with security mode above 4, which hides WPA2/WPA3 mixed networks. Allow mixed mode now; WPA3-only needs the ESP-IDF upgrade. Also affects: needforheat-generic-firmware. *(Trello #806)*
+- [ ] <a id="expo"></a>**Upgrade Expo SDK 51 to a current SDK.** Needed for iOS/TestFlight and for the stores: the MapLibre config plugin (maps) requires Expo SDK 52 or newer, so iOS builds cannot be prepared on SDK 51 (Android links MapLibre without the plugin), and Google Play requires a recent target SDK. Also update the provisioning library to a version that ships its own config plugin. The APK workflow (*Android APK*) builds without an Expo account; set a release key in the repository secrets before distributing.
 
 ## Soon: robustness and correctness
 
@@ -17,7 +18,6 @@ Items that touch several repositories are written out in full in one *lead* repo
 - [ ] <a id="monitor"></a>**Finish data-flow monitoring per source.** Show per source whether data is still arriving on schedule (upload interval plus margin), with details on tap (last and next upload, reset), a clear progress indicator, and correct handling of several devices of the same type. Quick win: a plain list of the latest measurements per device, so users can see their sensors work. Also affects: needforheat-server-api. *(Trello #1041, #1096, #1042, #1119, #1117, #1040)*
 - [ ] <a id="urls"></a>**One place for default URLs.** Default manual, FAQ and privacy links are still hard-coded to the old Windesheim domains; put defaults in one configuration value. Design rule: the domain (for example `energiegedrag.nl`) is the only build-time setting in app and firmware; derive `api.` and `manuals.` from it and get everything else at run time. *(Trello #572, #824)*
 - [ ] <a id="h3noise"></a>**Weather location: H3 level 5 with random noise.** The app now sends the centre of the H3 level-4 cell (about 1,770 km²) of the home. A later re-identification analysis (AnonyMate) shows that level 5 after adding random noise (σ ≈ 10 km) to the location gives more accurate weather and is just as safe. Change both screens accordingly and update the privacy text. Design rules: GPS only as a hint for the pin, show no street address, then show the hexagon so the user can confirm. Also affects: needforheat-generic-firmware. *(Trello #689)*
-- [ ] <a id="signature"></a>**Local-first heat performance signature for one home.** The building profile now evaluates simple formulas on 3DBAG attributes. Port the single-home calculation of AnonyMate (`signature.py`: methods `nta8800` and `mwa`, from BAG, 3DBAG, EP-online label, RVO reference dwellings and NTA 8800 default values) to a tested TypeScript module, with the reference tables as JSON and test cases computed by AnonyMate. The address stays on the phone; EP-online is queried with a key handed out at run time, or the user enters the label. Upload only what the campaign needs, rounded as AnonyMate advises: signatures are quasi-identifiers (they can be computed for every home), so mention them in the privacy statement. Also affects: needforheat-server-api. *(Trello #690, #1192, #1196)*
 - [ ] → Upgrade to ESP-IDF 5.5 (WPA3, Wi-Fi 6) — see [needforheat-generic-firmware](https://github.com/energiegedrag-nl/needforheat-generic-firmware/blob/main/TODO.md#idf) *(Trello #806)*
 - [ ] → Re-use devices and update a changed proof of possession — see [needforheat-server-api](https://github.com/energiegedrag-nl/needforheat-server-api/blob/main/TODO.md#reuse) *(Trello #671, #836, #959)*
 
@@ -45,4 +45,6 @@ Items that touch several repositories are written out in full in one *lead* repo
 
 ## Recently done
 
+- [x] Local-first heat performance signature for one home (AnonyMate method; BAG via PDOK and 3DBAG without keys, EP-online with a run-time key), rounded before upload
+- [x] Android APK workflow without an Expo account; bundle id nl.energiegedrag.app
 - [x] Firebase removed (#1011), Google API key no longer used (#677), info links from campaign (#773) — open PRs, see top item

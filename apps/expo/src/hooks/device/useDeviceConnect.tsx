@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
-import { NativeEventEmitter, NativeModules } from "react-native";
-import EspIdfProvisioning from "react-native-esp-idf-provisioning";
+import { useState } from "react";
 
 import { BleDeviceType } from "@/types";
+import { connectBleDevice } from "@/utils/espProvisioning";
 
 type useDeviceConnectOptions = {
   device: BleDeviceType;
@@ -11,9 +10,6 @@ type useDeviceConnectOptions = {
 
 type onError = (error?: string) => void;
 
-const EspIdfProvisioningModule = NativeModules.EspIdfProvisioning;
-const emitter = new NativeEventEmitter(EspIdfProvisioningModule);
-
 export default function useDeviceConnect({ device, proofOfPossession }: useDeviceConnectOptions) {
   const [isConnected, setIsConnected] = useState(false);
 
@@ -21,45 +17,18 @@ export default function useDeviceConnect({ device, proofOfPossession }: useDevic
     console.log("connectToDevice: " + device.deviceName);
     setIsConnected(false);
 
-    emitter.removeAllListeners("DeviceConnectionEvent");
-
-    emitter.addListener("DeviceConnectionEvent", function (status: string) {
-      onConnectionEvent(status, callback, onError);
-      emitter.removeAllListeners("DeviceConnectionEvent");
-    });
-
-    await EspIdfProvisioning.connectBleDevice(device.deviceAddress, proofOfPossession).catch(onError);
-  }
-
-  useEffect(() => {
-    const connectionEventListener = (status: string) => {
-      onConnectionEvent(status, callback);
-    };
-
-    emitter.addListener("DeviceConnectionEvent", connectionEventListener);
-    return () => {
-      emitter.removeAllListeners("DeviceConnectionEvent");
-    };
-  }, []);
-
-  function onConnectionEvent(status: string, callback: () => void, onError?: onError) {
-    // Listen to connection events, only effective on Android (iOS will reject the promise in connectBleDevice)
-    if (status === "EVENT_DEVICE_CONNECTION_FAILED") {
-      console.log(`onDeviceConnectionFailed: ${device.deviceName} failed to connect (EVENT_DEVICE_CONNECTION_FAILED)`);
-      onError?.();
-      return;
-    }
-
-    // Status can be "connected" (iOS) or "EVENT_DEVICE_CONNECTED" (Android) if it was successful
-    if (status !== "connected" && status !== "EVENT_DEVICE_CONNECTED") {
-      setIsConnected(true);
-      console.log(`onDeviceConnected: ${device.deviceName} connected`);
+    try {
+      // Resolves once the BLE session (security 1 + proof of possession) is established.
+      await connectBleDevice(device.deviceName, proofOfPossession);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : undefined;
+      console.log(`onDeviceConnectionFailed: ${device.deviceName} failed to connect (${message})`);
+      onError?.(message);
       return;
     }
 
     setIsConnected(true);
     console.log(`onDeviceConnected: ${device.deviceName} connected`);
-
     callback();
   }
 
@@ -67,7 +36,4 @@ export default function useDeviceConnect({ device, proofOfPossession }: useDevic
     isConnected,
     connectToDevice,
   };
-}
-function callback(): void {
-  throw new Error("Function not implemented.");
 }

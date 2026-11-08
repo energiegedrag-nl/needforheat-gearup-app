@@ -41,7 +41,6 @@ target 'NeedforHeat' do
   config = use_native_modules!
 
   use_frameworks! :linkage => podfile_properties['ios.useFrameworks'].to_sym if podfile_properties['ios.useFrameworks']
-  $RNFirebaseAsStaticFramework = true
 
 
   use_react_native!(
@@ -65,6 +64,9 @@ target 'NeedforHeat' do
         end
       end
     end
+
+    # MapLibre (maps on OpenStreetMap data)
+    $MLRN.post_install(installer)
 
     react_native_post_install(
       installer,

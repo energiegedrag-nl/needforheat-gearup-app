@@ -4,12 +4,12 @@ import * as Burnt from "burnt";
 import { FeatureCollection } from "geojson";
 import { latLngToCell, cellToBoundary, cellToLatLng, CoordPair } from "h3-js";
 import { useEffect, useRef, useState } from "react";
-import { Alert, Platform, Text, View } from "react-native";
+import { Alert, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import MapView, { Geojson } from "react-native-maps";
 
 import { postEnergyQuery } from "@/api/energyquery";
 import Box from "@/components/elements/Box";
+import OpenMap, { GeoJsonOverlay, OpenMapRef } from "@/components/map/OpenMap";
 import useTranslation from "@/hooks/translation/useTranslation";
 import { EnergyQuery } from "@/types/api";
 import { UserLocation } from "@/types/energyquery";
@@ -22,7 +22,7 @@ export default function WeatherLocationResultScreen({ navigation, route }: Weath
   const { theme } = useTheme();
   const { t } = useTranslation();
   const style = useStyles();
-  const refMap = useRef<MapView>(null);
+  const refMap = useRef<OpenMapRef>(null);
   const [locationState, setLocationState] = useState<UserLocation>(location);
   const [disableButtons, setDisableButtons] = useState<boolean>(false);
 
@@ -189,34 +189,27 @@ export default function WeatherLocationResultScreen({ navigation, route }: Weath
           </Text>
         </View>
         <View style={style.mapcontainer}>
-          <MapView
+          <OpenMap
             ref={refMap}
             region={locationState}
-            showsBuildings
-            showsScale
             pitchEnabled={false}
             style={style.map}
-            zoomControlEnabled
           >
-            <Geojson
+            <GeoJsonOverlay
               geojson={cellBoundariesGeoJson}
               strokeColor="#3388ff"
               strokeWidth={3}
-              lineCap="round"
-              lineJoin="round"
               fillColor="rgba(51, 136, 255, 0.2)"
             />
-          </MapView>
-          {Platform.OS === "ios" ? (
-            <View style={style.zoomControls}>
-              <TouchableOpacity onPress={handleZoomIn} style={style.zoomButton}>
-                <Icon name="add" color="white" size={30} />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={handleZoomOut} style={style.zoomButton}>
-                <Icon name="remove" color="white" size={30} />
-              </TouchableOpacity>
-            </View>
-          ) : null}
+          </OpenMap>
+          <View style={style.zoomControls}>
+            <TouchableOpacity onPress={handleZoomIn} style={style.zoomButton}>
+              <Icon name="add" color="white" size={30} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleZoomOut} style={style.zoomButton}>
+              <Icon name="remove" color="white" size={30} />
+            </TouchableOpacity>
+          </View>
         </View>
 
         <Box style={{ flexDirection: "row", marginTop: 16, width: "100%" }}>

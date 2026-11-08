@@ -1,46 +1,25 @@
-import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import { registerRootComponent } from "expo";
-import PushNotification from "react-native-push-notification";
+import * as Notifications from "expo-notifications";
 
 import App from "./App";
-PushNotification.configure({
-  onRegister(token) {
-    console.log("TOKEN:", token);
-  },
 
-  onNotification(notification) {
-    console.log("NOTIFICATION:", notification);
-    notification.finish(PushNotificationIOS.FetchResult.NoData);
-  },
-
-  onAction(notification) {
-    console.log("ACTION:", notification.action);
-    console.log("NOTIFICATION:", notification);
-  },
-
-  onRegistrationError(err) {
-    console.error(err.message, err);
-  },
-
-  // IOS ONLY
-  permissions: {
-    alert: true,
-    badge: true,
-    sound: true,
-  },
-
-  popInitialNotification: true,
-  requestPermissions: true,
+// Local notifications only (no push service): see src/hooks/notification/useNotificationChecker.tsx.
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
 });
 
-PushNotification.createChannel(
-  {
-    channelId: "777", // (required), every ASCII in NFH starts with 7
-    channelName: "NeedForHeat", // (required)
-    channelDescription: "Notifications for DataSources",
-  },
-  created => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
-);
+Notifications.setNotificationChannelAsync("777", {
+  // every ASCII in NFH starts with 7
+  name: "NeedForHeat",
+  description: "Notifications for DataSources",
+  importance: Notifications.AndroidImportance.DEFAULT,
+}).catch(err => console.error("createChannel failed", err));
+
+Notifications.requestPermissionsAsync().catch(err => console.error("notification permission request failed", err));
 
 // registerRootComponent calls AppRegistry.registerComponent('main', () => App);
 // It also ensures that whether you load the app in Expo Go or in a native build,

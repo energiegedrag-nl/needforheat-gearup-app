@@ -1,7 +1,6 @@
-import PushNotificationIOS from "@react-native-community/push-notification-ios";
+import * as Notifications from "expo-notifications";
 import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
-import PushNotification from "react-native-push-notification";
 
 import useTranslation from "../translation/useTranslation";
 
@@ -62,54 +61,23 @@ export default function useSuperLateDataSourceNotifier() {
       const shouldSend = await shouldSendNotification();
       if (!shouldSend) {
         console.log("Notification already sent today.");
-        PushNotification.setApplicationIconBadgeNumber(badgeCounter);
+        await Notifications.setBadgeCountAsync(badgeCounter);
         return;
       }
 
-      if (Platform.OS === "android") {
-        PushNotification.localNotification({
-          channelId: "777",
-          ticker: t("notifications.ticker") as string,
-          largeIcon: "ic_launcher",
-          largeIconUrl: "./assets/Logo-WH-social-groen-800px.png",
-          smallIcon: "ic_notification",
-          bigText: t("notifications.bigText") as string,
-          subText: t("notifications.subText") as string,
-          bigPictureUrl: "./assets/Logo-WH-social-groen-800px.png",
-          bigLargeIcon: "ic_launcher",
-          bigLargeIconUrl: "./assets/Logo-WH-social-groen-800px.png",
-          color: "#ee3135",
-          vibrate: silentNotification,
-          vibration: 300,
-          tag: "WindesheimTag",
-          group: "WindesheimGroup",
-          ongoing: false,
-          ignoreInForeground: false,
-          onlyAlertOnce: true,
-
-          when: Date.now(),
-          showWhen: true,
-
-          /* iOS only properties */
-          category: "Windesheim",
-
-          /* iOS and Android properties */
-          title: t("notifications.title") as string,
-          message: t("notifications.message"),
-          picture: "./assets/Logo-WH-social-groen-800px.png",
-          playSound: silentNotification,
-          number: badgeCounter,
-        });
-      } else {
-        PushNotificationIOS.addNotificationRequest({
-          id: "777",
+      // Note: the previous implementation enabled sound/vibration *during* silent hours (inverted flag).
+      await Notifications.scheduleNotificationAsync({
+        content: {
           title: t("notifications.title") as string,
           body: t("notifications.message") as string,
+          subtitle: Platform.OS === "ios" ? undefined : (t("notifications.subText") as string),
           badge: badgeCounter,
-          category: "NeedForHeat",
-          isSilent: silentNotification,
-        });
-      }
+          sound: !silentNotification,
+          color: "#ee3135",
+        },
+        // Show immediately; on Android in channel "777" (created in index.js).
+        trigger: Platform.OS === "android" ? { channelId: "777" } : null,
+      });
 
       await saveNotificationSentToday();
     }

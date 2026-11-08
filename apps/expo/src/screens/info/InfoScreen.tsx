@@ -1,3 +1,4 @@
+import { MANUAL_URL } from "@env";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ListItem, makeStyles, Text, useTheme } from "@rneui/themed";
 import { Alert, FlatList, Linking, TouchableOpacity } from "react-native";
@@ -40,53 +41,28 @@ export default function InfoScreen({ navigation }: InfoScreenProps) {
   const { t, resolvedLanguage } = useTranslation();
   const { user } = useUser();
 
-  function getFAQUri() {
-    if (user?.campaign && user.campaign.info_url) {
-      return user.campaign.info_url + "/faq/" + (resolvedLanguage ? resolvedLanguage : "") + "/";
-    } else {
-      return (
-        "https://manuals.energietransitiewindesheim.nl/campaigns/generic/faq/" +
-        (resolvedLanguage ? "/" + resolvedLanguage : "")
-      );
-    }
-  }
-
-  function getInfoUri() {
-    if (user?.campaign && user.campaign.info_url) {
-      return user.campaign.info_url + "/info/" + (resolvedLanguage ? resolvedLanguage : "") + "/";
-    } else {
-      return (
-        "https://manuals.energietransitiewindesheim.nl/campaigns/generic/info/" +
-        (resolvedLanguage ? "/" + resolvedLanguage : "")
-      );
-    }
-  }
-
-  function getPrivacyUri() {
-    if (user?.campaign && user.campaign.info_url) {
-      return user.campaign.info_url + "/privacy/" + (resolvedLanguage ? resolvedLanguage : "") + "/";
-    } else {
-      return (
-        "https://manuals.energietransitiewindesheim.nl/campaigns/generic/privacy/" +
-        (resolvedLanguage ? "/" + resolvedLanguage : "")
-      );
-    }
+  // Campaign pages come from the campaign (returned by the API with the user); without a campaign,
+  // the generic pages on our own manual server (MANUAL_URL) are used. Was hard-coded to the
+  // Windesheim manual server before.
+  function campaignPageUri(page: "info" | "faq" | "privacy") {
+    const base = (user?.campaign?.info_url || `${MANUAL_URL}/campaigns/generic`).replace(/\/+$/, "");
+    return `${base}/${page}/${resolvedLanguage ? resolvedLanguage + "/" : ""}`;
   }
 
   const data: InfoItem[] = [
     {
       title: t("screens.info_stack.about.title"),
-      uri: getInfoUri(),
+      uri: campaignPageUri("info"),
       icon: "book-outline",
     },
     {
       title: t("screens.info_stack.faq.title"),
-      uri: getFAQUri(),
+      uri: campaignPageUri("faq"),
       icon: "help-circle-outline",
     },
     {
       title: t("screens.info_stack.privacy.title"),
-      uri: getPrivacyUri(),
+      uri: campaignPageUri("privacy"),
       icon: "shield",
     },
   ];

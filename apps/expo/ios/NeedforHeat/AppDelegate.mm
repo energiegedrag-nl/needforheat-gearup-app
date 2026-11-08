@@ -1,8 +1,5 @@
 #import "AppDelegate.h"
-#import <Firebase/Firebase.h>
-#import <RNFBDynamicLinksAppDelegateInterceptor.h>
 #import <UserNotifications/UserNotifications.h>
-#import <RNCPushNotificationIOS.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTLinkingManager.h>
 #import <React/RCTConvert.h>
@@ -12,15 +9,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  // Currently, iOS requires a workaround to make method swizzling work.
-  // The workaround is described on GitHub: https://github.com/invertase/react-native-firebase/issues/4548#issuecomment-1252028059
-  [RNFBDynamicLinksAppDelegateInterceptor sharedInstance];
-  
-  [FIRApp configure];
-  
-  // Define UNUserNotificationCenter
-    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
-    center.delegate = self;
+  // Notifications are handled by expo-notifications (it installs its own UNUserNotificationCenter delegate).
 
   self.moduleName = @"main";
   // You can add your custom initial props in the dictionary below.
@@ -33,12 +22,6 @@
   [[TSBackgroundFetch sharedInstance] didFinishLaunching];
 
   return YES;
-}
-
-//Called when a notification is delivered to a foreground app.
--(void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler
-{
-  completionHandler(UNNotificationPresentationOptionSound | UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionBadge);
 }
 
 - (NSArray<id<RCTBridgeModule>> *)extraModulesForBridge:(RCTBridge *)bridge
@@ -75,30 +58,19 @@
 // Explicitly define remote notification delegates to ensure compatibility with some third-party libraries
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
-  [RNCPushNotificationIOS didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
   return [super application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
 }
 
 // Explicitly define remote notification delegates to ensure compatibility with some third-party libraries
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
 {
-  [RNCPushNotificationIOS didFailToRegisterForRemoteNotificationsWithError:error];
   return [super application:application didFailToRegisterForRemoteNotificationsWithError:error];
 }
 
 // Explicitly define remote notification delegates to ensure compatibility with some third-party libraries
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
-  [RNCPushNotificationIOS didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
   return [super application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
-}
-
-// Required for localNotification event
-- (void)userNotificationCenter:(UNUserNotificationCenter *)center
-didReceiveNotificationResponse:(UNNotificationResponse *)response
-         withCompletionHandler:(void (^)(void))completionHandler
-{
-  [RNCPushNotificationIOS didReceiveNotificationResponse:response];
 }
 
 @end

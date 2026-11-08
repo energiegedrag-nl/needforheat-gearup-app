@@ -13,4 +13,4 @@ jobs:
         run: yarn --frozen-lockfile
       - name: Heat signature (compared with AnonyMate)
         working-directory: apps/expo
-        run: yarn jest src/lib/heatSignature
+        run: yarn jest --config jest.unit.config.js

@@ -36,12 +36,12 @@ The app currently supports the following languages:
 - English (American)
 
 ## Installing the app
-The LTS version of the app is available on the [Google Play Store (Android)](https://play.google.com/store/apps/details?id=nl.windesheim.energietransitie.needforheat) and [Apple App Store (iOS)](https://apps.apple.com/nl/app/needforheat-gearup/id6503364746).
+Android: install the APK from the *Android APK* workflow (Actions → Android APK → artifact `android-apk`). Store releases (Google Play, TestFlight) under bundle id `nl.energiegedrag.app` will follow.
 
 For beta versions an invite is required. To receive an invite please contact [@henriterhofte](https://github.com/henriterhofte). \
 Please include in your request the email address of the Apple ID or Google account that's being used on the device you wish to install the app.
 
-To deploy and successfully use the app you need to have received an e-mail with a proper Firebase Dynamic Link and you need be in the possession of at least one NFH measurement device.
+To deploy and successfully use the app you need an invitation link for a campaign and you need be in the possession of at least one NFH measurement device.
 
 ## Documentation
 ### EnergyDoctor

@@ -42,8 +42,7 @@ export default function InfoScreen({ navigation }: InfoScreenProps) {
   const { user } = useUser();
 
   // Campaign pages come from the campaign (returned by the API with the user); without a campaign,
-  // the generic pages on our own manual server (MANUAL_URL) are used. Was hard-coded to the
-  // Windesheim manual server before.
+  // the generic pages on our own manual server (MANUAL_URL) are used.
   function campaignPageUri(page: "info" | "faq" | "privacy") {
     const base = (user?.campaign?.info_url || `${MANUAL_URL}/campaigns/generic`).replace(/\/+$/, "");
     return `${base}/${page}/${resolvedLanguage ? resolvedLanguage + "/" : ""}`;

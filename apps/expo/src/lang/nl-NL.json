@@ -94,7 +94,7 @@
         },
         "unauthenticated": {
           "title": "NeedForHeat",
-          "subtitle": "App voor deelnemers aan onderzoek van het Lectoraat Energietransitie van Hogeschool Windesheim",
+          "subtitle": "App voor deelnemers aan onderzoek naar energiegedrag in huis",
           "description": "U kunt deze app pas gebruiken na een uitnodiging voor een onderzoek met een persoonlijke activatielink.",
           "already_invited": "Ik heb zo'n uitnodiging"
         }
@@ -227,7 +227,7 @@
             },
             "invalid_wifi": {
               "title": "Fout",
-              "message": "Dit meetapparaat kan geen verbinding maken met WPA2 Enterprise- of WPA3-netwerken."
+              "message": "Dit meetapparaat kan geen verbinding maken met WPA2 Enterprise of met netwerken die alleen WPA3 gebruiken. Zet op de router WPA2/WPA3 (gemengd) aan, of gebruik een ander netwerk."
             }
           }
         }

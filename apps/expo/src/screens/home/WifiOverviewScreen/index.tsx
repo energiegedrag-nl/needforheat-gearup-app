@@ -12,6 +12,7 @@ import Screen from "@/components/elements/Screen";
 import useTranslation from "@/hooks/translation/useTranslation";
 import useStoredWifiNetworks from "@/hooks/wifi/useStoredWifiNetworks";
 import useWifiNetworks from "@/hooks/wifi/useWifiNetworks";
+import { isSupportedWifiSecurity } from "@/lib/provisioning/wifiSecurity";
 import { Maybe, WifiEntry } from "@/types";
 import { HomeStackParamList } from "@/types/navigation";
 
@@ -99,7 +100,7 @@ export default function WifiOverviewScreen({ navigation, route }: WifiOverviewSc
       return;
     }
 
-    if (network.security && network.security > 4) {
+    if (!isSupportedWifiSecurity(network.security)) {
       Alert.alert(
         t("screens.home_stack.wifi_overview.alerts.connect.invalid_wifi.title"),
         t("screens.home_stack.wifi_overview.alerts.connect.invalid_wifi.message") as string

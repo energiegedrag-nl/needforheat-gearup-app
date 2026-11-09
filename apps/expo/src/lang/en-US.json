@@ -94,7 +94,7 @@
         },
         "unauthenticated": {
           "title": "NeedForHeat",
-          "subtitle": "App for participants in a study of Research Group Energy Transition of Windesheim University of Applied Sciences",
+          "subtitle": "App for participants in research on energy use at home",
           "description": "You can only use this app after receiving an invitation for a study with a personal activation link.",
           "already_invited": "I have such an invitation"
         }
@@ -227,7 +227,7 @@
             },
             "invalid_wifi": {
               "title": "Error",
-              "message": "This measurement device cannot connect to WPA2 Enterprise or WPA3 networks."
+              "message": "This measurement device cannot connect to WPA2 Enterprise or to WPA3-only networks. Switch the router to WPA2/WPA3 (mixed), or use another network."
             }
           }
         }

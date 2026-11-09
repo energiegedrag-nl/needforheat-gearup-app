@@ -11,7 +11,7 @@ import { InvalidQrCodeException } from "@/exceptions/InvalidQrCodeException";
 import { MismatchedDeviceNameException } from "@/exceptions/MismatchedDeviceNameException";
 import useTranslation from "@/hooks/translation/useTranslation";
 import useCameraPermission from "@/hooks/useCameraPermission/useCameraPermission";
-import { SensorQrCode } from "@/types";
+import { parseProvisioningQr } from "@/lib/provisioning/qrCode";
 import { HomeStackParamList } from "@/types/navigation";
 
 type QrScannerScreenProps = NativeStackScreenProps<HomeStackParamList, "QrScannerScreen">;
@@ -81,9 +81,10 @@ export default function QrScannerScreen({ navigation, route }: QrScannerScreenPr
     setScanned(true);
 
     try {
-      const qrdata = JSON.parse(data) as SensorQrCode;
+      // v2 "NFH:" + Base32 (firmware v3.4+) or v1 JSON.
+      const qrdata = parseProvisioningQr(data);
 
-      if (!qrdata?.name || !qrdata?.pop || qrdata?.transport !== "ble") {
+      if (!qrdata) {
         throw new InvalidQrCodeException();
       }
 

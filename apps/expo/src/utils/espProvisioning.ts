@@ -4,7 +4,14 @@ import {
   ESPSecurity,
   ESPTransport,
 } from "@orbital-systems/react-native-esp-idf-provisioning";
+import { API_URL } from "@env";
 
+import {
+  SERVER_CONFIG_ENDPOINT,
+  hostFromApiUrl,
+  parseServerConfigReply,
+  serverConfigRequest,
+} from "@/lib/provisioning/serverConfig";
 import { BleDeviceType, WifiEntry } from "@/types";
 
 /*
@@ -57,12 +64,41 @@ export async function scanWifiList(): Promise<WifiEntry[]> {
  * when the device reports wrong credentials or a network it cannot find.
  */
 export async function provision(ssid: string, passphrase = ""): Promise<string> {
+  // Before the Wi-Fi credentials: once those are applied, the device ends the provisioning session.
+  await sendServerChoice();
   try {
     const response = await requireDevice().provision(ssid, passphrase);
     return response.status;
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
     throw new Error(isWifiCredentialError(message) ? `wifi failure: ${message}` : message);
+  }
+}
+
+/**
+ * Tell the device which server this app uses (test or production), so it uploads to the same one.
+ * Devices with older firmware have no "nfh-config" endpoint: they keep their built-in server.
+ * A device that refuses the server would never activate, so that stops provisioning with a clear error.
+ */
+async function sendServerChoice(): Promise<void> {
+  const host = hostFromApiUrl(API_URL ?? "");
+  if (!host) {
+    console.warn("Provisioning: API_URL has no host; the device keeps its built-in server.");
+    return;
+  }
+  let reply: string;
+  try {
+    reply = await requireDevice().sendData(SERVER_CONFIG_ENDPOINT, serverConfigRequest(host));
+  } catch (err: unknown) {
+    console.warn("Provisioning: device does not support choosing a server (older firmware).", err);
+    return;
+  }
+  const result = parseServerConfigReply(reply);
+  if (result.kind === "refused") {
+    throw new Error(`server not allowed: ${host} (device accepts: ${result.allowed.join(", ") || "none"})`);
+  }
+  if (result.kind === "unreadable") {
+    console.warn(`Provisioning: unexpected reply to the server choice: ${result.reply}`);
   }
 }
 

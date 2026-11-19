@@ -100,25 +100,25 @@
         }
       },
       "provision": {
-        "title": "Apparaat verbinden",
+        "title": "Koppelen",
         "enelogic": "Enelogic verbinden",
         "timeline": {
           "steps": {
             "connecting": {
-              "title": "Zoeken",
-              "description": "Zoeken naar {{device_name}}"
+              "title": "Bluetooth",
+              "description": "Verbonden met {{device_name}}"
             },
             "activating": {
-              "title": "Activeren",
-              "description": "Activeren {{device_name}}"
+              "title": "Server",
+              "description": "{{device_name}} aangemeld voor jouw account"
             },
             "provisioning": {
-              "title": "Configureren",
-              "description": "Configureren op {{network_name}}"
+              "title": "Wifi",
+              "description": "Wifi instellen: {{network_name}}"
             },
             "receiving": {
-              "title": "Afronden",
-              "description": "Wachten op eerste gegevens van {{device_name}}"
+              "title": "Eerste meting",
+              "description": "Wachten op de eerste meting van {{device_name}}"
             }
           }
         },

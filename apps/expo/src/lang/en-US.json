@@ -105,20 +105,20 @@
         "timeline": {
           "steps": {
             "connecting": {
-              "title": "Searching",
-              "description": "Searching {{device_name}}"
+              "title": "Bluetooth",
+              "description": "Connected to {{device_name}}"
             },
             "activating": {
-              "title": "Activating",
-              "description": "Activating {{device_name}}"
+              "title": "Server",
+              "description": "{{device_name}} registered to your account"
             },
             "provisioning": {
-              "title": "Configuring",
-              "description": "Configuring on {{network_name}}"
+              "title": "Wi-Fi",
+              "description": "Setting up Wi-Fi: {{network_name}}"
             },
             "receiving": {
-              "title": "Finalizing",
-              "description": "Waiting for first data from {{device_name}}"
+              "title": "First measurement",
+              "description": "Waiting for the first measurement from {{device_name}}"
             }
           }
         },

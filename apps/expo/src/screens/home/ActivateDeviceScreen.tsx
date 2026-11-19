@@ -77,8 +77,13 @@ export default function ActivateDeviceScreen({ navigation, route }: ActivateDevi
   // Activate the device if it's not activated already
   const onFetchError = (error: Error) => {
     const errorMsg = (error as Error)?.message?.toLowerCase();
-    if (errorMsg !== "device not found") {
+    if (errorMsg === "device does not belong to account") {
       errorAlert(t("screens.home_stack.activate_device.alert.already_activated"));
+      return;
+    }
+    if (errorMsg !== "device not found") {
+      // Not "another account": a token, server or network problem. Show it as such, with the message.
+      onError(error);
       return;
     }
 

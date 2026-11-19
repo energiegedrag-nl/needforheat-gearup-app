@@ -19,7 +19,15 @@ export default function useReceivingMeasurements(deviceName: string, retries = 1
     if (count > 0) {
       setTimeout(
         async () => {
-          const data = await fetchDevice(deviceName);
+          let data;
+          try {
+            data = await fetchDevice(deviceName);
+          } catch (err) {
+            // A failed request (e.g. no network for a moment) is one try less, not the end of waiting.
+            console.warn("Waiting for the first heartbeat:", err);
+            setCount(count - 1);
+            return;
+          }
           const latestMeasurement = toLocalDateTime(data?.latest_upload);
 
           console.log("latestTimestamp", latestMeasurement);
@@ -36,6 +44,11 @@ export default function useReceivingMeasurements(deviceName: string, retries = 1
         },
         count === retries ? 0 : 5000
       );
+    } else {
+      // All tries used without a heartbeat: stop waiting and say so (before, the spinner kept turning).
+      setIsLoading(false);
+      setIsError(true);
+      setCount(null);
     }
   }, [count]);
 

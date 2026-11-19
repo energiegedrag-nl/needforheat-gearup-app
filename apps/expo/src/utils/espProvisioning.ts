@@ -104,8 +104,10 @@ async function sendServerChoice(): Promise<void> {
 
 // Android: ESPConstants.ProvisionFailureReason (AUTH_FAILED, NETWORK_NOT_FOUND);
 // iOS: ESPProvisionError descriptions (authentication / network not found).
-function isWifiCredentialError(message: string): boolean {
-  return /AUTH_FAILED|NETWORK_NOT_FOUND|auth|not found|wifi|wi-fi/i.test(message);
+// Only these are Wi-Fi errors. Other errors (e.g. "wifi status" unreadable because the device ended the Bluetooth
+// session after connecting) are not: the device may well be online, so the app then waits for its first heartbeat.
+export function isWifiCredentialError(message: string): boolean {
+  return /AUTH_FAILED|NETWORK_NOT_FOUND|authentication|network not found/i.test(message);
 }
 
 export function disconnect(): void {

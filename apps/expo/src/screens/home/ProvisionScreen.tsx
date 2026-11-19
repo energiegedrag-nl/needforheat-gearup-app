@@ -35,11 +35,17 @@ export default function ProvisionScreen({ navigation, route }: ProvisionScreenPr
     isSuccess: isReceivingMeasurements,
     isError: isReceivingMeasurementsError,
     isLoading: isReceivingMeasurementsLoading,
-  } = useReceivingMeasurements(device.deviceName, 15);
+  } = useReceivingMeasurements(device.deviceName, 24); // 2 minutes, every 5 s
+
+  // An error after sending the credentials that is not a Wi-Fi error (wrong password, network not found) usually
+  // means the Bluetooth session ended while the device went online. Then wait for the heartbeat as after success.
+  const isUnclearProvisioningError = isProvisioningError && !isWifiError;
+  const showProvisioningError =
+    isProvisioningError && !isReceivingMeasurements && !(isUnclearProvisioningError && isReceivingMeasurementsLoading);
 
   const { storeWifiNetwork } = useStoredWifiNetworks();
 
-  const showBackButton = isReceivingMeasurementsError || isProvisioningError || isReceivingMeasurements;
+  const showBackButton = isReceivingMeasurementsError || showProvisioningError || isReceivingMeasurements;
 
   const timelineData = [
     {
@@ -61,9 +67,9 @@ export default function ProvisionScreen({ navigation, route }: ProvisionScreenPr
       description: t("screens.home_stack.provision.timeline.steps.provisioning.description", {
         network_name: network.name,
       }),
-      finished: isProvisioningSuccess,
+      finished: isProvisioningSuccess || isReceivingMeasurements,
       loading: isProvisioning,
-      error: isProvisioningError,
+      error: showProvisioningError,
     },
     {
       title: t("screens.home_stack.provision.timeline.steps.receiving.title"),
@@ -113,6 +119,12 @@ export default function ProvisionScreen({ navigation, route }: ProvisionScreenPr
   }, [isProvisioningSuccess]);
 
   useEffect(() => {
+    if (isUnclearProvisioningError) {
+      fetchMeasuringData();
+    }
+  }, [isUnclearProvisioningError]);
+
+  useEffect(() => {
     provisionDevice(network.name, password);
   }, []);
 
@@ -132,12 +144,12 @@ export default function ProvisionScreen({ navigation, route }: ProvisionScreenPr
                 date: latestMeasurement ? formatDateAndTime(latestMeasurement) : formatDateAndTime(),
               })}
             />
-          ) : isWifiError ? (
+          ) : isWifiError && showProvisioningError ? (
             <StatusMessage
               label={t("screens.home_stack.provision.wifi_error.title")}
               message={t("screens.home_stack.provision.wifi_error.message")}
             />
-          ) : isProvisioningError ? (
+          ) : showProvisioningError ? (
             <StatusMessage
               label={t("screens.home_stack.provision.provisioning_error.title")}
               message={t("screens.home_stack.provision.provisioning_error.message")}
@@ -153,7 +165,7 @@ export default function ProvisionScreen({ navigation, route }: ProvisionScreenPr
       <Box style={{ flex: 1, width: "100%", alignItems: "center", justifyContent: "flex-end" }}>
         {showBackButton && (
           <>
-            {isProvisioningError && (
+            {showProvisioningError && (
               <DelayedButton
                 containerStyle={{ width: "100%" }}
                 timeout={10}

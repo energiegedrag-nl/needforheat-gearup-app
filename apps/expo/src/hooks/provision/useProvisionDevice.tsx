@@ -1,21 +1,17 @@
-import { useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { provision } from "@/utils/espProvisioning";
 import { withTimeout } from "@/utils/withTimeout";
 
 export default function useProvisionDevice() {
-  const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [status, setStatus] = useState<string | null>(null);
   const [isError, setIsError] = useState<boolean>(false);
   const isSuccess = status === "success" && !isLoading;
 
-  useEffect(() => {
-    if (isSuccess) {
-      queryClient.invalidateQueries(["wifiNetworks"]);
-    }
-  }, [isSuccess]);
+  // No wifiNetworks invalidation after success: the Wi-Fi screen is still mounted under this one, so it would scan
+  // again over Bluetooth while the device has already closed the connection, and after the retries show
+  // "error loading Wi-Fi networks" over a pairing that went fine. The Wi-Fi screen scans anew when it opens.
 
   const provisionDevice = (networkName: string, password?: string) => {
     resetState();

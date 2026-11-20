@@ -1,4 +1,5 @@
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { useIsFocused } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useEffect, useRef, useState } from "react";
 import { Alert, BackHandler } from "react-native";
@@ -23,6 +24,7 @@ export default function WifiOverviewScreen({ navigation, route }: WifiOverviewSc
   const [selectedNetwork, setSelectedNetwork] = useState<Maybe<WifiEntry>>(null);
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const { t } = useTranslation();
+  const focused = useIsFocused();
   const { storedWifiNetworks } = useStoredWifiNetworks();
   const {
     data: networks,
@@ -145,11 +147,12 @@ export default function WifiOverviewScreen({ navigation, route }: WifiOverviewSc
     bottomSheetRef.current?.present();
   };
 
+  // Only while this screen is in front: never over the pairing screen that follows it.
   useEffect(() => {
-    if (isError) {
+    if (isError && focused) {
       onFetchError();
     }
-  }, [isError]);
+  }, [isError, focused]);
 
   return isLoading || isError ? (
     <Screen>

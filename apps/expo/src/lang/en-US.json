@@ -37,9 +37,9 @@
         "hours": "h"
       },
       "explanation_sheet": {
-          "title": "Brief explanation",
-          "description": "This screen lists data sources to activate: install devices, grant access to online sources, and answer questions.\n\nGreen sources are activated, gray ones become enabled after one or more white ones are activated.\n\nSelect the green ?-icon at the bottom right to view again."
-        }
+        "title": "Brief explanation",
+        "description": "This screen lists data sources to activate: install devices, grant access to online sources, and answer questions.\n\nGreen sources are activated, gray ones become enabled after one or more white ones are activated.\n\nSelect the green ?-icon at the bottom right to view again."
+      }
     },
     "home_stack": {
       "title": "Data sources",
@@ -131,8 +131,12 @@
           "message": "An error occurred while configuring your device. Restart the measurement device and try again."
         },
         "wifi_error": {
-          "title": "Something went wrong while connecting the Wi-Fi network",
-          "message": "Please make sure the password is correct and you are in proximity of the device."
+          "title": "Connecting to the Wi-Fi network failed",
+          "message": "Is the password correct, and is it a 2.4 GHz network? The device restarts now. Wait until it shows its QR code again, then tap Retry."
+        },
+        "session_error": {
+          "title": "The connection with the device got stuck",
+          "message": "The Wi-Fi network did not reach the device. Keep the phone close to the device and tap Retry."
         },
         "measurements_error": {
           "title": "No data was received",
@@ -288,7 +292,7 @@
             "request_failed": "An error occurred while requesting Location permissions."
           }
         },
-        "building_profile_progress":{
+        "building_profile_progress": {
           "title": "Processing Address",
           "alert": {
             "initial_data": {

@@ -27,6 +27,7 @@ export default function ProvisionScreen({ navigation, route }: ProvisionScreenPr
     isError: isProvisioningError,
     isSuccess: isProvisioningSuccess,
     isWifiError,
+    errorKind,
   } = useProvisionDevice();
 
   const {
@@ -37,9 +38,11 @@ export default function ProvisionScreen({ navigation, route }: ProvisionScreenPr
     isLoading: isReceivingMeasurementsLoading,
   } = useReceivingMeasurements(device.deviceName, 24); // 2 minutes, every 5 s
 
-  // An error after sending the credentials that is not a Wi-Fi error (wrong password, network not found) usually
-  // means the Bluetooth session ended while the device went online. Then wait for the heartbeat as after success.
-  const isUnclearProvisioningError = isProvisioningError && !isWifiError;
+  // An unclear error after sending the credentials usually means the Bluetooth session ended while the device went
+  // online: then wait for the heartbeat as after success. A session error (nothing reached the device) or a Wi-Fi
+  // error (the device restarts) is shown at once, without waiting for a measurement that cannot come (21-11).
+  const isUnclearProvisioningError = isProvisioningError && errorKind === "unclear";
+  const isSessionError = isProvisioningError && errorKind === "session";
   const showProvisioningError =
     isProvisioningError && !isReceivingMeasurements && !(isUnclearProvisioningError && isReceivingMeasurementsLoading);
 
@@ -148,6 +151,11 @@ export default function ProvisionScreen({ navigation, route }: ProvisionScreenPr
             <StatusMessage
               label={t("screens.home_stack.provision.wifi_error.title")}
               message={t("screens.home_stack.provision.wifi_error.message")}
+            />
+          ) : isSessionError && showProvisioningError ? (
+            <StatusMessage
+              label={t("screens.home_stack.provision.session_error.title")}
+              message={t("screens.home_stack.provision.session_error.message")}
             />
           ) : showProvisioningError ? (
             <StatusMessage

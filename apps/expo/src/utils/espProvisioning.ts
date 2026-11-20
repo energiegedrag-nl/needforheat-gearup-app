@@ -6,6 +6,7 @@ import {
 } from "@orbital-systems/react-native-esp-idf-provisioning";
 import { API_URL } from "@env";
 
+import { ProvisionError, toProvisionError } from "@/lib/provisioning/provisionError";
 import {
   SERVER_CONFIG_ENDPOINT,
   hostFromApiUrl,
@@ -13,6 +14,9 @@ import {
   serverConfigRequest,
 } from "@/lib/provisioning/serverConfig";
 import { BleDeviceType, WifiEntry } from "@/types";
+import { withTimeout } from "@/utils/withTimeout";
+
+export { isWifiCredentialError } from "@/lib/provisioning/provisionError";
 
 /*
  * Thin wrapper around @orbital-systems/react-native-esp-idf-provisioning (MIT, maintained).
@@ -33,11 +37,40 @@ export async function getBleDevices(prefix = ""): Promise<BleDeviceType[]> {
   return (devices ?? []).map(device => ({ deviceName: device.name, deviceAddress: device.name }));
 }
 
-/** Connect to a device by name; replaces any previously connected device. */
+/**
+ * End any earlier session with this device in the native library first. The library reuses its native device object
+ * per name; after the device restarted (e.g. after a wrong Wi-Fi password) that object still held the dropped
+ * connection and its transport lock, so the next request hung (21-11). disconnect() makes the library replace it.
+ */
+function resetSession(deviceName: string): void {
+  try {
+    connectedDevice?.disconnect();
+  } catch {
+    // already gone
+  }
+  connectedDevice = null;
+  try {
+    new ESPDevice({ name: deviceName, transport: TRANSPORT, security: SECURITY }).disconnect();
+  } catch {
+    // nothing to end
+  }
+}
+
+/** Connect to a device by name with a fresh session; one more try with a fresh session when the first fails. */
 export async function connectBleDevice(deviceName: string, proofOfPossession: string): Promise<void> {
-  const device = new ESPDevice({ name: deviceName, transport: TRANSPORT, security: SECURITY });
-  await device.connect(proofOfPossession);
-  connectedDevice = device;
+  for (let attempt = 1; ; attempt++) {
+    resetSession(deviceName);
+    const device = new ESPDevice({ name: deviceName, transport: TRANSPORT, security: SECURITY });
+    try {
+      await device.connect(proofOfPossession);
+      connectedDevice = device;
+      return;
+    } catch (err: unknown) {
+      if (attempt >= 2) throw err;
+      console.warn(`Provisioning: connecting to ${deviceName} failed, trying once more with a fresh session.`, err);
+      await new Promise(resolve => setTimeout(resolve, 1500));
+    }
+  }
 }
 
 function requireDevice(): ESPDevice {
@@ -58,20 +91,29 @@ export async function scanWifiList(): Promise<WifiEntry[]> {
   }));
 }
 
+/** Seconds for the server choice: one short request; if it hangs, the session is stale. */
+const SERVER_CHOICE_TIMEOUT_S = 10;
+/** Seconds for sending and applying the credentials and reading the Wi-Fi status (the device tries up to 30 s). */
+const CREDENTIALS_TIMEOUT_S = 45;
+
 /**
- * Send Wi-Fi credentials to the connected device.
- * Resolves with "success"; rejects with an Error whose message contains "wifi failure"
- * when the device reports wrong credentials or a network it cannot find.
+ * Send Wi-Fi credentials to the connected device. Resolves with "success"; rejects with a ProvisionError whose kind
+ * says what to do next (lib/provisioning/provisionError.ts). After any failure the session is ended, so "retry"
+ * always starts with a fresh one.
  */
 export async function provision(ssid: string, passphrase = ""): Promise<string> {
-  // Before the Wi-Fi credentials: once those are applied, the device ends the provisioning session.
-  await sendServerChoice();
   try {
-    const response = await requireDevice().provision(ssid, passphrase);
+    // Before the Wi-Fi credentials: once those are applied, the device ends the provisioning session.
+    await withTimeout(SERVER_CHOICE_TIMEOUT_S, sendServerChoice()).catch((err: unknown) => {
+      throw toProvisionError(err, "session");
+    });
+    const response = await withTimeout(CREDENTIALS_TIMEOUT_S, requireDevice().provision(ssid, passphrase));
     return response.status;
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : String(err);
-    throw new Error(isWifiCredentialError(message) ? `wifi failure: ${message}` : message);
+    const error = toProvisionError(err, "credentials");
+    console.warn(`Provisioning failed (${error.kind}): ${error.message}`);
+    disconnect();
+    throw error;
   }
 }
 
@@ -95,22 +137,18 @@ async function sendServerChoice(): Promise<void> {
   }
   const result = parseServerConfigReply(reply);
   if (result.kind === "refused") {
-    throw new Error(`server not allowed: ${host} (device accepts: ${result.allowed.join(", ") || "none"})`);
+    throw new ProvisionError("session", `server not allowed: ${host} (device accepts: ${result.allowed.join(", ") || "none"})`);
   }
   if (result.kind === "unreadable") {
     console.warn(`Provisioning: unexpected reply to the server choice: ${result.reply}`);
   }
 }
 
-// Android: ESPConstants.ProvisionFailureReason (AUTH_FAILED, NETWORK_NOT_FOUND);
-// iOS: ESPProvisionError descriptions (authentication / network not found).
-// Only these are Wi-Fi errors. Other errors (e.g. "wifi status" unreadable because the device ended the Bluetooth
-// session after connecting) are not: the device may well be online, so the app then waits for its first heartbeat.
-export function isWifiCredentialError(message: string): boolean {
-  return /AUTH_FAILED|NETWORK_NOT_FOUND|authentication|network not found/i.test(message);
-}
-
 export function disconnect(): void {
-  connectedDevice?.disconnect();
+  try {
+    connectedDevice?.disconnect();
+  } catch {
+    // already gone
+  }
   connectedDevice = null;
 }

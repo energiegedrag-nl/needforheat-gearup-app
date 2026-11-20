@@ -1,3 +1,11 @@
+## [3.3.1](https://github.com/energiegedrag-nl/needforheat-gearup-app/compare/v3.3.0...v3.3.1) (2026-11-20)
+
+
+### Bug Fixes
+
+* **i18n:** map phone locale to nl-NL/en-US ([388323a](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/388323aaef3ef7ce1b79229d99b3db88061b7624))
+* **provisioning:** no false Wi-Fi error after pairing; step words match the device ([ef83e63](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/ef83e634321df2465bc82d2ed617fb07eeccb013)), closes [#50](https://github.com/energiegedrag-nl/needforheat-gearup-app/issues/50)
+
 # [3.3.0](https://github.com/energietransitie/needforheat-gearup-app/compare/v3.2.0...v3.3.0) (2024-06-25)
 
 

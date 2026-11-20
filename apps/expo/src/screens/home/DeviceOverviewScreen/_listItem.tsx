@@ -45,21 +45,11 @@ export default function DeviceListItem(props: WifiNetworkListItemProps) {
   };
 
   const getNormalName = (): string => {
-    let name = "";
+    // Name in the app language, else in the other language, else the technical name.
+    const names = (data ?? {}) as Record<string, string | undefined>;
+    const name = names[resolvedLanguage] || names["en-US"] || names["nl-NL"] || item.data_source?.item?.Name || "";
 
-    if (data?.["nl-NL"] && resolvedLanguage === "nl-NL") {
-      name = capitalizeFirstLetter(data["nl-NL"]) || name;
-    }
-
-    if (!name && data?.["en-US"] && resolvedLanguage === "en-US") {
-      name = capitalizeFirstLetter(data["en-US"]) || name;
-    }
-
-    if (!name && item.data_source?.item?.Name) {
-      name = capitalizeFirstLetter(item.data_source.item.Name) || name;
-    }
-
-    return name;
+    return capitalizeFirstLetter(name) || name;
   };
 
   const onReset = (close: () => void) => {

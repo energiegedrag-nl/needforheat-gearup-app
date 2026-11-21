@@ -17,7 +17,7 @@ type ProviderProps = {
   children: ReactNode;
 };
 
-// Stale-while-revalidate: data on screen stays visible while newer data is fetched; data older than a minute is
+// Stale-while-revalidate: data on screen stays visible while newer data is fetched; data older than five minutes is
 // refreshed when a screen shows it, when the app comes back to the foreground and when the network returns.
 // Screens show that a refresh is running (RefreshStatus and the pull-down indicator).
 const queryClient = new QueryClient({

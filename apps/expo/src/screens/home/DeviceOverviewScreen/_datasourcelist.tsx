@@ -39,7 +39,10 @@ export default function DataSourceList({
   const updatedAt = Math.min(
     ...[devices.dataUpdatedAt, energyQueries.dataUpdatedAt].filter(time => time > 0).concat([Infinity])
   );
-  const refreshFailed = devices.isError || energyQueries.isError || cloudFeeds.isError;
+  // "Could not update" only when the last attempt failed after the last success (not for an old error).
+  const refreshFailed = [devices, energyQueries, cloudFeeds].some(
+    query => query.isError && query.errorUpdatedAt > query.dataUpdatedAt
+  );
 
   const [itemData, setItemData] = useState<AllDataSourcesResponse[]>([]);
   const [allItemsDone, setAllItemsDone] = useState(true);

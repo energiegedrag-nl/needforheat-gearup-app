@@ -12,10 +12,16 @@
 export const QUERY_CACHE_VERSION = 1;
 /** Older than this, a saved cache is not shown at all (the screen then waits for the server). */
 export const QUERY_CACHE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
-/** Data older than this is refreshed when a screen shows it or the app comes back to the foreground. */
-export const STALE_TIME_MS = 60 * 1000;
+/**
+ * Data older than this is refreshed when a screen shows it or the app comes back to the foreground. Five minutes:
+ * devices upload every 10 minutes, so newer data is likely only after that; going back and forth between screens
+ * does not fetch again.
+ */
+export const STALE_TIME_MS = 5 * 60 * 1000;
 
-const PERSISTED_KEYS = ["user", "devices", "energy_queries", "cloud-feeds"];
+const PERSISTED_KEYS = ["user", "devices", "energy_queries", "cloud-feeds", "manual-names"];
+/** Names of data sources from the manual server: they hardly change. */
+export const MANUAL_NAMES_STALE_TIME_MS = 24 * 60 * 60 * 1000;
 
 export function shouldPersistQuery(queryKey: readonly unknown[], status: string): boolean {
   return status === "success" && typeof queryKey[0] === "string" && PERSISTED_KEYS.includes(queryKey[0]);

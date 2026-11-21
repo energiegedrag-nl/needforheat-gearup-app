@@ -1,5 +1,5 @@
 {
- "bron": "AnonyMate signature.compute (anonymate-nl/anonymate), gegenereerd voor needforheat-gearup-app",
+ "bron": "AnonyMate signature.compute (anonymate-nl/anonymate), gegenereerd voor needforheat-gearup-app met tools/make_fixtures.py",
  "cases": [
   {
    "input": {
@@ -25,7 +25,10 @@
      "Asol__m2": 25.175,
      "Ainf__cm2": 379.9,
      "woningtype_gebruikt__cat": "vrijstaand",
-     "isolatieniveau__0": 0.0
+     "isolatieniveau__0": 0.0,
+     "qv10__dm3_s_1_m_2": 4.2,
+     "ELA__cm2": 1320.585,
+     "asol_bron__str": "gemiddelde verhouding (methode is richtingsgemiddeld)"
     },
     "mwa": {
      "H__W_K_1": 647.11,
@@ -34,7 +37,10 @@
      "Asol__m2": 20.969,
      "Ainf__cm2": 190.0,
      "woningtype_gebruikt__cat": "vrijstaand",
-     "isolatieniveau__0": 0.0
+     "isolatieniveau__0": 0.0,
+     "qv10__dm3_s_1_m_2": 2.1,
+     "ELA__cm2": 660.293,
+     "asol_bron__str": "gemiddelde verhouding (methode is richtingsgemiddeld)"
     },
     "best": {
      "H__W_K_1": 417.99,
@@ -43,7 +49,10 @@
      "Asol__m2": 14.907,
      "Ainf__cm2": 190.0,
      "woningtype_gebruikt__cat": "vrijstaand",
-     "isolatieniveau__0": 1.0
+     "isolatieniveau__0": 1.0,
+     "qv10__dm3_s_1_m_2": 2.1,
+     "ELA__cm2": 660.293,
+     "asol_bron__str": "gemiddelde verhouding (gevelrichting onbekend)"
     },
     "ep": {
      "H__W_K_1": null,
@@ -52,7 +61,10 @@
      "Asol__m2": null,
      "Ainf__cm2": null,
      "woningtype_gebruikt__cat": null,
-     "isolatieniveau__0": null
+     "isolatieniveau__0": null,
+     "qv10__dm3_s_1_m_2": null,
+     "ELA__cm2": null,
+     "asol_bron__str": null
     },
     "ep_3dbag": {
      "H__W_K_1": null,
@@ -61,7 +73,10 @@
      "Asol__m2": null,
      "Ainf__cm2": null,
      "woningtype_gebruikt__cat": null,
-     "isolatieniveau__0": null
+     "isolatieniveau__0": null,
+     "qv10__dm3_s_1_m_2": null,
+     "ELA__cm2": null,
+     "asol_bron__str": null
     },
     "passend": {
      "H__W_K_1": 417.99,
@@ -71,7 +86,9 @@
      "Ainf__cm2": 190.0,
      "woningtype_gebruikt__cat": "vrijstaand",
      "isolatieniveau__0": 1.0,
-     "methode_gebruikt__cat": "best"
+     "qv10__dm3_s_1_m_2": 2.1,
+     "ELA__cm2": 660.293,
+     "asol_bron__str": "gemiddelde verhouding (gevelrichting onbekend)"
     }
    }
   },
@@ -100,7 +117,10 @@
      "Asol__m2": 9.046,
      "Ainf__cm2": 190.8,
      "woningtype_gebruikt__cat": "tussenwoning",
-     "isolatieniveau__0": 0.0
+     "isolatieniveau__0": 0.0,
+     "qv10__dm3_s_1_m_2": 2.5,
+     "ELA__cm2": 576.446,
+     "asol_bron__str": "gemiddelde verhouding (methode is richtingsgemiddeld)"
     },
     "mwa": {
      "H__W_K_1": 155.25,
@@ -109,7 +129,10 @@
      "Asol__m2": 8.89,
      "Ainf__cm2": 95.4,
      "woningtype_gebruikt__cat": "tussenwoning",
-     "isolatieniveau__0": 0.0
+     "isolatieniveau__0": 0.0,
+     "qv10__dm3_s_1_m_2": 1.25,
+     "ELA__cm2": 288.223,
+     "asol_bron__str": "gemiddelde verhouding (methode is richtingsgemiddeld)"
     },
     "best": {
      "H__W_K_1": 159.52,
@@ -118,7 +141,10 @@
      "Asol__m2": 8.141,
      "Ainf__cm2": 95.4,
      "woningtype_gebruikt__cat": "tussenwoning",
-     "isolatieniveau__0": 1.0
+     "isolatieniveau__0": 1.0,
+     "qv10__dm3_s_1_m_2": 1.25,
+     "ELA__cm2": 288.223,
+     "asol_bron__str": "gemiddelde verhouding (gevelrichting onbekend)"
     },
     "ep": {
      "H__W_K_1": null,
@@ -127,7 +153,10 @@
      "Asol__m2": null,
      "Ainf__cm2": null,
      "woningtype_gebruikt__cat": null,
-     "isolatieniveau__0": null
+     "isolatieniveau__0": null,
+     "qv10__dm3_s_1_m_2": null,
+     "ELA__cm2": null,
+     "asol_bron__str": null
     },
     "ep_3dbag": {
      "H__W_K_1": null,
@@ -136,7 +165,10 @@
      "Asol__m2": null,
      "Ainf__cm2": null,
      "woningtype_gebruikt__cat": null,
-     "isolatieniveau__0": null
+     "isolatieniveau__0": null,
+     "qv10__dm3_s_1_m_2": null,
+     "ELA__cm2": null,
+     "asol_bron__str": null
     },
     "passend": {
      "H__W_K_1": 159.52,
@@ -146,7 +178,9 @@
      "Ainf__cm2": 95.4,
      "woningtype_gebruikt__cat": "tussenwoning",
      "isolatieniveau__0": 1.0,
-     "methode_gebruikt__cat": "best"
+     "qv10__dm3_s_1_m_2": 1.25,
+     "ELA__cm2": 288.223,
+     "asol_bron__str": "gemiddelde verhouding (gevelrichting onbekend)"
     }
    }
   },
@@ -179,7 +213,10 @@
      "Asol__m2": 7.573,
      "Ainf__cm2": 95.0,
      "woningtype_gebruikt__cat": "hoekwoning",
-     "isolatieniveau__0": 0.0
+     "isolatieniveau__0": 0.0,
+     "qv10__dm3_s_1_m_2": 1.26,
+     "ELA__cm2": 330.146,
+     "asol_bron__str": "gemiddelde verhouding (methode is richtingsgemiddeld)"
     },
     "mwa": {
      "H__W_K_1": 125.16,
@@ -188,7 +225,10 @@
      "Asol__m2": 7.497,
      "Ainf__cm2": 47.5,
      "woningtype_gebruikt__cat": "hoekwoning",
-     "isolatieniveau__0": 0.0
+     "isolatieniveau__0": 0.0,
+     "qv10__dm3_s_1_m_2": 0.63,
+     "ELA__cm2": 165.073,
+     "asol_bron__str": "gemiddelde verhouding (methode is richtingsgemiddeld)"
     },
     "best": {
      "H__W_K_1": 135.46,
@@ -197,7 +237,10 @@
      "Asol__m2": 7.806,
      "Ainf__cm2": 47.5,
      "woningtype_gebruikt__cat": "hoekwoning",
-     "isolatieniveau__0": 1.11
+     "isolatieniveau__0": 1.11,
+     "qv10__dm3_s_1_m_2": 0.63,
+     "ELA__cm2": 165.073,
+     "asol_bron__str": "gemiddelde verhouding (gevelrichting onbekend)"
     },
     "ep": {
      "H__W_K_1": 124.21,
@@ -206,7 +249,10 @@
      "Asol__m2": 7.198,
      "Ainf__cm2": 44.8,
      "woningtype_gebruikt__cat": "hoekwoning",
-     "isolatieniveau__0": 1.11
+     "isolatieniveau__0": 1.11,
+     "qv10__dm3_s_1_m_2": 0.63,
+     "ELA__cm2": 155.829,
+     "asol_bron__str": "gemiddelde verhouding (gevelrichting onbekend)"
     },
     "ep_3dbag": {
      "H__W_K_1": 125.5,
@@ -215,7 +261,10 @@
      "Asol__m2": 7.232,
      "Ainf__cm2": 44.8,
      "woningtype_gebruikt__cat": "hoekwoning",
-     "isolatieniveau__0": 1.11
+     "isolatieniveau__0": 1.11,
+     "qv10__dm3_s_1_m_2": 0.63,
+     "ELA__cm2": 155.829,
+     "asol_bron__str": "gemiddelde verhouding (gevelrichting onbekend)"
     },
     "passend": {
      "H__W_K_1": 124.21,
@@ -225,7 +274,9 @@
      "Ainf__cm2": 44.8,
      "woningtype_gebruikt__cat": "hoekwoning",
      "isolatieniveau__0": 1.11,
-     "methode_gebruikt__cat": "ep"
+     "qv10__dm3_s_1_m_2": 0.63,
+     "ELA__cm2": 155.829,
+     "asol_bron__str": "gemiddelde verhouding (gevelrichting onbekend)"
     }
    }
   },
@@ -258,7 +309,10 @@
      "Asol__m2": 11.006,
      "Ainf__cm2": 70.9,
      "woningtype_gebruikt__cat": "twee_onder_een_kap",
-     "isolatieniveau__0": 0.0
+     "isolatieniveau__0": 0.0,
+     "qv10__dm3_s_1_m_2": 0.84,
+     "ELA__cm2": 246.509,
+     "asol_bron__str": "gemiddelde verhouding (methode is richtingsgemiddeld)"
     },
     "mwa": {
      "H__W_K_1": 153.84,
@@ -267,7 +321,10 @@
      "Asol__m2": 10.879,
      "Ainf__cm2": 35.5,
      "woningtype_gebruikt__cat": "twee_onder_een_kap",
-     "isolatieniveau__0": 0.0
+     "isolatieniveau__0": 0.0,
+     "qv10__dm3_s_1_m_2": 0.42,
+     "ELA__cm2": 123.255,
+     "asol_bron__str": "gemiddelde verhouding (methode is richtingsgemiddeld)"
     },
     "best": {
      "H__W_K_1": 119.34,
@@ -276,7 +333,10 @@
      "Asol__m2": 8.658,
      "Ainf__cm2": 35.5,
      "woningtype_gebruikt__cat": "twee_onder_een_kap",
-     "isolatieniveau__0": 2.685
+     "isolatieniveau__0": 2.685,
+     "qv10__dm3_s_1_m_2": 0.42,
+     "ELA__cm2": 123.255,
+     "asol_bron__str": "gemiddelde verhouding (gevelrichting onbekend)"
     },
     "ep": {
      "H__W_K_1": 109.77,
@@ -285,7 +345,10 @@
      "Asol__m2": 7.997,
      "Ainf__cm2": 34.2,
      "woningtype_gebruikt__cat": "twee_onder_een_kap",
-     "isolatieniveau__0": 2.685
+     "isolatieniveau__0": 2.685,
+     "qv10__dm3_s_1_m_2": 0.42,
+     "ELA__cm2": 118.853,
+     "asol_bron__str": "gemiddelde verhouding (gevelrichting onbekend)"
     },
     "ep_3dbag": {
      "H__W_K_1": 109.14,
@@ -294,7 +357,10 @@
      "Asol__m2": 7.918,
      "Ainf__cm2": 34.2,
      "woningtype_gebruikt__cat": "twee_onder_een_kap",
-     "isolatieniveau__0": 2.685
+     "isolatieniveau__0": 2.685,
+     "qv10__dm3_s_1_m_2": 0.42,
+     "ELA__cm2": 118.853,
+     "asol_bron__str": "gemiddelde verhouding (gevelrichting onbekend)"
     },
     "passend": {
      "H__W_K_1": 109.77,
@@ -304,7 +370,9 @@
      "Ainf__cm2": 34.2,
      "woningtype_gebruikt__cat": "twee_onder_een_kap",
      "isolatieniveau__0": 2.685,
-     "methode_gebruikt__cat": "ep"
+     "qv10__dm3_s_1_m_2": 0.42,
+     "ELA__cm2": 118.853,
+     "asol_bron__str": "gemiddelde verhouding (gevelrichting onbekend)"
     }
    }
   },
@@ -332,7 +400,10 @@
      "Asol__m2": 11.951,
      "Ainf__cm2": 171.9,
      "woningtype_gebruikt__cat": "tussenwoning",
-     "isolatieniveau__0": 0.0
+     "isolatieniveau__0": 0.0,
+     "qv10__dm3_s_1_m_2": 3.0,
+     "ELA__cm2": 597.408,
+     "asol_bron__str": "gemiddelde verhouding (methode is richtingsgemiddeld)"
     },
     "mwa": {
      "H__W_K_1": 284.4,
@@ -341,7 +412,10 @@
      "Asol__m2": 10.323,
      "Ainf__cm2": 85.9,
      "woningtype_gebruikt__cat": "tussenwoning",
-     "isolatieniveau__0": 0.0
+     "isolatieniveau__0": 0.0,
+     "qv10__dm3_s_1_m_2": 1.5,
+     "ELA__cm2": 298.704,
+     "asol_bron__str": "gemiddelde verhouding (methode is richtingsgemiddeld)"
     },
     "best": {
      "H__W_K_1": 212.66,
@@ -350,7 +424,10 @@
      "Asol__m2": 8.236,
      "Ainf__cm2": 85.9,
      "woningtype_gebruikt__cat": "tussenwoning",
-     "isolatieniveau__0": 1.0
+     "isolatieniveau__0": 1.0,
+     "qv10__dm3_s_1_m_2": 1.5,
+     "ELA__cm2": 298.704,
+     "asol_bron__str": "gemiddelde verhouding (gevelrichting onbekend)"
     },
     "ep": {
      "H__W_K_1": null,
@@ -359,7 +436,10 @@
      "Asol__m2": null,
      "Ainf__cm2": null,
      "woningtype_gebruikt__cat": null,
-     "isolatieniveau__0": null
+     "isolatieniveau__0": null,
+     "qv10__dm3_s_1_m_2": null,
+     "ELA__cm2": null,
+     "asol_bron__str": null
     },
     "ep_3dbag": {
      "H__W_K_1": null,
@@ -368,7 +448,10 @@
      "Asol__m2": null,
      "Ainf__cm2": null,
      "woningtype_gebruikt__cat": null,
-     "isolatieniveau__0": null
+     "isolatieniveau__0": null,
+     "qv10__dm3_s_1_m_2": null,
+     "ELA__cm2": null,
+     "asol_bron__str": null
     },
     "passend": {
      "H__W_K_1": 212.66,
@@ -378,7 +461,9 @@
      "Ainf__cm2": 85.9,
      "woningtype_gebruikt__cat": "tussenwoning",
      "isolatieniveau__0": 1.0,
-     "methode_gebruikt__cat": "best"
+     "qv10__dm3_s_1_m_2": 1.5,
+     "ELA__cm2": 298.704,
+     "asol_bron__str": "gemiddelde verhouding (gevelrichting onbekend)"
     }
    }
   },
@@ -406,7 +491,10 @@
      "Asol__m2": null,
      "Ainf__cm2": null,
      "woningtype_gebruikt__cat": null,
-     "isolatieniveau__0": null
+     "isolatieniveau__0": null,
+     "qv10__dm3_s_1_m_2": null,
+     "ELA__cm2": null,
+     "asol_bron__str": null
     },
     "mwa": {
      "H__W_K_1": null,
@@ -415,7 +503,10 @@
      "Asol__m2": null,
      "Ainf__cm2": null,
      "woningtype_gebruikt__cat": null,
-     "isolatieniveau__0": null
+     "isolatieniveau__0": null,
+     "qv10__dm3_s_1_m_2": null,
+     "ELA__cm2": null,
+     "asol_bron__str": null
     },
     "best": {
      "H__W_K_1": null,
@@ -424,7 +515,10 @@
      "Asol__m2": null,
      "Ainf__cm2": null,
      "woningtype_gebruikt__cat": null,
-     "isolatieniveau__0": null
+     "isolatieniveau__0": null,
+     "qv10__dm3_s_1_m_2": null,
+     "ELA__cm2": null,
+     "asol_bron__str": null
     },
     "ep": {
      "H__W_K_1": null,
@@ -433,7 +527,10 @@
      "Asol__m2": null,
      "Ainf__cm2": null,
      "woningtype_gebruikt__cat": null,
-     "isolatieniveau__0": null
+     "isolatieniveau__0": null,
+     "qv10__dm3_s_1_m_2": null,
+     "ELA__cm2": null,
+     "asol_bron__str": null
     },
     "ep_3dbag": {
      "H__W_K_1": null,
@@ -442,7 +539,10 @@
      "Asol__m2": null,
      "Ainf__cm2": null,
      "woningtype_gebruikt__cat": null,
-     "isolatieniveau__0": null
+     "isolatieniveau__0": null,
+     "qv10__dm3_s_1_m_2": null,
+     "ELA__cm2": null,
+     "asol_bron__str": null
     },
     "passend": {
      "H__W_K_1": null,
@@ -452,7 +552,570 @@
      "Ainf__cm2": null,
      "woningtype_gebruikt__cat": null,
      "isolatieniveau__0": null,
-     "methode_gebruikt__cat": null
+     "qv10__dm3_s_1_m_2": null,
+     "ELA__cm2": null,
+     "asol_bron__str": null
+    }
+   }
+  },
+  {
+   "input": {
+    "name": "tussenwoning 1975 zuid-noord, type uit buren",
+    "bouwjaar__yr": 1975,
+    "oppervlakte__m2": 110,
+    "pand_woningen__0": 1,
+    "aaneengebouwd__bool": true,
+    "daktype__cat": "slanted",
+    "bouwlagen__0": 2,
+    "opp_buitenmuur__m2": 66,
+    "opp_grond__m2": 55,
+    "opp_dak_plat__m2": 0,
+    "opp_dak_schuin__m2": 70,
+    "opp_scheidingsmuur__m2": 100,
+    "gevel__m": [
+     5.5,
+     0,
+     0,
+     0,
+     5.5,
+     0,
+     0,
+     0
+    ],
+    "gevelzij__m": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "buren__0": 2,
+    "blok_panden__0": 6
+   },
+   "expected": {
+    "nta8800": {
+     "H__W_K_1": 196.94,
+     "C__Wh_K_1": 11000.0,
+     "tau__h": 55.855,
+     "Asol__m2": 8.756,
+     "Ainf__cm2": 165.8,
+     "woningtype_gebruikt__cat": "tussenwoning",
+     "isolatieniveau__0": 0.0,
+     "qv10__dm3_s_1_m_2": 2.5,
+     "ELA__cm2": 576.446,
+     "asol_bron__str": "gemiddelde verhouding (methode is richtingsgemiddeld)"
+    },
+    "mwa": {
+     "H__W_K_1": 159.6,
+     "C__Wh_K_1": 11000.0,
+     "tau__h": 68.924,
+     "Asol__m2": 8.588,
+     "Ainf__cm2": 82.9,
+     "woningtype_gebruikt__cat": "tussenwoning",
+     "isolatieniveau__0": 0.0,
+     "qv10__dm3_s_1_m_2": 1.25,
+     "ELA__cm2": 288.223,
+     "asol_bron__str": "gemiddelde verhouding (methode is richtingsgemiddeld)"
+    },
+    "best": {
+     "H__W_K_1": 163.46,
+     "C__Wh_K_1": 11000.0,
+     "tau__h": 67.293,
+     "Asol__m2": 8.306,
+     "Ainf__cm2": 82.9,
+     "woningtype_gebruikt__cat": "tussenwoning",
+     "isolatieniveau__0": 1.0,
+     "qv10__dm3_s_1_m_2": 1.25,
+     "ELA__cm2": 288.223,
+     "asol_bron__str": "gevelrichting (BAG-pand, R_o De Bilt)"
+    },
+    "ep": {
+     "H__W_K_1": null,
+     "C__Wh_K_1": null,
+     "tau__h": null,
+     "Asol__m2": null,
+     "Ainf__cm2": null,
+     "woningtype_gebruikt__cat": null,
+     "isolatieniveau__0": null,
+     "qv10__dm3_s_1_m_2": null,
+     "ELA__cm2": null,
+     "asol_bron__str": null
+    },
+    "ep_3dbag": {
+     "H__W_K_1": null,
+     "C__Wh_K_1": null,
+     "tau__h": null,
+     "Asol__m2": null,
+     "Ainf__cm2": null,
+     "woningtype_gebruikt__cat": null,
+     "isolatieniveau__0": null,
+     "qv10__dm3_s_1_m_2": null,
+     "ELA__cm2": null,
+     "asol_bron__str": null
+    },
+    "passend": {
+     "H__W_K_1": 163.46,
+     "C__Wh_K_1": 11000.0,
+     "tau__h": 67.293,
+     "Asol__m2": 8.306,
+     "Ainf__cm2": 82.9,
+     "woningtype_gebruikt__cat": "tussenwoning",
+     "isolatieniveau__0": 1.0,
+     "qv10__dm3_s_1_m_2": 1.25,
+     "ELA__cm2": 288.223,
+     "asol_bron__str": "gevelrichting (BAG-pand, R_o De Bilt)"
+    }
+   }
+  },
+  {
+   "input": {
+    "name": "tussenwoning 1975 oost-west, type uit buren",
+    "bouwjaar__yr": 1975,
+    "oppervlakte__m2": 110,
+    "pand_woningen__0": 1,
+    "aaneengebouwd__bool": true,
+    "daktype__cat": "slanted",
+    "bouwlagen__0": 2,
+    "opp_buitenmuur__m2": 66,
+    "opp_grond__m2": 55,
+    "opp_dak_plat__m2": 0,
+    "opp_dak_schuin__m2": 70,
+    "opp_scheidingsmuur__m2": 100,
+    "gevel__m": [
+     0,
+     0,
+     5.5,
+     0,
+     0,
+     0,
+     5.5,
+     0
+    ],
+    "gevelzij__m": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "buren__0": 2,
+    "blok_panden__0": 6
+   },
+   "expected": {
+    "nta8800": {
+     "H__W_K_1": 196.94,
+     "C__Wh_K_1": 11000.0,
+     "tau__h": 55.855,
+     "Asol__m2": 8.756,
+     "Ainf__cm2": 165.8,
+     "woningtype_gebruikt__cat": "tussenwoning",
+     "isolatieniveau__0": 0.0,
+     "qv10__dm3_s_1_m_2": 2.5,
+     "ELA__cm2": 576.446,
+     "asol_bron__str": "gemiddelde verhouding (methode is richtingsgemiddeld)"
+    },
+    "mwa": {
+     "H__W_K_1": 159.6,
+     "C__Wh_K_1": 11000.0,
+     "tau__h": 68.924,
+     "Asol__m2": 8.588,
+     "Ainf__cm2": 82.9,
+     "woningtype_gebruikt__cat": "tussenwoning",
+     "isolatieniveau__0": 0.0,
+     "qv10__dm3_s_1_m_2": 1.25,
+     "ELA__cm2": 288.223,
+     "asol_bron__str": "gemiddelde verhouding (methode is richtingsgemiddeld)"
+    },
+    "best": {
+     "H__W_K_1": 163.46,
+     "C__Wh_K_1": 11000.0,
+     "tau__h": 67.293,
+     "Asol__m2": 7.465,
+     "Ainf__cm2": 82.9,
+     "woningtype_gebruikt__cat": "tussenwoning",
+     "isolatieniveau__0": 1.0,
+     "qv10__dm3_s_1_m_2": 1.25,
+     "ELA__cm2": 288.223,
+     "asol_bron__str": "gevelrichting (BAG-pand, R_o De Bilt)"
+    },
+    "ep": {
+     "H__W_K_1": null,
+     "C__Wh_K_1": null,
+     "tau__h": null,
+     "Asol__m2": null,
+     "Ainf__cm2": null,
+     "woningtype_gebruikt__cat": null,
+     "isolatieniveau__0": null,
+     "qv10__dm3_s_1_m_2": null,
+     "ELA__cm2": null,
+     "asol_bron__str": null
+    },
+    "ep_3dbag": {
+     "H__W_K_1": null,
+     "C__Wh_K_1": null,
+     "tau__h": null,
+     "Asol__m2": null,
+     "Ainf__cm2": null,
+     "woningtype_gebruikt__cat": null,
+     "isolatieniveau__0": null,
+     "qv10__dm3_s_1_m_2": null,
+     "ELA__cm2": null,
+     "asol_bron__str": null
+    },
+    "passend": {
+     "H__W_K_1": 163.46,
+     "C__Wh_K_1": 11000.0,
+     "tau__h": 67.293,
+     "Asol__m2": 7.465,
+     "Ainf__cm2": 82.9,
+     "woningtype_gebruikt__cat": "tussenwoning",
+     "isolatieniveau__0": 1.0,
+     "qv10__dm3_s_1_m_2": 1.25,
+     "ELA__cm2": 288.223,
+     "asol_bron__str": "gevelrichting (BAG-pand, R_o De Bilt)"
+    }
+   }
+  },
+  {
+   "input": {
+    "name": "hoekwoning 1960 met zijgevel west, type uit buren",
+    "bouwjaar__yr": 1960,
+    "oppervlakte__m2": 100,
+    "pand_woningen__0": 1,
+    "aaneengebouwd__bool": true,
+    "daktype__cat": "slanted",
+    "bouwlagen__0": 2,
+    "opp_buitenmuur__m2": 140,
+    "opp_grond__m2": 50,
+    "opp_dak_plat__m2": 0,
+    "opp_dak_schuin__m2": 65,
+    "opp_scheidingsmuur__m2": 50,
+    "gevel__m": [
+     5.5,
+     0,
+     0,
+     0,
+     5.5,
+     0,
+     9.0,
+     0
+    ],
+    "gevelzij__m": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     9.0,
+     0
+    ],
+    "buren__0": 1,
+    "blok_panden__0": 4
+   },
+   "expected": {
+    "nta8800": {
+     "H__W_K_1": 675.82,
+     "C__Wh_K_1": 10000.0,
+     "tau__h": 14.797,
+     "Asol__m2": 18.189,
+     "Ainf__cm2": 217.1,
+     "woningtype_gebruikt__cat": "hoekwoning",
+     "isolatieniveau__0": 0.0,
+     "qv10__dm3_s_1_m_2": 3.6,
+     "ELA__cm2": 754.62,
+     "asol_bron__str": "gemiddelde verhouding (methode is richtingsgemiddeld)"
+    },
+    "mwa": {
+     "H__W_K_1": 466.53,
+     "C__Wh_K_1": 10000.0,
+     "tau__h": 21.435,
+     "Asol__m2": 15.298,
+     "Ainf__cm2": 108.6,
+     "woningtype_gebruikt__cat": "hoekwoning",
+     "isolatieniveau__0": 0.0,
+     "qv10__dm3_s_1_m_2": 1.8,
+     "ELA__cm2": 377.31,
+     "asol_bron__str": "gemiddelde verhouding (methode is richtingsgemiddeld)"
+    },
+    "best": {
+     "H__W_K_1": 329.27,
+     "C__Wh_K_1": 10000.0,
+     "tau__h": 30.371,
+     "Asol__m2": 12.785,
+     "Ainf__cm2": 108.6,
+     "woningtype_gebruikt__cat": "hoekwoning",
+     "isolatieniveau__0": 1.0,
+     "qv10__dm3_s_1_m_2": 1.8,
+     "ELA__cm2": 377.31,
+     "asol_bron__str": "gevelrichting (BAG-pand, R_o De Bilt)"
+    },
+    "ep": {
+     "H__W_K_1": null,
+     "C__Wh_K_1": null,
+     "tau__h": null,
+     "Asol__m2": null,
+     "Ainf__cm2": null,
+     "woningtype_gebruikt__cat": null,
+     "isolatieniveau__0": null,
+     "qv10__dm3_s_1_m_2": null,
+     "ELA__cm2": null,
+     "asol_bron__str": null
+    },
+    "ep_3dbag": {
+     "H__W_K_1": null,
+     "C__Wh_K_1": null,
+     "tau__h": null,
+     "Asol__m2": null,
+     "Ainf__cm2": null,
+     "woningtype_gebruikt__cat": null,
+     "isolatieniveau__0": null,
+     "qv10__dm3_s_1_m_2": null,
+     "ELA__cm2": null,
+     "asol_bron__str": null
+    },
+    "passend": {
+     "H__W_K_1": 329.27,
+     "C__Wh_K_1": 10000.0,
+     "tau__h": 30.371,
+     "Asol__m2": 12.785,
+     "Ainf__cm2": 108.6,
+     "woningtype_gebruikt__cat": "hoekwoning",
+     "isolatieniveau__0": 1.0,
+     "qv10__dm3_s_1_m_2": 1.8,
+     "ELA__cm2": 377.31,
+     "asol_bron__str": "gevelrichting (BAG-pand, R_o De Bilt)"
+    }
+   }
+  },
+  {
+   "input": {
+    "name": "twee-onder-een-kap 2005 plat dak, zijgevel oost",
+    "bouwjaar__yr": 2005,
+    "oppervlakte__m2": 140,
+    "pand_woningen__0": 1,
+    "aaneengebouwd__bool": true,
+    "daktype__cat": "horizontal",
+    "bouwlagen__0": 3,
+    "opp_buitenmuur__m2": 190,
+    "opp_grond__m2": 70,
+    "opp_dak_plat__m2": 70,
+    "opp_dak_schuin__m2": 0,
+    "opp_scheidingsmuur__m2": 75,
+    "gevel__m": [
+     7.0,
+     0,
+     10.0,
+     0,
+     7.0,
+     0,
+     0,
+     0
+    ],
+    "gevelzij__m": [
+     0,
+     0,
+     10.0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "buren__0": 1,
+    "blok_panden__0": 2
+   },
+   "expected": {
+    "nta8800": {
+     "H__W_K_1": 229.18,
+     "C__Wh_K_1": 17500.0,
+     "tau__h": 76.358,
+     "Asol__m2": 13.65,
+     "Ainf__cm2": 116.6,
+     "woningtype_gebruikt__cat": "twee_onder_een_kap",
+     "isolatieniveau__0": 0.0,
+     "qv10__dm3_s_1_m_2": 1.2,
+     "ELA__cm2": 352.156,
+     "asol_bron__str": "gemiddelde verhouding (methode is richtingsgemiddeld)"
+    },
+    "mwa": {
+     "H__W_K_1": 205.69,
+     "C__Wh_K_1": 17500.0,
+     "tau__h": 85.081,
+     "Asol__m2": 13.529,
+     "Ainf__cm2": 58.3,
+     "woningtype_gebruikt__cat": "twee_onder_een_kap",
+     "isolatieniveau__0": 0.0,
+     "qv10__dm3_s_1_m_2": 0.6,
+     "ELA__cm2": 176.078,
+     "asol_bron__str": "gemiddelde verhouding (methode is richtingsgemiddeld)"
+    },
+    "best": {
+     "H__W_K_1": 207.68,
+     "C__Wh_K_1": 17500.0,
+     "tau__h": 84.265,
+     "Asol__m2": 13.914,
+     "Ainf__cm2": 58.3,
+     "woningtype_gebruikt__cat": "twee_onder_een_kap",
+     "isolatieniveau__0": 1.0,
+     "qv10__dm3_s_1_m_2": 0.6,
+     "ELA__cm2": 176.078,
+     "asol_bron__str": "gevelrichting (BAG-pand, R_o De Bilt)"
+    },
+    "ep": {
+     "H__W_K_1": null,
+     "C__Wh_K_1": null,
+     "tau__h": null,
+     "Asol__m2": null,
+     "Ainf__cm2": null,
+     "woningtype_gebruikt__cat": null,
+     "isolatieniveau__0": null,
+     "qv10__dm3_s_1_m_2": null,
+     "ELA__cm2": null,
+     "asol_bron__str": null
+    },
+    "ep_3dbag": {
+     "H__W_K_1": null,
+     "C__Wh_K_1": null,
+     "tau__h": null,
+     "Asol__m2": null,
+     "Ainf__cm2": null,
+     "woningtype_gebruikt__cat": null,
+     "isolatieniveau__0": null,
+     "qv10__dm3_s_1_m_2": null,
+     "ELA__cm2": null,
+     "asol_bron__str": null
+    },
+    "passend": {
+     "H__W_K_1": 207.68,
+     "C__Wh_K_1": 17500.0,
+     "tau__h": 84.265,
+     "Asol__m2": 13.914,
+     "Ainf__cm2": 58.3,
+     "woningtype_gebruikt__cat": "twee_onder_een_kap",
+     "isolatieniveau__0": 1.0,
+     "qv10__dm3_s_1_m_2": 0.6,
+     "ELA__cm2": 176.078,
+     "asol_bron__str": "gevelrichting (BAG-pand, R_o De Bilt)"
+    }
+   }
+  },
+  {
+   "input": {
+    "name": "vrijstaand 1990 diagonaal, label C",
+    "bouwjaar__yr": 1990,
+    "oppervlakte__m2": 160,
+    "pand_woningen__0": 1,
+    "aaneengebouwd__bool": false,
+    "daktype__cat": "slanted",
+    "bouwlagen__0": 2,
+    "opp_buitenmuur__m2": 200,
+    "opp_grond__m2": 90,
+    "opp_dak_plat__m2": 0,
+    "opp_dak_schuin__m2": 115,
+    "opp_scheidingsmuur__m2": 0,
+    "gevel__m": [
+     0,
+     10.0,
+     0,
+     9.0,
+     0,
+     10.0,
+     0,
+     9.0
+    ],
+    "gevelzij__m": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "buren__0": 0,
+    "blok_panden__0": 1,
+    "energielabel__cat": "C"
+   },
+   "expected": {
+    "nta8800": {
+     "H__W_K_1": 289.41,
+     "C__Wh_K_1": 16000.0,
+     "tau__h": 55.285,
+     "Asol__m2": 16.091,
+     "Ainf__cm2": 202.6,
+     "woningtype_gebruikt__cat": "vrijstaand",
+     "isolatieniveau__0": 0.0,
+     "qv10__dm3_s_1_m_2": 2.1,
+     "ELA__cm2": 704.312,
+     "asol_bron__str": "gemiddelde verhouding (methode is richtingsgemiddeld)"
+    },
+    "mwa": {
+     "H__W_K_1": 253.48,
+     "C__Wh_K_1": 16000.0,
+     "tau__h": 63.12,
+     "Asol__m2": 15.905,
+     "Ainf__cm2": 101.3,
+     "woningtype_gebruikt__cat": "vrijstaand",
+     "isolatieniveau__0": 0.0,
+     "qv10__dm3_s_1_m_2": 1.05,
+     "ELA__cm2": 352.156,
+     "asol_bron__str": "gemiddelde verhouding (methode is richtingsgemiddeld)"
+    },
+    "best": {
+     "H__W_K_1": 336.81,
+     "C__Wh_K_1": 16000.0,
+     "tau__h": 47.504,
+     "Asol__m2": 15.526,
+     "Ainf__cm2": 101.3,
+     "woningtype_gebruikt__cat": "vrijstaand",
+     "isolatieniveau__0": 1.0,
+     "qv10__dm3_s_1_m_2": 1.05,
+     "ELA__cm2": 352.156,
+     "asol_bron__str": "gevelrichting (BAG-pand, R_o De Bilt)"
+    },
+    "ep": {
+     "H__W_K_1": null,
+     "C__Wh_K_1": null,
+     "tau__h": null,
+     "Asol__m2": null,
+     "Ainf__cm2": null,
+     "woningtype_gebruikt__cat": null,
+     "isolatieniveau__0": null,
+     "qv10__dm3_s_1_m_2": null,
+     "ELA__cm2": null,
+     "asol_bron__str": null
+    },
+    "ep_3dbag": {
+     "H__W_K_1": null,
+     "C__Wh_K_1": null,
+     "tau__h": null,
+     "Asol__m2": null,
+     "Ainf__cm2": null,
+     "woningtype_gebruikt__cat": null,
+     "isolatieniveau__0": null,
+     "qv10__dm3_s_1_m_2": null,
+     "ELA__cm2": null,
+     "asol_bron__str": null
+    },
+    "passend": {
+     "H__W_K_1": 336.81,
+     "C__Wh_K_1": 16000.0,
+     "tau__h": 47.504,
+     "Asol__m2": 15.526,
+     "Ainf__cm2": 101.3,
+     "woningtype_gebruikt__cat": "vrijstaand",
+     "isolatieniveau__0": 1.0,
+     "qv10__dm3_s_1_m_2": 1.05,
+     "ELA__cm2": 352.156,
+     "asol_bron__str": "gevelrichting (BAG-pand, R_o De Bilt)"
     }
    }
   }

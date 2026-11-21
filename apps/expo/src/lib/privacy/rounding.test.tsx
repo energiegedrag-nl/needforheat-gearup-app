@@ -36,12 +36,15 @@ describe("rounding rules", () => {
     expect(out).toEqual({ heat_tr_building_cond__W_K_1: 220, th_mass_building__Wh_K_1: 10000 });
   });
 
-  it("has defaults for the four signature quantities", () => {
+  it("has defaults for the four signature quantities and qv10", () => {
     expect(Object.keys(DEFAULT_SIGNATURE_ROUNDING).sort()).toEqual([
       "aperture_inf__cm2",
       "aperture_sol__m2",
       "heat_tr_building_cond__W_K_1",
+      "qv10__dm3_s_1_m_2",
       "th_mass_building__Wh_K_1",
     ]);
+    // a value without a rule (default or campaign) never leaves the phone
+    expect(roundForUpload({ something_else__0: 1.3 }, {})).toEqual({});
   });
 });

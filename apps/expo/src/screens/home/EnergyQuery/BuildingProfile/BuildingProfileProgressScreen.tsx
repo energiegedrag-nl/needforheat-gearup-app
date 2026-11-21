@@ -53,28 +53,28 @@ export default function BuildingProfileProgressScreen({ navigation, route }: Bui
       title: t("screens.home_stack.energy_query.building_profile_progress.alert.initial_data.title"),
       description: t("screens.home_stack.energy_query.building_profile_progress.alert.initial_data.message"),
       finished: isBAGReceived,
-      loading: !isBAGReceived,
+      loading: !isBAGReceived && !isBAGReceivedError,
       error: isBAGReceivedError,
     },
     {
       title: t("screens.home_stack.energy_query.building_profile_progress.alert.data.title"),
       description: t("screens.home_stack.energy_query.building_profile_progress.alert.data.message"),
       finished: is3DBAGReceived,
-      loading: !is3DBAGReceived,
+      loading: isBAGReceived && !is3DBAGReceived && !is3DBAGReceivedError,
       error: is3DBAGReceivedError,
     },
     {
       title: t("screens.home_stack.energy_query.building_profile_progress.alert.calculating.title"),
       description: t("screens.home_stack.energy_query.building_profile_progress.alert.calculating.message"),
       finished: isCalculating,
-      loading: !isCalculating,
+      loading: is3DBAGReceived && !isCalculating && !isCalculatingError && !isUnsuitable,
       error: isCalculatingError || isUnsuitable,
     },
     {
       title: t("screens.home_stack.energy_query.building_profile_progress.alert.sending.title"),
       description: t("screens.home_stack.energy_query.building_profile_progress.alert.sending.message"),
       finished: isSucces,
-      loading: !isSucces,
+      loading: isCalculating && !isSucces && !isSuccesError,
       error: isSuccesError,
     },
   ];
@@ -85,12 +85,23 @@ export default function BuildingProfileProgressScreen({ navigation, route }: Bui
     // Everything is fetched from the phone; the address is not sent to the NeedForHeat server.
     let dwelling: Awaited<ReturnType<typeof fetchDwelling>>;
     try {
-      dwelling = await fetchDwelling(location, epOnlineKey?.api_key ?? null);
-      setisBAGReceived(true);
+      // Each step is ticked off when it is done (not all at the end): BAG, then 3DBAG.
+      let bagDone = false;
+      try {
+        dwelling = await fetchDwelling(location, epOnlineKey?.api_key ?? null, stage => {
+          if (stage === "bag") {
+            bagDone = true;
+            setisBAGReceived(true);
+          }
+        });
+      } catch (err) {
+        if (bagDone) setis3DBAGReceivedError(true);
+        else setisBAGReceivedError(true);
+        throw err;
+      }
       setis3DBAGReceived(true);
     } catch {
       setShowButton(true);
-      setisBAGReceivedError(true);
       return;
     }
 

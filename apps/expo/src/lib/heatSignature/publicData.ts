@@ -165,7 +165,11 @@ export async function fetchEpOnline(vboId: string, apiKey: string): Promise<Part
 }
 
 /** Everything for one address; EP-online only when a key is given (errors there are not fatal). */
-export async function fetchDwelling(address: string, epOnlineKey?: string | null) {
+export async function fetchDwelling(
+  address: string,
+  epOnlineKey?: string | null,
+  onProgress?: (stage: "bag" | "3dbag") => void
+) {
   const parts = splitAddress(address);
   if (!parts) throw new Error("address without a postcode");
 
@@ -198,10 +202,12 @@ export async function fetchDwelling(address: string, epOnlineKey?: string | null
   const hood = new Neighbourhood(footprints);
   const facades = hood.exposedPerSector(pandId);
   const { neighbours, block } = hood.neighboursAndBlock(pandId);
+  onProgress?.("bag");
 
   // 3. 3DBAG, among seven other residential buildings of the tile
   const others = footprints.filter(f => f.dwelling && f.id !== pandId).map(f => f.id);
   const { input: shape, attributes } = await fetch3dBagAmong(pandId, others);
+  onProgress?.("3dbag");
 
   let label: Partial<DwellingInput> = {};
   if (epOnlineKey) {

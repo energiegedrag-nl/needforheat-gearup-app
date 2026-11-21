@@ -1,3 +1,18 @@
+# [3.4.0](https://github.com/energiegedrag-nl/needforheat-gearup-app/compare/v3.3.2...v3.4.0) (2026-11-21)
+
+
+### Bug Fixes
+
+* **building-profile:** timeline one step at a time ([3f07c07](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/3f07c0734dc63b8586bacfcaa675a01219b87961))
+* no false "could not update", names cached, refresh after 5 minutes ([657bc54](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/657bc5484c98b41991a42f29bbaf445590e04d53))
+* **provisioning:** no red Wi-Fi step when the device went online; reconnect once when a scan fails ([d0d0f09](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/d0d0f09df912e7ca85d4c442bb843a0f72fb3f45)), closes [#34](https://github.com/energiegedrag-nl/needforheat-gearup-app/issues/34)
+
+
+### Features
+
+* **building-profile:** A_sol per façade orientation, dwelling type from the neighbours, qv10, heat island ([ba41726](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/ba417260abbcbf9122468a1d38570dfdeb19d593))
+* show the last known data at once and say when new data is being fetched ([8d7e55c](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/8d7e55ce85324357f406d7e583997f12012b2a50))
+
 ## [3.3.2](https://github.com/energiegedrag-nl/needforheat-gearup-app/compare/v3.3.1...v3.3.2) (2026-11-21)
 
 

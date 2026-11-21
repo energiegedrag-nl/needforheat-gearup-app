@@ -131,8 +131,12 @@
           "message": "Er is een fout opgetreden tijdens het configureren van uw apparaat. Start het meetapparaat opnieuw en probeer opnieuw."
         },
         "wifi_error": {
-          "title": "Er is iets misgegaan tijdens het verbinden met het wifinetwerk",
-          "message": "Is uw wifi-wachtwoord wel correct? Bent u wel in de buurt van het apparaat?"
+          "title": "Verbinden met het wifinetwerk lukte niet",
+          "message": "Klopt het wachtwoord, en is het een 2,4 GHz-netwerk? De module start nu opnieuw. Wacht tot de module weer de QR-code toont en tik dan op Opnieuw."
+        },
+        "session_error": {
+          "title": "De verbinding met de module liep vast",
+          "message": "Het wifinetwerk is niet bij de module aangekomen. Houd de telefoon dicht bij de module en tik op Opnieuw."
         },
         "measurements_error": {
           "title": "Geen gegevens ontvangen",

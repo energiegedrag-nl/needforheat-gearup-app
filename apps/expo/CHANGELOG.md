@@ -1,3 +1,10 @@
+## [3.3.2](https://github.com/energiegedrag-nl/needforheat-gearup-app/compare/v3.3.1...v3.3.2) (2026-11-21)
+
+
+### Bug Fixes
+
+* **provisioning:** fresh Bluetooth session, clear error per phase ([5f8c6be](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/5f8c6be62bf0848b06b60a3864588e2ae3d11106))
+
 ## [3.3.1](https://github.com/energiegedrag-nl/needforheat-gearup-app/compare/v3.3.0...v3.3.1) (2026-11-20)
 
 

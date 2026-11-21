@@ -5,7 +5,7 @@
  * either a step (rounded to a multiple of `step` after clamping to [`min`, `max`], so each tail
  * ends up in one value) or bins (the first bin whose exclusive upper bound `lt` the value is
  * below, uploaded as that bin's representative `value`; the last bin is open). Results computed
- * from public data, such as a heat performance signature, are quasi-identifiers: choose rules
+ * from public data, such as a heat signature, are quasi-identifiers: choose rules
  * beforehand with AnonyMate's rounding analysis against a norm (e.g. p = 0.09, k >= 11).
  *
  * This file has no imports, so it also runs directly under Node.
@@ -17,7 +17,7 @@ export type RoundingRule =
 export type RoundingRules = Record<string, RoundingRule>;
 
 /**
- * Default for the heat performance signature when a campaign sets nothing: deciles for H and
+ * Default for the heat signature when a campaign sets nothing: deciles for H and
  * quintiles for C, Asol and Ainf, with the median of each bin as its value. Computed from the
  * national population of single-family homes (AnonyMate, method `passend`, 5.28 million homes).
  * Against k >= 11 (p = 0.09), publishing these four together leaves 0.02% of the homes in a group

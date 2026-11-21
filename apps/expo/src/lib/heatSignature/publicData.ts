@@ -1,7 +1,7 @@
 /**
  * Public data about one home, fetched directly from the phone (local first): the address never
  * goes to the NeedForHeat server, and no source gets the exact address or building in a request
- * ("fetch broad, choose locally"; docs/modelbijsluiter/warmteprestatiesignatuur.md, §B4):
+ * ("fetch broad, choose locally"; docs/modelbijsluiter/warmtesignatuur.md, §B4):
  *
  * - PDOK BAG OGC API (no key):
  *   1. the verblijfsobjecten of the **postcode** (PC6, typically 10-25 addresses), with address,

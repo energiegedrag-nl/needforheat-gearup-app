@@ -113,7 +113,7 @@ export default function BuildingProfileProgressScreen({ navigation, route }: Bui
       return;
     }
 
-    // 3. Calculate: the heat performance signature (method of AnonyMate), plus any formulas the
+    // 3. Calculate: the heat signature (method of AnonyMate), plus any formulas the
     // campaign configured for this data source (on the 3DBAG attributes, as before).
     const currentLocaleTimeInUnix = Math.floor(Date.now() / 1000);
     const measurements: { value: string; property: { name: string }; time: number }[] = [];

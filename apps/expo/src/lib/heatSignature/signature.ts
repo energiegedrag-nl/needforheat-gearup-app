@@ -1,5 +1,5 @@
 /**
- * Heat performance signature (warmteprestatiesignatuur) of one single-family home, from public
+ * Heat signature (warmtesignatuur) of one single-family home, from public
  * data only: BAG (construction year, usable area, dwellings in the building), 3DBAG (envelope
  * areas, roof type, storeys) and, when available, the registered energy label (EP-online).
  *
@@ -12,7 +12,7 @@
  * A port of `signature.compute` from AnonyMate (https://github.com/anonymate-nl/anonymate,
  * src/anonymate/signature.py), for one dwelling, with the façade orientations and the dwelling
  * type from the neighbours in the BAG footprints (facades.ts) where known. Design and
- * assumptions: docs/modelbijsluiter/warmteprestatiesignatuur.md. The author of AnonyMate makes this port
+ * assumptions: docs/modelbijsluiter/warmtesignatuur.md. The author of AnonyMate makes this port
  * available under the license of this repository. Tests: `signature.test.tsx` compares with
  * values computed by AnonyMate itself (`signature.fixtures.json`).
  *

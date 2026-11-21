@@ -1,9 +1,9 @@
-# Modelbijsluiter: berekende warmteprestatiesignatuur van een eengezinswoning (gebouwprofiel)
+# Modelbijsluiter: berekende warmtesignatuur van een eengezinswoning
 
 | | |
 |---|---|
 | Status | **Concept**, versie 0.1 van 21 november 2026. Nog niet gereviewd. |
-| Rekenmethode | warmteprestatiesignatuur volgens AnonyMate, methode `passend` (standaard in de app); methodeversie **0.1** |
+| Rekenmethode | warmtesignatuur volgens AnonyMate, methode `passend` (standaard in de app); methodeversie **0.1** |
 | Code | repository `needforheat-gearup-app`, map `apps/expo/src/lib/heatSignature/` (PR #35); een port van `signature.py` en `gevel.py` uit [AnonyMate](https://github.com/anonymate-nl/anonymate) |
 | Auteur | Henri ter Hofte |
 | Technische verklaring | bijlage bij deze bijsluiter |
@@ -29,8 +29,9 @@ dm³/(s·m²), `Asol__m2` een oppervlak in m², `buren__0` een dimensieloos aant
 # Deel A. De grote lijn
 
 **Wat de rekenwijze doet.** De NeedForHeat-app berekent voor **één eengezinswoning** uit openbare
-gegevens een *warmteprestatiesignatuur*: vijf getallen die samen zeggen hoe de woning warmte verliest en
-opvangt. Deze berekende signatuur gaat, grof afgerond, als *gebouwprofiel* naar de onderzoeksserver,
+gegevens een *warmtesignatuur*: vijf getallen die samen zeggen hoe de woning warmte verliest en
+opvangt. Deze berekende signatuur gaat, grof afgerond, als antwoord op de vraag *woonadres
+(warmtesignatuur)* (technisch de energy query `building-profile`) naar de onderzoeksserver,
 naast de metingen (temperaturen, gas, stroom) waaruit later een *geleerde* signatuur volgt. De twee naast
 elkaar laten zien waar een woning afwijkt van wat haar bouwjaar, vorm en label doen verwachten.
 
@@ -41,6 +42,14 @@ elkaar laten zien waar een woning afwijkt van wat haar bouwjaar, vorm en label d
 | τ = C / H | tijdconstante: hoe snel de woning afkoelt | h |
 | A_sol | effectieve *horizontale* zonnetoetreding: zonwinst = A_sol × globale horizontale instraling | m² |
 | A_inf | effectieve windapertuur: infiltratiedebiet = windsnelheid × A_inf | cm² |
+
+**Warmtesignatuur, geen energiesignatuur.** De warmtesignatuur beschrijft het **gebouw**: hoe de schil warmte
+doorlaat, vasthoudt en van zon en wind opvangt (H, C, τ, A_sol, A_inf). Een *energiesignatuur* legt het
+**energiegebruik** uit tegen het weer, meestal het gas- of warmtegebruik tegen de buitentemperatuur of
+graaddagen; daarin zitten ook het rendement van de installatie, de stooklijn en het gedrag van de bewoners.
+Uit een energiesignatuur volgt de warmtesignatuur dus niet zonder meer, en omgekeerd. In deze bijsluiter,
+in de app en in de handleidingen heet het daarom overal *warmtesignatuur* (niet gebouwprofiel,
+energieprofiel of warmteprestatiesignatuur).
 
 Daarnaast, nieuw in deze versie: de **luchtdoorlatendheid q_v;10** waarop A_inf rust (§C5). Het
 **stedelijk hitte-eilandeffect** op de plek van de woning wordt in H verwerkt, niet los gepubliceerd
@@ -70,7 +79,7 @@ graph LR
     HC --> AF
     AS --> AF
     INF --> AF
-    AF --> S[Gebouwprofiel naar de server]
+    AF --> S[Warmtesignatuur naar de server]
 ```
 
 **Wat eruit komt.** Per woning één set: H, C, A_sol, A_inf en q_v;10, elk afgerond in grove klassen
@@ -307,7 +316,7 @@ linearisatie. Een expliciete schoorsteenterm in de signatuur is mogelijk (§7, v
 ## C6. Stedelijk hitte-eiland
 
 Een leermodel dat zijn buitentemperatuur van een KNMI-station of een interpolatie daartussen haalt
-(zoals de weerlocatie-vraag van NeedForHeat), ziet een stadswoning minder warmte verliezen dan het
+(zoals de vraag *woonlocatie (weerzone)* van NeedForHeat), ziet een stadswoning minder warmte verliezen dan het
 station doet vermoeden, en schat dus een kleinere H.
 
 **Data, compact.** RIVM-kaart *Stedelijk hitte-eiland effect* (10 m raster, 1-6-2022, v2), door AnonyMate
@@ -333,7 +342,7 @@ Als los getal is het een **locatiewijzer**: binnen een weerzone verschilt het pe
 kost het niets: de aanvaller rekent de gecorrigeerde H net zo goed uit het adres als de ongecorrigeerde.
 Er is dus geen keus: de app verwerkt het in H en publiceert het niet apart.
 
-**Hoe.** De app rekent H om naar wat een leermodel met KNMI-weer (of de geïnterpoleerde weerlocatie van
+**Hoe.** De app rekent H om naar wat een leermodel met KNMI-weer (of de geïnterpoleerde weerzone van
 NeedForHeat, §C7) zou vinden:
 
   H_gepubliceerd = H · (T_binnen − T_buiten − s · UHI) / (T_binnen − T_buiten)
@@ -369,7 +378,7 @@ kiezen* (Slim stroomgebruik thuis, kladbloknotitie 8):
 | EP-online (alleen met sleutel) | het adres | 1 |
 | Hitte-eiland | niets (in de app, verwerkt in H) | alle |
 
-**Weerlocatie.** De vraag *weerlocatie* (`weather-interpolation-location`) stuurt geen adres maar het
+**Weerzone.** De vraag *woonlocatie (weerzone)* (`weather-interpolation-location`) stuurt geen adres maar het
 midden van een H3-cel van **niveau 5** (ongeveer 250 km²), **na een willekeurige verschuiving** met
 normaal verdeelde ruis van **σ = 10 km** per richting (`utils/weatherLocation.ts`). De verschuiving
 wordt één keer per installatie getrokken en bewaard, zodat opnieuw antwoorden geen nieuwe steekproeven

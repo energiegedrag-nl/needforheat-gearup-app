@@ -37,12 +37,12 @@ export default function Providers(props: ProviderProps) {
   // Show the last known data at once: restore the saved cache before the screens mount (a small local file).
   const [restored, setRestored] = useState(false);
   useEffect(() => {
-    let unsubscribe = () => {};
+    let unsubscribe: (() => void) | undefined;
     restoreQueryCache(queryClient).finally(() => {
       unsubscribe = persistQueryCache(queryClient);
       setRestored(true);
     });
-    return () => unsubscribe();
+    return () => unsubscribe?.();
   }, []);
   if (!restored) return null;
 

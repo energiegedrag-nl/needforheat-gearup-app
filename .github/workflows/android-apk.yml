@@ -29,6 +29,8 @@ jobs:
         run: |
           echo "API_URL=${{ vars.NFH_API_URL || 'https://api.energiegedrag.nl/v3' }}" > .env
           echo "MANUAL_URL=${{ vars.NFH_MANUAL_URL || 'https://manuals.energiegedrag.nl' }}" >> .env
+          # Shown in Settings, so testers can see which build they have (the version stays the same between test builds).
+          echo "BUILD_COMMIT=$(git rev-parse --short HEAD)" >> .env
       - name: Generate native project
         working-directory: apps/expo
         run: npx expo prebuild --platform android --clean --no-install

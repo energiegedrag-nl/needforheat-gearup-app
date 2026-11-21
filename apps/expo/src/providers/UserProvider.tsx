@@ -1,5 +1,5 @@
 import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { QueryObserverResult, RefetchOptions, RefetchQueryFilters } from "@tanstack/react-query";
+import { QueryObserverResult, RefetchOptions, RefetchQueryFilters, useQueryClient } from "@tanstack/react-query";
 import * as Burnt from "burnt";
 import { createContext, PropsWithChildren } from "react";
 import { Alert, Platform } from "react-native";
@@ -10,6 +10,7 @@ import useActivateAccount from "@/hooks/account/useActivateAccount";
 import useTranslation from "@/hooks/translation/useTranslation";
 import useAppLinks from "@/hooks/useAppLinks";
 import useUser from "@/hooks/user/useUser";
+import { clearQueryCache } from "@/lib/queryCache";
 import { Maybe } from "@/types";
 import { AccountResponse } from "@/types/api";
 import { HomeStackParamList } from "@/types/navigation";
@@ -18,6 +19,8 @@ type UserContextProps = {
   user: Maybe<AccountResponse>;
   isAuthed: boolean;
   isLoading: boolean;
+  /** The account is being fetched while (older) account data is already shown. */
+  isRefreshing: boolean;
   refetch: <T>(
     options?: (RefetchOptions & RefetchQueryFilters<T>) | undefined
   ) => Promise<QueryObserverResult<Maybe<AccountResponse>>>;
@@ -27,13 +30,15 @@ export const UserContext = createContext<UserContextProps>({
   user: null,
   isAuthed: false,
   isLoading: true,
+  isRefreshing: false,
   async refetch<T>(_options?: (RefetchOptions & RefetchQueryFilters<T>) | undefined) {
     return {} as QueryObserverResult<Maybe<AccountResponse>>;
   },
 });
 
 export default function UserProvider({ children }: PropsWithChildren<unknown>) {
-  const { user, isAuthed, isLoading, refetch } = useUser();
+  const { user, isAuthed, isLoading, isRefreshing, refetch } = useUser();
+  const queryClient = useQueryClient();
   const { mutateAsync: activateAccount } = useActivateAccount();
   const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
@@ -71,6 +76,9 @@ export default function UserProvider({ children }: PropsWithChildren<unknown>) {
       });
 
       await setAuthToken(authorization_token);
+      // Another account: forget the data of the previous one (in memory and on the phone).
+      queryClient.clear();
+      await clearQueryCache();
       await refetch();
       navigation.navigate("HomeScreen");
     } catch (err) {
@@ -94,5 +102,7 @@ export default function UserProvider({ children }: PropsWithChildren<unknown>) {
     }
   });
 
-  return <UserContext.Provider value={{ user, isAuthed, isLoading, refetch }}>{children}</UserContext.Provider>;
+  return (
+    <UserContext.Provider value={{ user, isAuthed, isLoading, isRefreshing, refetch }}>{children}</UserContext.Provider>
+  );
 }

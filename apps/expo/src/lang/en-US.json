@@ -485,6 +485,12 @@
     }
   },
   "common": {
+    "refresh_status": {
+      "fetching": "Updating…",
+      "updated": "Updated {{when}}",
+      "failed": "Could not update; data from {{when}}",
+      "weekdays": "Sun,Mon,Tue,Wed,Thu,Fri,Sat"
+    },
     "cancel": "Cancel",
     "delete": "Delete",
     "reset": "Reset",

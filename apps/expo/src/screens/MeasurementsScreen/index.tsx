@@ -2,11 +2,13 @@
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { Text, makeStyles } from "@rneui/themed";
 import { useContext, useEffect, useRef, useState } from "react";
-import { ScrollView, TouchableOpacity } from "react-native";
+import { useIsFetching, useQueryClient } from "@tanstack/react-query";
+import { RefreshControl, ScrollView, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 
 import DeviceGraph from "./_deviceGraph";
 
+import RefreshStatus from "@/components/common/RefreshStatus";
 import StatusIndicator from "@/components/common/StatusIndicator";
 import DeviceBottomSheet from "@/components/common/bottomSheets/DeviceBottomSheet";
 import PropertyBottomSheet from "@/components/common/bottomSheets/PropertyBottomSheet";
@@ -27,7 +29,16 @@ export default function MeasurementsScreen() {
   const deviceBottomSheetRef = useRef<BottomSheetModal>(null);
   const propertyBottomSheetRef = useRef<BottomSheetModal>(null);
 
-  const { data: devices } = useDevices();
+  const devicesQuery = useDevices();
+  const { data: devices } = devicesQuery;
+  const queryClient = useQueryClient();
+  // Measurements are fetched per chart; refreshing shows here as for the home screen.
+  const fetchingMeasurements = useIsFetching(["measurementsSchema"]) > 0;
+  const isFetchingAny = fetchingMeasurements || devicesQuery.isFetching;
+  const refreshAll = () => {
+    devicesQuery.refetch();
+    queryClient.refetchQueries(["measurementsSchema"], { type: "active" });
+  };
   const [deviceIdentifierName, setDeviceIdentifierName] = useState<string | undefined>();
   const [fetchedData, setFetchedData] = useState(null);
 
@@ -83,7 +94,8 @@ export default function MeasurementsScreen() {
 
   return (
     <Screen>
-      <ScrollView>
+      <RefreshStatus fetching={isFetchingAny} updatedAt={devicesQuery.dataUpdatedAt} failed={devicesQuery.isError} />
+      <ScrollView refreshControl={<RefreshControl refreshing={isFetchingAny} onRefresh={refreshAll} />}>
         <Box style={{ flex: 1 }} padded>
           <TouchableOpacity
             disabled={deviceDropdownDisabled}

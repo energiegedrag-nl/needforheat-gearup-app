@@ -1,5 +1,6 @@
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { Button, ListItem, makeStyles, useTheme } from "@rneui/themed";
+import { useQuery } from "@tanstack/react-query";
 import * as Burnt from "burnt";
 import cronParser from "cron-parser";
 import { format } from "date-fns";
@@ -13,6 +14,7 @@ import TimeProgressBar from "./timeProgressBar";
 
 import useTranslation from "@/hooks/translation/useTranslation";
 import { useOpenExternalLink } from "@/hooks/useOpenExternalLink";
+import { MANUAL_NAMES_STALE_TIME_MS } from "@/lib/queryCache/policy";
 import { AllDataSourcesResponse, DataSourceType } from "@/types/api";
 import { HomeStackParamList } from "@/types/navigation";
 import { capitalizeFirstLetter, checkMissedUpload, getManualUrl, toLocalDateTime } from "@/utils/tools";
@@ -34,7 +36,6 @@ export default function DeviceListItem(props: WifiNetworkListItemProps) {
   const { theme } = useTheme();
   const style = useStyles();
   const { t, resolvedLanguage } = useTranslation();
-  const [data, setData] = useState(null); // Initialize data state variable
   const CompleteURL = getManualUrl(item.data_source as DataSourceType);
   const [missed, setMissed] = useState(0);
   const [timeToUpload, setTimeToUpload] = useState<string>();
@@ -105,22 +106,18 @@ export default function DeviceListItem(props: WifiNetworkListItemProps) {
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    try {
+  // The names come from the manual server; they hardly change: once a day, from the cache in between (also after a
+  // restart), instead of on every render of the list.
+  const { data } = useQuery({
+    queryKey: ["manual-names", CompleteURL],
+    queryFn: async () => {
       const response = await fetch(`${CompleteURL}`);
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const fetchedData = await response.json();
-      setData(fetchedData);
-    } catch (error) {
-      console.error("Error fetching data listitem:", error);
-    }
-  };
+      if (!response.ok) throw new Error(`manual names: HTTP ${response.status}`);
+      return (await response.json()) as Record<string, string>;
+    },
+    staleTime: MANUAL_NAMES_STALE_TIME_MS,
+    retry: 1,
+  });
   // End region
 
   function formatDateAndTime(date?: Date) {

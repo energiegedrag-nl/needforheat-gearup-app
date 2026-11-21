@@ -27,7 +27,8 @@ export async function fetchCloudFeeds() {
   });
   const data = await handleRequestErrors(response);
   const jsonData = await data.json();
-  return cloudFeedSchema.parse(jsonData);
+  // An account without cloud feeds gets null (an empty Go slice), not []: that is an empty list, not an error.
+  return cloudFeedSchema.parse(jsonData ?? []);
 }
 
 export async function activateCloudFeed({ cloudFeedId, authCode }: { cloudFeedId: number; authCode: string }) {

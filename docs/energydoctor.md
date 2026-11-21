@@ -12,7 +12,7 @@ Energy Queries are interactive questionnaires designed for users. These question
 
 Certain Energy Queries require additional knowledge for optimal use. 
 
-### 1.1. Building Profile (BAG)
+### 1.1. Heat signature (energy query `building-profile`, BAG)
 
 The BuildingProfile energy query leverages Dutch BAG (Basisregistratie Adressen en Gebouwen) data to retrieve information about a user's residence. NeedForHeat can then perform calculations based on a formula defined within the [needforheat-server-api](https://github.com/energiegedrag-nl/needforheat-server-api).
 

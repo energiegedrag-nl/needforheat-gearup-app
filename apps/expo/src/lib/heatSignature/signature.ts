@@ -1,5 +1,5 @@
 /**
- * Heat performance signature (warmteprestatiesignatuur) of one single-family home, from public
+ * Heat signature (warmtesignatuur) of one single-family home, from public
  * data only: BAG (construction year, usable area, dwellings in the building), 3DBAG (envelope
  * areas, roof type, storeys) and, when available, the registered energy label (EP-online).
  *
@@ -10,8 +10,9 @@
  *   Ainf  effective wind infiltration aperture                         [cm²]
  *
  * A port of `signature.compute` from AnonyMate (https://github.com/anonymate-nl/anonymate,
- * src/anonymate/signature.py), for one dwelling and without façade orientations (the
- * orientation-averaged irradiance ratio is used). The author of AnonyMate makes this port
+ * src/anonymate/signature.py), for one dwelling, with the façade orientations and the dwelling
+ * type from the neighbours in the BAG footprints (facades.ts) where known. Design and
+ * assumptions: docs/modelbijsluiter/warmtesignatuur.md. The author of AnonyMate makes this port
  * available under the license of this repository. Tests: `signature.test.tsx` compares with
  * values computed by AnonyMate itself (`signature.fixtures.json`).
  *
@@ -40,6 +41,12 @@ export type DwellingInput = {
   nta8800__bool?: boolean | null;
   compactheid__m2_m_2?: number | null;
   label_oppervlakte__m2?: number | null;
+  /** Exposed wall per orientation (8 values, N NE E SE S SW W NW) and its side-façade part, from the BAG footprints. */
+  gevel__m?: number[] | null;
+  gevelzij__m?: number[] | null;
+  /** Neighbouring dwelling buildings (>= 2 m shared wall) and the size of the block, from the BAG footprints. */
+  buren__0?: number | null;
+  blok_panden__0?: number | null;
 };
 
 export type Signature = {
@@ -51,7 +58,15 @@ export type Signature = {
   method: Method;
   methode_gebruikt__cat: Exclude<Method, "passend">;
   woningtype_gebruikt__cat: DwellingType;
+  /** Where the type came from: "label" (EP-online), "buren" (BAG footprints) or "vorm" (3DBAG shares). */
+  woningtype_bron__cat: "label" | "buren" | "vorm";
   isolatieniveau__0: number;
+  /** Air tightness used (NTA 8800 forfaitary, after the maatwerk factor) [dm³/(s·m²) usable area]. */
+  qv10__dm3_s_1_m_2: number;
+  /** Effective leakage area at 4 Pa (discharge coefficient 1) [cm²]. */
+  ELA__cm2: number;
+  /** "gevelrichting", "gemiddeld" (orientation unknown) or "standaard" (method is orientation-averaged). */
+  asol_bron__cat: "gevelrichting" | "gemiddeld" | "standaard";
 };
 
 /** RVO reference dwellings 2022 (single-family), as in AnonyMate's data file. */
@@ -83,6 +98,16 @@ const GLASS_SHARE__0 = 1 - 0.3;
 const F_W__0 = 0.9;
 const F_SH__0 = 0.9;
 const VERTICAL_IRRADIANCE_RATIO__W0 = 0.731;
+// Vertical / horizontal irradiance per façade orientation (N NE E SE S SW W NW), heating season
+// October-April 2025-26, KNMI De Bilt (260), hourly global radiation; NOAA solar position, Erbs
+// diffuse fraction, Hay & Davies transposition, albedo 0.2 (AnonyMate instraling.py). Scaled so
+// that the mean of N/E/S/W equals the NTA 8800 ratio above: the pattern from KNMI, the level from
+// NTA 8800.
+const R_KNMI_260_2025_26 = [0.2982, 0.3838, 0.655, 1.0085, 1.1884, 1.0165, 0.6596, 0.3822];
+const R_SCALE = VERTICAL_IRRADIANCE_RATIO__W0 / ((R_KNMI_260_2025_26[0] + R_KNMI_260_2025_26[2] + R_KNMI_260_2025_26[4] + R_KNMI_260_2025_26[6]) / 4);
+export const R_PER_ORIENTATION = R_KNMI_260_2025_26.map(r => Math.round(r * R_SCALE * 1e4) / 1e4);
+// Side façades (hoekwoning, twee-onder-een-kap) have fewer and smaller windows than front and back.
+const SIDE_FACADE_WEIGHT__0 = 0.5;
 
 const MWA_RC_SURCHARGE = 0.15;
 const MWA_U_WINDOW_DOOR = 0.9;
@@ -215,6 +240,56 @@ function refClass(type: DwellingType, year: number) {
   return "2015–2018";
 }
 
+/**
+ * Single-family type from the neighbours in the BAG footprints (AnonyMate gevel.dwelling_type):
+ * none -> vrijstaand; a block of two -> twee_onder_een_kap; one neighbour in a longer block ->
+ * hoekwoning; else tussenwoning. Null when unknown.
+ */
+export function dwellingTypeFromNeighbours(
+  neighbours: number | null | undefined,
+  block: number | null | undefined
+): DwellingType | null {
+  if (neighbours === null || neighbours === undefined || !Number.isFinite(neighbours)) return null;
+  if (neighbours === 0) return "vrijstaand";
+  if (block === null || block === undefined || !Number.isFinite(block)) return null;
+  if (block === 2) return "twee_onder_een_kap";
+  if (neighbours === 1) return "hoekwoning";
+  return "tussenwoning";
+}
+
+/**
+ * Vertical / horizontal irradiance ratio of the windows (and door) and of the opaque walls, from the
+ * exposed façade per orientation (AnonyMate _irradiance_ratios). Windows follow the exposed façade,
+ * side façades at half weight (full for vrijstaand); the opaque wall is the gross wall per
+ * orientation minus what windows and door take. Null when the façades are unknown.
+ */
+export function irradianceRatios(
+  total: number[] | null | undefined,
+  sideIn: number[] | null | undefined,
+  type: DwellingType,
+  windows: number,
+  walls: number,
+  door: number
+): { rWin: number; rWall: number } | null {
+  if (!total || total.length !== 8 || !total.every(Number.isFinite)) return null;
+  const sumTotal = total.reduce((a, b) => a + b, 0);
+  if (!(sumTotal > 0)) return null;
+  const side = total.map((t, i) => Math.min(Math.max(Number(sideIn?.[i]) || 0, 0), t));
+  const ws = type === "vrijstaand" ? 1 : SIDE_FACADE_WEIGHT__0;
+  const w = total.map((t, i) => t - side[i] + ws * side[i]);
+  const sumW = w.reduce((a, b) => a + b, 0);
+  const fWin = w.map(v => v / sumW);
+  const fGross = total.map(v => v / sumTotal);
+  const gross = walls + windows + door;
+  let wallO = fGross.map((f, i) => Math.max(gross * f - (windows + door) * fWin[i], 0));
+  const sumWall = wallO.reduce((a, b) => a + b, 0);
+  wallO = wallO.map(v => v * (walls / sumWall));
+  const dot = (a: number[], b: number[]) => a.reduce((s, v, i) => s + v * b[i], 0);
+  const rWin = dot(fWin, R_PER_ORIENTATION);
+  const rWall = sumWall > 0 ? dot(wallO, R_PER_ORIENTATION) / walls : dot(fGross, R_PER_ORIENTATION);
+  return Number.isFinite(rWin) && Number.isFinite(rWall) ? { rWin, rWall } : null;
+}
+
 /** Single-family type from 3DBAG shape when no registered type exists (AnonyMate, without neighbours). */
 export function inferDwellingType(
   attached: boolean | null | undefined,
@@ -293,7 +368,11 @@ export function computeSignature(
   const registered = TYPES.includes(input.woningtype__cat as DwellingType)
     ? (input.woningtype__cat as DwellingType)
     : null;
-  const type = registered ?? inferDwellingType(input.aaneengebouwd__bool, party, outer);
+  // registered (EP-online) first; else the neighbours in the BAG footprints; else the 3DBAG shares
+  const fromNeighbours = dwellingTypeFromNeighbours(input.buren__0, input.blok_panden__0);
+  const shapeType = inferDwellingType(input.aaneengebouwd__bool, party, outer);
+  const type = registered ?? fromNeighbours ?? shapeType;
+  const typeSource: Signature["woningtype_bron__cat"] = registered ? "label" : fromNeighbours ? "buren" : "vorm";
   if (!type || !Number.isFinite(year)) return null;
 
   const u: Record<string, number> = { gevel: NaN, raam: NaN, deur: NaN, vloer: NaN, dak: NaN };
@@ -377,11 +456,20 @@ export function computeSignature(
   const H = walls * u.gevel + windows * u.raam + door * u.deur + ground * u.vloer + roof * u.dak;
   const C = ((lookup(year, MASS, 2) * 1000) / 3600) * gbo;
   const opaque = ALPHA_SOL__0 * R_SE;
-  const r = VERTICAL_IRRADIANCE_RATIO__W0;
+  // nta8800 and mwa stay orientation-averaged on purpose (standard-conform, comparable with the RVO
+  // reference dwellings); the other methods follow the exposed façades when known.
+  let rWin = VERTICAL_IRRADIANCE_RATIO__W0;
+  let rWall = VERTICAL_IRRADIANCE_RATIO__W0;
+  let asolSource: Signature["asol_bron__cat"] = "standaard";
+  if (method !== "nta8800" && method !== "mwa") {
+    const ratios = irradianceRatios(input.gevel__m, input.gevelzij__m, type, windows, walls, door);
+    asolSource = ratios ? "gevelrichting" : "gemiddeld";
+    if (ratios) ({ rWin, rWall } = ratios);
+  }
   const Asol =
-    windows * GLASS_SHARE__0 * g * F_W__0 * F_SH__0 * r +
-    walls * opaque * u.gevel * r +
-    door * opaque * u.deur * r +
+    windows * GLASS_SHARE__0 * g * F_W__0 * F_SH__0 * rWin +
+    walls * opaque * u.gevel * rWall +
+    door * opaque * u.deur * rWin +
     roof * opaque * u.dak;
 
   // infiltration: NTA 8800 forfaitary qv10, effective leakage area, LBL linearisation
@@ -406,7 +494,11 @@ export function computeSignature(
     method,
     methode_gebruikt__cat: method,
     woningtype_gebruikt__cat: type,
+    woningtype_bron__cat: typeSource,
     isolatieniveau__0: round(level, 3),
+    qv10__dm3_s_1_m_2: round(qv10, 3),
+    ELA__cm2: round(ela, 3),
+    asol_bron__cat: asolSource,
   };
 }
 

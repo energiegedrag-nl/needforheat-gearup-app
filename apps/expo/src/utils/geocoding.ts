@@ -2,7 +2,7 @@
  * Address search with the PDOK Locatieserver (Dutch government, open data from the BAG,
  * no API key): https://api.pdok.nl/bzk/locatieserver/search/v3_1/
  * Replaces the Google Geocoding API (react-native-geocoding). Covers addresses in the Netherlands,
- * which is what the building profile needs.
+ * which is what the heat signature (energy query building-profile) needs.
  */
 const BASE_URL = "https://api.pdok.nl/bzk/locatieserver/search/v3_1";
 const FIELDS = "straatnaam,huisnummer,huisletter,huisnummertoevoeging,postcode,woonplaatsnaam,centroide_ll";
@@ -33,7 +33,7 @@ function toCoordinates(address: PdokAddress) {
 
 /**
  * Format like the previous Google results ("Campus 2K, 8017 CA Zwolle, Nederland"),
- * so NL_ADDRESS_REGEX and the building profile keep parsing street, number and postal code.
+ * so NL_ADDRESS_REGEX and the heat signature keep parsing street, number and postal code.
  */
 export function formatAddress(address: PdokAddress): string {
   const pc = address.postcode.replace(/^(\d{4})\s?([A-Z]{2})$/i, "$1 $2").toUpperCase();

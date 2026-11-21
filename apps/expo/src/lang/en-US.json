@@ -28,7 +28,7 @@
           "last_seen": "Last seen at {{date}}",
           "no_data": "No data received yet"
         },
-        "reset_device": "Reset",
+        "reset_device": "Wi-Fi again",
         "empty_collection": "No items found for this campaign or there is no internet/Wi-Fi.",
         "updating_now": "Now",
         "late": "Late",
@@ -296,24 +296,24 @@
           "title": "Processing Address",
           "alert": {
             "initial_data": {
-              "title": "Fetching initial data...",
-              "message": "Retrieving initial data about your home"
+              "title": "Fetching addresses and buildings...",
+              "message": "Retrieving the addresses of your postcode and the buildings nearby"
             },
             "data": {
-              "title": "Fetching data...",
-              "message": "Retrieving more data about your home"
+              "title": "Fetching 3D data...",
+              "message": "Retrieving the 3D data of your building, together with that of seven other buildings"
             },
             "calculating": {
               "title": "Calculating...",
-              "message": "Calculating your buiding energy profile"
+              "message": "Calculating the heat signature of your home"
             },
             "sending": {
-              "title": "Sending energy profile...",
-              "message": "Sending your building energy profile"
+              "title": "Sending heat signature...",
+              "message": "Sending the rounded heat signature of your home"
             },
             "success": {
               "title": "Success!",
-              "message": "Your building energy profile was sent"
+              "message": "The heat signature of your home was sent"
             }
           },
           "fail": {
@@ -332,7 +332,7 @@
             },
             "unsuitable": {
               "title": "Not yet suitable for this home",
-              "message": "The building profile currently only works for single-family homes: detached, semi-detached, corner or terraced. Your address is in a building with several homes, such as an apartment. The app does not support that yet. Nothing was sent; you can continue with the other steps in the app."
+              "message": "The heat signature currently only works for single-family homes: detached, semi-detached, corner or terraced. Your address is in a building with several homes, such as an apartment. The app does not support that yet. Nothing was sent; you can continue with the other steps in the app."
             },
             "sending": {
               "message": "Error sending data. Ensure you have internet/Wi-Fi or contact support."
@@ -485,6 +485,12 @@
     }
   },
   "common": {
+    "refresh_status": {
+      "fetching": "Updating…",
+      "updated": "Updated {{when}}",
+      "failed": "Could not update; data from {{when}}",
+      "weekdays": "Sun,Mon,Tue,Wed,Thu,Fri,Sat"
+    },
     "cancel": "Cancel",
     "delete": "Delete",
     "reset": "Reset",

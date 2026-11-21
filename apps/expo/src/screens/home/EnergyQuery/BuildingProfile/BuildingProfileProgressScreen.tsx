@@ -12,6 +12,7 @@ import Box from "@/components/elements/Box";
 import useAPIKey from "@/hooks/API/useAPIKey";
 import useTranslation from "@/hooks/translation/useTranslation";
 import { fetchDwelling, heatSignature } from "@/lib/heatSignature";
+import { applyUhiToH } from "@/lib/heatSignature/uhi";
 import { parseRoundingRules, roundForUpload } from "@/lib/privacy/rounding";
 import { useDisableBackButton } from "@/hooks/useDisableBackButton";
 import { EnergyQuery } from "@/types/api";
@@ -52,28 +53,28 @@ export default function BuildingProfileProgressScreen({ navigation, route }: Bui
       title: t("screens.home_stack.energy_query.building_profile_progress.alert.initial_data.title"),
       description: t("screens.home_stack.energy_query.building_profile_progress.alert.initial_data.message"),
       finished: isBAGReceived,
-      loading: !isBAGReceived,
+      loading: !isBAGReceived && !isBAGReceivedError,
       error: isBAGReceivedError,
     },
     {
       title: t("screens.home_stack.energy_query.building_profile_progress.alert.data.title"),
       description: t("screens.home_stack.energy_query.building_profile_progress.alert.data.message"),
       finished: is3DBAGReceived,
-      loading: !is3DBAGReceived,
+      loading: isBAGReceived && !is3DBAGReceived && !is3DBAGReceivedError,
       error: is3DBAGReceivedError,
     },
     {
       title: t("screens.home_stack.energy_query.building_profile_progress.alert.calculating.title"),
       description: t("screens.home_stack.energy_query.building_profile_progress.alert.calculating.message"),
       finished: isCalculating,
-      loading: !isCalculating,
+      loading: is3DBAGReceived && !isCalculating && !isCalculatingError && !isUnsuitable,
       error: isCalculatingError || isUnsuitable,
     },
     {
       title: t("screens.home_stack.energy_query.building_profile_progress.alert.sending.title"),
       description: t("screens.home_stack.energy_query.building_profile_progress.alert.sending.message"),
       finished: isSucces,
-      loading: !isSucces,
+      loading: isCalculating && !isSucces && !isSuccesError,
       error: isSuccesError,
     },
   ];
@@ -84,12 +85,23 @@ export default function BuildingProfileProgressScreen({ navigation, route }: Bui
     // Everything is fetched from the phone; the address is not sent to the NeedForHeat server.
     let dwelling: Awaited<ReturnType<typeof fetchDwelling>>;
     try {
-      dwelling = await fetchDwelling(location, epOnlineKey?.api_key ?? null);
-      setisBAGReceived(true);
+      // Each step is ticked off when it is done (not all at the end): BAG, then 3DBAG.
+      let bagDone = false;
+      try {
+        dwelling = await fetchDwelling(location, epOnlineKey?.api_key ?? null, stage => {
+          if (stage === "bag") {
+            bagDone = true;
+            setisBAGReceived(true);
+          }
+        });
+      } catch (err) {
+        if (bagDone) setis3DBAGReceivedError(true);
+        else setisBAGReceivedError(true);
+        throw err;
+      }
       setis3DBAGReceived(true);
     } catch {
       setShowButton(true);
-      setisBAGReceivedError(true);
       return;
     }
 
@@ -101,7 +113,7 @@ export default function BuildingProfileProgressScreen({ navigation, route }: Bui
       return;
     }
 
-    // 3. Calculate: the heat performance signature (method of AnonyMate), plus any formulas the
+    // 3. Calculate: the heat signature (method of AnonyMate), plus any formulas the
     // campaign configured for this data source (on the 3DBAG attributes, as before).
     const currentLocaleTimeInUnix = Math.floor(Date.now() / 1000);
     const measurements: { value: string; property: { name: string }; time: number }[] = [];
@@ -115,10 +127,15 @@ export default function BuildingProfileProgressScreen({ navigation, route }: Bui
       const values: Record<string, number> = {};
       const signature = heatSignature(dwelling.input, "passend");
       if (signature) {
-        values.heat_tr_building_cond__W_K_1 = signature.H__W_K_1;
+        // H with the urban heat island folded in (RIVM per PC4, bundled), as a learning model with KNMI
+        // weather would see it; the heat island itself is not uploaded (modelbijsluiter §C6).
+        values.heat_tr_building_cond__W_K_1 = applyUhiToH(signature.H__W_K_1, dwelling.uhi__K);
         values.th_mass_building__Wh_K_1 = signature.C__Wh_K_1;
         values.aperture_sol__m2 = signature.Asol__m2;
         values.aperture_inf__cm2 = signature.Ainf__cm2;
+        // Air tightness behind Ainf (NTA 8800 forfaitary, after the maatwerk factor): the quantity a
+        // blower-door test measures, so a later measured value can replace it (modelbijsluiter §C5).
+        values.qv10__dm3_s_1_m_2 = signature.qv10__dm3_s_1_m_2;
       }
 
       const formulas = dataSource.item.Formula;

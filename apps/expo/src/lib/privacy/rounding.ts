@@ -5,7 +5,7 @@
  * either a step (rounded to a multiple of `step` after clamping to [`min`, `max`], so each tail
  * ends up in one value) or bins (the first bin whose exclusive upper bound `lt` the value is
  * below, uploaded as that bin's representative `value`; the last bin is open). Results computed
- * from public data, such as a heat performance signature, are quasi-identifiers: choose rules
+ * from public data, such as a heat signature, are quasi-identifiers: choose rules
  * beforehand with AnonyMate's rounding analysis against a norm (e.g. p = 0.09, k >= 11).
  *
  * This file has no imports, so it also runs directly under Node.
@@ -17,7 +17,7 @@ export type RoundingRule =
 export type RoundingRules = Record<string, RoundingRule>;
 
 /**
- * Default for the heat performance signature when a campaign sets nothing: deciles for H and
+ * Default for the heat signature when a campaign sets nothing: deciles for H and
  * quintiles for C, Asol and Ainf, with the median of each bin as its value. Computed from the
  * national population of single-family homes (AnonyMate, method `passend`, 5.28 million homes).
  * Against k >= 11 (p = 0.09), publishing these four together leaves 0.02% of the homes in a group
@@ -64,6 +64,17 @@ export const DEFAULT_SIGNATURE_ROUNDING: RoundingRules = {
       { lt: 115, value: 100 },
       { lt: 155, value: 130 },
       { value: 205 },
+    ],
+  },
+  // Five classes around the NTA 8800 forfaitary ladder after the maatwerk factor 0.5 (values 0.17-2.1).
+  // Not yet checked with AnonyMate's rounding analysis together with the four above (modelbijsluiter §B3).
+  qv10__dm3_s_1_m_2: {
+    bins: [
+      { lt: 0.35, value: 0.3 },
+      { lt: 0.65, value: 0.5 },
+      { lt: 1.0, value: 0.8 },
+      { lt: 1.5, value: 1.25 },
+      { value: 1.8 },
     ],
   },
 };

@@ -28,7 +28,7 @@
           "last_seen": "Laatst gezien op {{date}}",
           "no_data": "Nog geen data ontvangen"
         },
-        "reset_device": "Resetten",
+        "reset_device": "Wifi opnieuw",
         "empty_collection": "Er is geen lijst met bronnen gevonden voor deze campagne of er is geen internet/wifi.",
         "updating_now": "Nu",
         "late": "Laat",
@@ -296,24 +296,24 @@
           "title": "Adres verwerken",
           "alert": {
             "initial_data": {
-              "title": "Gegevens ophalen...",
-              "message": "Initiële gegevens van uw woning worden opgehaald"
+              "title": "Adressen en gebouwen ophalen...",
+              "message": "Adressen van uw postcode en gebouwen in de buurt worden opgehaald"
             },
             "data": {
-              "title": "Meer gegevens ophalen...",
-              "message": "Meer gegevens van uw woning worden opgehaald"
+              "title": "3D-gegevens ophalen...",
+              "message": "3D-gegevens van uw gebouw worden opgehaald, samen met die van zeven andere gebouwen"
             },
             "calculating": {
               "title": "Berekenen...",
-              "message": "Energieprofiel van uw woning wordt berekend"
+              "message": "Warmtesignatuur van uw woning wordt berekend"
             },
             "sending": {
-              "title": "Profiel verzenden...",
-              "message": "Energieprofiel van uw woning wordt verzonden"
+              "title": "Warmtesignatuur verzenden...",
+              "message": "Afgeronde warmtesignatuur van uw woning wordt verzonden"
             },
             "success": {
               "title": "Succes!",
-              "message": "Energieprofiel van uw woning is verzonden"
+              "message": "Warmtesignatuur van uw woning is verzonden"
             }
           },
           "fail": {
@@ -332,7 +332,7 @@
             },
             "unsuitable": {
               "title": "Nog niet geschikt voor deze woning",
-              "message": "Het gebouwprofiel werkt nu alleen voor eengezinswoningen: vrijstaand, twee-onder-een-kap, hoek- of tussenwoning. Uw adres ligt in een gebouw met meerdere woningen, zoals een appartement. Daarvoor is de app nog niet geschikt. Er is niets verstuurd; u kunt verder met de andere stappen in de app."
+              "message": "De warmtesignatuur werkt nu alleen voor eengezinswoningen: vrijstaand, twee-onder-een-kap, hoek- of tussenwoning. Uw adres ligt in een gebouw met meerdere woningen, zoals een appartement. Daarvoor is de app nog niet geschikt. Er is niets verstuurd; u kunt verder met de andere stappen in de app."
             },
             "sending": {
               "message": "Fout bij het verzenden van gegevens. Zorg voor internet/wifi of neem contact op met de helpdesk."
@@ -486,6 +486,12 @@
     }
   },
   "common": {
+    "refresh_status": {
+      "fetching": "Bijwerken…",
+      "updated": "Bijgewerkt {{when}}",
+      "failed": "Bijwerken lukte niet; gegevens van {{when}}",
+      "weekdays": "zo,ma,di,wo,do,vr,za"
+    },
     "cancel": "Annuleren",
     "delete": "Verwijderen",
     "reset": "Reset",

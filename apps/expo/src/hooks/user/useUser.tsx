@@ -62,7 +62,9 @@ export default function useUser() {
   return {
     user: user || storedUser,
     isAuthed: Boolean((user && user.activated_at) || storedUser),
-    isLoading: isFetching,
+    // Only "loading" when there is nothing to show yet; with known data the screen stays and shows a refresh.
+    isLoading: isFetching && !user && !storedUser,
+    isRefreshing: isFetching,
     refetch,
   };
 }

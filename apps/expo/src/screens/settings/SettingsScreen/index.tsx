@@ -1,4 +1,4 @@
-import { API_URL } from "@env";
+import { API_URL, BUILD_COMMIT } from "@env";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { makeStyles, Text } from "@rneui/themed";
 import { toast } from "burnt";
@@ -78,6 +78,7 @@ export default function SettingsScreen() {
           })}
         </Text>
         <Text style={{ fontSize: 14 }}>API: {API_URL}</Text>
+        {BUILD_COMMIT ? <Text style={{ fontSize: 14 }}>Build: {BUILD_COMMIT}</Text> : null}
       </Box>
       <LanguageBottomSheet bottomSheetRef={bottomSheetRef} />
     </Box>

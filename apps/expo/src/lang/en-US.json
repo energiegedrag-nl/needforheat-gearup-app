@@ -28,7 +28,7 @@
           "last_seen": "Last seen at {{date}}",
           "no_data": "No data received yet"
         },
-        "reset_device": "Reset",
+        "reset_device": "Wi-Fi again",
         "empty_collection": "No items found for this campaign or there is no internet/Wi-Fi.",
         "updating_now": "Now",
         "late": "Late",

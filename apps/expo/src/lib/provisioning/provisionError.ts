@@ -29,8 +29,9 @@ export class ProvisionError extends Error {
 // iOS: ESPProvisionError descriptions (authentication / network not found).
 const WIFI_CREDENTIAL_ERROR = /AUTH_FAILED|NETWORK_NOT_FOUND|authentication|network not found/i;
 
-// The session is gone or never worked: no credentials can have been applied.
-const SESSION_ERROR = /not connected|E_DEVICE_DISCONNECTED|No ESP device|session|disconnect|connection timed out/i;
+// The session could not be set up: nothing was sent. A disconnect *after* the credentials is not this: the device
+// ends the Bluetooth session itself once it is online (21-11: that showed a red Wi-Fi step while pairing worked).
+const SESSION_SETUP_ERROR = /create session|session failed|createSession|No ESP device/i;
 
 export function isWifiCredentialError(message: string): boolean {
   return WIFI_CREDENTIAL_ERROR.test(message);
@@ -39,7 +40,7 @@ export function isWifiCredentialError(message: string): boolean {
 export function classifyProvisionError(message: string, phase: ProvisionPhase): ProvisionErrorKind {
   if (isWifiCredentialError(message)) return "wifi";
   if (phase === "session") return "session";
-  return SESSION_ERROR.test(message) && !/status/i.test(message) ? "session" : "unclear";
+  return SESSION_SETUP_ERROR.test(message) ? "session" : "unclear";
 }
 
 export function toProvisionError(err: unknown, phase: ProvisionPhase): ProvisionError {

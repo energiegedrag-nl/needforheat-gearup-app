@@ -28,7 +28,7 @@
           "last_seen": "Laatst gezien op {{date}}",
           "no_data": "Nog geen data ontvangen"
         },
-        "reset_device": "Resetten",
+        "reset_device": "Wifi opnieuw",
         "empty_collection": "Er is geen lijst met bronnen gevonden voor deze campagne of er is geen internet/wifi.",
         "updating_now": "Nu",
         "late": "Laat",

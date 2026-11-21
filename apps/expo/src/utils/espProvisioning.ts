@@ -29,6 +29,8 @@ const TRANSPORT = ESPTransport.ble;
 const SECURITY = ESPSecurity.secure;
 
 let connectedDevice: ESPDevice | null = null;
+/** The last device connected to, to connect again when a request fails (see scanWifiList). */
+let lastConnection: { deviceName: string; proofOfPossession: string } | null = null;
 
 /** Scan for BLE provisioning devices whose name starts with prefix ("" = all). */
 export async function getBleDevices(prefix = ""): Promise<BleDeviceType[]> {
@@ -64,6 +66,7 @@ export async function connectBleDevice(deviceName: string, proofOfPossession: st
     try {
       await device.connect(proofOfPossession);
       connectedDevice = device;
+      lastConnection = { deviceName, proofOfPossession };
       return;
     } catch (err: unknown) {
       if (attempt >= 2) throw err;
@@ -82,7 +85,17 @@ function requireDevice(): ESPDevice {
 
 /** Wi-Fi networks as seen by the connected device. */
 export async function scanWifiList(): Promise<WifiEntry[]> {
-  const networks = await requireDevice().scanWifiList();
+  let networks;
+  try {
+    networks = await requireDevice().scanWifiList();
+  } catch (err: unknown) {
+    // 21-11: after a Wi-Fi reset of the device the first scan failed (the device did scan and beeped), while a new
+    // connection ("retry") worked. So connect again once by ourselves before giving up.
+    if (!lastConnection) throw err;
+    console.warn("Provisioning: Wi-Fi scan failed, connecting again once.", err);
+    await connectBleDevice(lastConnection.deviceName, lastConnection.proofOfPossession);
+    networks = await requireDevice().scanWifiList();
+  }
   // ESPWifiAuthMode uses the same numbering (0-7) as WifiSecurity.
   return networks.map(network => ({
     name: network.ssid,

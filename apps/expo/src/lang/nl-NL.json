@@ -486,6 +486,12 @@
     }
   },
   "common": {
+    "refresh_status": {
+      "fetching": "Bijwerken…",
+      "updated": "Bijgewerkt {{when}}",
+      "failed": "Bijwerken lukte niet; gegevens van {{when}}",
+      "weekdays": "zo,ma,di,wo,do,vr,za"
+    },
     "cancel": "Annuleren",
     "delete": "Verwijderen",
     "reset": "Reset",

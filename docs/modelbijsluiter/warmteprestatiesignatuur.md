@@ -42,8 +42,9 @@ elkaar laten zien waar een woning afwijkt van wat haar bouwjaar, vorm en label d
 | A_sol | effectieve *horizontale* zonnetoetreding: zonwinst = A_sol × globale horizontale instraling | m² |
 | A_inf | effectieve windapertuur: infiltratiedebiet = windsnelheid × A_inf | cm² |
 
-Daarnaast, nieuw in deze versie: de **luchtdoorlatendheid q_v;10** waarop A_inf rust (§C5), en het
-**stedelijk hitte-eilandeffect** op de plek van de woning (§C6).
+Daarnaast, nieuw in deze versie: de **luchtdoorlatendheid q_v;10** waarop A_inf rust (§C5). Het
+**stedelijk hitte-eilandeffect** op de plek van de woning wordt in H verwerkt, niet los gepubliceerd
+(§C6).
 
 **Hoe de berekening loopt.**
 
@@ -63,18 +64,19 @@ graph LR
     HC --> AS
     TY --> INF[C5 q_v;10, ELA en A_inf]
     D3 --> INF
-    UHI[RIVM hitte-eiland per PC4, in de app] --> U[C6 UHI]
-    HC --> AF[C7 Afronden]
+    UHI[RIVM hitte-eiland per PC4, in de app] --> U[C6 H zoals een leermodel hem ziet]
+    HC --> U
+    U --> AF[C7 Afronden]
+    HC --> AF
     AS --> AF
     INF --> AF
-    U --> AF
     AF --> S[Gebouwprofiel naar de server]
 ```
 
 **Wat eruit komt.** Per woning één set: H, C, A_sol, A_inf en q_v;10, elk afgerond in grove klassen
 (§3, §C7). τ en de gebruikte methode gaan niet mee (ze maken de afgeronde waarden weer scherper of
-verraden of er een label is). Het hitte-eilandeffect gaat alleen mee als de campagne dat met een eigen
-afrondingsregel toestaat.
+verraden of er een label is). H is gecorrigeerd voor het stedelijk hitte-eiland, zodat hij vergelijkbaar
+is met een H die met KNMI-weer is geleerd; de hitte-eilandwaarde zelf verlaat de telefoon niet.
 
 **Waar het op leunt.** De U-waarden en ramen komen uit de RVO-voorbeeldwoningen 2022 bij bouwjaar en
 type, bijgesteld met het energielabel als dat er is. Waar de ramen precies zitten weet niemand: ze
@@ -129,17 +131,19 @@ getypte zoektekst nog wel naar PDOK; zie §7.
 
 | Property (server) | Bron | Standaardafronding (zonder campagneregel) |
 |---|---|---|
-| `heat_tr_building_cond__W_K_1` | H | 10 klassen (decielen) |
+| `heat_tr_building_cond__W_K_1` | H, **met het hitte-eiland verwerkt** (§C6) | 10 klassen (decielen) |
 | `th_mass_building__Wh_K_1` | C | 5 klassen (kwintielen) |
 | `aperture_sol__m2` | A_sol | 5 klassen |
 | `aperture_inf__cm2` | A_inf | 5 klassen |
 | `qv10__dm3_s_1_m_2` | q_v;10 (nieuw) | 5 klassen rond de forfaitaire ladder: 0,3 / 0,5 / 0,8 / 1,25 / 1,8 |
-| `uhi__K` | hitte-eilandeffect (nieuw) | **geen**: gaat alleen mee met een regel van de campagne |
 
 De klassengrenzen van H, C, A_sol en A_inf komen uit de landelijke populatie eengezinswoningen
 (AnonyMate, 5,28 miljoen woningen) en houden samen 0,02% van de woningen in een groep kleiner dan 11.
 De klassen voor q_v;10 zijn **nog niet** in die analyse meegenomen: q_v;10 hangt alleen af van type,
-bouwjaarklasse en daktype en voegt daarom weinig toe, maar dat moet de analyse nog bevestigen.
+bouwjaarklasse en daktype en voegt daarom weinig toe, maar dat moet de analyse nog bevestigen. Hetzelfde
+geldt voor de H met hitte-eilandcorrectie: die ligt tot ongeveer 13% lager dan de H waarop de
+klassengrenzen zijn bepaald (§C6), dus de klassen blijven bruikbaar, maar de populatie van AnonyMate kent
+de gecorrigeerde H nog niet (`sig_best_uhi_H`, kladbloknotitie 5 van AnonyMate).
 
 ## 4. Aannames
 
@@ -153,7 +157,7 @@ bouwjaarklasse en daktype en voegt daarom weinig toe, maar dat moet de analyse n
 4. **Luchtdichtheid** forfaitair volgens NTA 8800, bij maatwerk gehalveerd (§C5); niet gemeten.
 5. **Klimaat** één stookseizoen in De Bilt voor de richtingsfactoren en de infiltratieconstante.
 6. **Hitte-eiland:** de RIVM-waarde is een zomergemiddelde; welk deel in het stookseizoen geldt is
-   onbekend (§C6).
+   onbekend. De app neemt het volle effect (s = 1, de standaard van AnonyMate) (§C6).
 
 ## 5. Validatiebewijs
 
@@ -312,15 +316,40 @@ naar het aantal adressen, in tienden van een kelvin: 4.056 postcodes, **37 KB**,
 (`uhi.ts`, `tools/make_uhi_pc4.py`). Tegenover de PC6-waarde wijkt het PC4-gemiddelde 0,21 K af (RMS
 over adressen; P90 0,34 K). Landelijk is het effect gemiddeld 0,85 K (mediaan 0,82; 38% boven 1 K).
 
-**Gebruik.** De app laat H zoals hij is (de fysieke schil) en levert het hitte-eilandeffect apart
-(`uhi__K`). Wie berekend en geleerd vergelijkt, rekent H om naar wat het leermodel zou zien:
+**Waarom in H en niet als los getal.** AnonyMate heeft dat doorgerekend (`docs/herleidbaarheid-uitleg.md`,
+eengezinswoningen van 50 tot 250 m² met label; gepubliceerd: weerzone, type, label en een afgeronde
+signatuur):
 
-  H_leer = H · (T_binnen − T_buiten − s · UHI) / (T_binnen − T_buiten)
+| opzet | aandeel in een groep < 11 | bits onthuld |
+|---|---:|---:|
+| geen hitte-eiland | 2,9% | 12,2 |
+| hitte-eiland verwerkt in de berekening | 2,9% | 12,2 |
+| plus hitte-eiland als kolom, op 1 °C | 5,7% | 13,1 |
+| plus hitte-eiland als kolom, op 0,5 °C | 8,1% | 13,8 |
+| plus hitte-eiland als kolom, op 0,1 °C | 20,8% | 15,8 |
 
-met T_binnen = 18,33 °C en T_buiten = 6,44 °C (stookseizoensgemiddelden, AnonyMate) en s het deel van
-het zomereffect dat in het stookseizoen geldt (onbekend; AnonyMate rekent met 0, 0,5 en 1). Bij
-UHI = 1 K en s = 1 is H_leer 8,4% kleiner. Omdat `uhi__K` een locatiekenmerk is, gaat het alleen mee
-met een afrondingsregel van de campagne (bijvoorbeeld stappen van 0,5 K).
+Als los getal is het een **locatiewijzer**: binnen een weerzone verschilt het per postcode (spreiding
+0,4 °C), en zelfs op 1 °C afgerond verdubbelt het aandeel te kleine groepen. Verwerkt in de berekening
+kost het niets: de aanvaller rekent de gecorrigeerde H net zo goed uit het adres als de ongecorrigeerde.
+Er is dus geen keus: de app verwerkt het in H en publiceert het niet apart.
+
+**Hoe.** De app rekent H om naar wat een leermodel met KNMI-weer (of de geïnterpoleerde weerlocatie van
+NeedForHeat, §C7) zou vinden:
+
+  H_gepubliceerd = H · (T_binnen − T_buiten − s · UHI) / (T_binnen − T_buiten)
+
+met T_binnen = 18,33 °C en T_buiten = 6,44 °C (stookseizoensgemiddelden, AnonyMate `as_learned`) en
+s = 1 (`UHI_SHARE__0` in `uhi.ts`; AnonyMate rekent met 0, 0,5 en 1 en heeft nog niet gekozen). Bij
+UHI = 1 K is H 8,4% kleiner; bij het negentigste percentiel van de eengezinswoningen ongeveer 13%.
+Zonder bekende waarde (postcode niet in de tabel) blijft H ongecorrigeerd. C, A_sol en A_inf
+veranderen niet. De ongecorrigeerde H staat niet op de server; wie hem nodig heeft, deelt door de factor
+hierboven (het algoritme en de tabel zijn openbaar).
+
+**Andersom kan ook, maar niet bij NeedForHeat.** AnonyMate noemt als veilige weg ook: het leermodel
+rekenen met lokaal weer (station plus hitte-eiland), zodat het de werkelijke H vindt. Daarvoor moet de
+partij die leert het hitte-eiland per woning kennen, dus de locatie. De NeedForHeat-server kent bewust
+alleen een verschoven H3-cel van niveau 5 (§C7); daarom gebeurt de correctie in de app, aan de kant van
+de berekende signatuur.
 
 ## C7. Afronden en privacy van de inname
 
@@ -338,7 +367,15 @@ kiezen* (Slim stroomgebruik thuis, kladbloknotitie 8):
 | BAG panden | een vaste tegel van 300 m | honderden panden |
 | 3DBAG | 8 panden uit de tegel, door elkaar | 8 |
 | EP-online (alleen met sleutel) | het adres | 1 |
-| Hitte-eiland | niets (in de app) | alle |
+| Hitte-eiland | niets (in de app, verwerkt in H) | alle |
+
+**Weerlocatie.** De vraag *weerlocatie* (`weather-interpolation-location`) stuurt geen adres maar het
+midden van een H3-cel van **niveau 5** (ongeveer 250 km²), **na een willekeurige verschuiving** met
+normaal verdeelde ruis van **σ = 10 km** per richting (`utils/weatherLocation.ts`). De verschuiving
+wordt één keer per installatie getrokken en bewaard, zodat opnieuw antwoorden geen nieuwe steekproeven
+rond de woning geeft die je kunt middelen. Volgens de analyse met AnonyMate (`weerspoor`: een aanvaller
+legt de weerreeks naast KNMI-uurwaarden en zoekt de gebruikte locatie) is dat even veilig als niveau 4
+zonder ruis (ongeveer 1.770 km²) en geeft het nauwkeuriger weer.
 
 De woningtypebepaling uit de buren past hier precies in: ze heeft de omliggende panden toch nodig, dus
 het ophalen per tegel kost niets extra. Het oude pad vroeg BAG en 3DBAG per object en de Locatieserver
@@ -361,8 +398,9 @@ op het volledige adres.
    ligt dichter bij ΔT dan bij v). Variant (b) past alleen als het leermodel aan de andere kant dezelfde
    opdeling maakt; anders verschuift het alleen verlies van A_inf naar H. Welk leermodel gebruikt de
    NeedForHeat-analyse?
-5. **Hitte-eiland in H?** Moet de app H_leer (§C6) in plaats van H publiceren, en met welke s? Of blijft
-   die correctie aan de analysekant, met `uhi__K` als losse invoer?
+5. **Welk deel van het hitte-eiland (s)?** De app verwerkt het volle zomereffect (s = 1) in H. Zodra
+   AnonyMate de varianten 0 / 0,5 / 1 tegen gemeten woningen heeft getoetst (kladbloknotitie 5), s
+   daarop aanpassen; dat is een wijziging van de rekenwijze (§6).
 6. **Ramen naar richting.** Het raamaandeel per richting volgt het geveloppervlak (zijgevel ½). Is er
    een betere openbare bron, bijvoorbeeld de ramen in 3DBAG LoD2.2?
 
@@ -383,11 +421,12 @@ op het volledige adres.
 | RIVM | Rijksinstituut voor Volksgezondheid en Milieu |
 | RVO | Rijksdienst voor Ondernemend Nederland |
 | UHI | urban heat island, stedelijk hitte-eilandeffect |
+| H3 | hiërarchisch zeshoekig raster (Uber); niveau 5 is ongeveer 250 km² |
 
 ## Bijlage. Technische verklaring
 
 - **Code.** `signature.ts` en `facades.ts` hebben geen imports en draaien ook los onder Node;
-  `publicData.ts` haalt de gegevens op, `uhi.ts` zoekt het hitte-eiland op.
+  `publicData.ts` haalt de gegevens op, `uhi.ts` zoekt het hitte-eiland op en verwerkt het in H (`applyUhiToH`).
 - **Tests.** `signature.test.tsx` (66 vergelijkingen met AnonyMate), `facades.test.tsx` (geometrie),
   `publicData.test.tsx` (adres kiezen, tegel, hitte-eiland), `lib/privacy/rounding.test.tsx`
   (afronding). Ze draaien in de CI bij elke pull request.

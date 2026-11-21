@@ -12,6 +12,7 @@ import Box from "@/components/elements/Box";
 import useAPIKey from "@/hooks/API/useAPIKey";
 import useTranslation from "@/hooks/translation/useTranslation";
 import { fetchDwelling, heatSignature } from "@/lib/heatSignature";
+import { applyUhiToH } from "@/lib/heatSignature/uhi";
 import { parseRoundingRules, roundForUpload } from "@/lib/privacy/rounding";
 import { useDisableBackButton } from "@/hooks/useDisableBackButton";
 import { EnergyQuery } from "@/types/api";
@@ -115,7 +116,9 @@ export default function BuildingProfileProgressScreen({ navigation, route }: Bui
       const values: Record<string, number> = {};
       const signature = heatSignature(dwelling.input, "passend");
       if (signature) {
-        values.heat_tr_building_cond__W_K_1 = signature.H__W_K_1;
+        // H with the urban heat island folded in (RIVM per PC4, bundled), as a learning model with KNMI
+        // weather would see it; the heat island itself is not uploaded (modelbijsluiter §C6).
+        values.heat_tr_building_cond__W_K_1 = applyUhiToH(signature.H__W_K_1, dwelling.uhi__K);
         values.th_mass_building__Wh_K_1 = signature.C__Wh_K_1;
         values.aperture_sol__m2 = signature.Asol__m2;
         values.aperture_inf__cm2 = signature.Ainf__cm2;
@@ -123,9 +126,6 @@ export default function BuildingProfileProgressScreen({ navigation, route }: Bui
         // blower-door test measures, so a later measured value can replace it (modelbijsluiter §C5).
         values.qv10__dm3_s_1_m_2 = signature.qv10__dm3_s_1_m_2;
       }
-      // Urban heat island at the home (RIVM, per PC4, bundled): uploaded only when the campaign sets a
-      // rounding rule for it (no default), because it is a location quasi-identifier (modelbijsluiter §C6).
-      if (dwelling.uhi__K !== null) values.uhi__K = dwelling.uhi__K;
 
       const formulas = dataSource.item.Formula;
       if (formulas) {

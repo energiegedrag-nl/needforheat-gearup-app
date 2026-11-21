@@ -1,7 +1,7 @@
 import { describe, expect, it } from "@jest/globals";
 
 import { chooseVerblijfsobject, splitAddress, tileAround } from "./publicData";
-import { uhiForPostcode } from "./uhi";
+import { applyUhiToH, uhiForPostcode } from "./uhi";
 
 const vbo = (huisnummer: number, huisletter: string | null = null, toevoeging: string | null = null) => ({
   properties: { openbare_ruimte_naam: "Achter het Oude Stadhuis", huisnummer, huisletter, toevoeging },
@@ -35,5 +35,11 @@ describe("finding the home without sending the address", () => {
     expect(v).not.toBeNull();
     expect(v!).toBeGreaterThan(0.5);
     expect(uhiForPostcode("0000")).toBeNull();
+  });
+
+  it("folds the heat island into H: 1 K makes H 8.4% smaller, unknown leaves it", () => {
+    expect(applyUhiToH(200, 1)).toBeCloseTo(200 * (10.89 / 11.89), 6);
+    expect(applyUhiToH(200, null)).toBe(200);
+    expect(applyUhiToH(200, 1, 0)).toBe(200);
   });
 });

@@ -1,15 +1,18 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { t } from "i18next";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { FlatList, View } from "react-native";
 import { RefreshControl } from "react-native-gesture-handler";
 
 import DeviceListItem from "./_listItem";
 import ProgressBar from "./progressBar";
 
+import RefreshStatus from "@/components/common/RefreshStatus";
 import StatusIndicator from "@/components/common/StatusIndicator";
 import useCloudFeeds from "@/hooks/cloud-feed/useCloudFeeds";
 import useDevices from "@/hooks/device/useDevices";
 import useEnergyQueries from "@/hooks/energyquery/useEnergyQueries";
+import { UserContext } from "@/providers/UserProvider";
 import { AllDataSourcesResponse, DataSourceListType } from "@/types/api";
 import { processDataSource } from "@/utils/tools";
 
@@ -22,13 +25,21 @@ export default function DataSourceList({
   dataSourceList: DataSourceListType;
   onRefresh: () => void;
 }) {
-  const { data, isLoading, refetch, isRefetching } = useDevices();
-  const { data: cloudFeedData, isFetching } = useCloudFeeds();
-  const {
-    data: energyQueryData,
-    isLoading: isLoadingEnergyQueries,
-    refetch: refetchEnergyQueries,
-  } = useEnergyQueries();
+  const queryClient = useQueryClient();
+  const { isRefreshing: isRefreshingUser, refetch: refetchUser } = useContext(UserContext);
+  const devices = useDevices();
+  const { data, isLoading, refetch } = devices;
+  const cloudFeeds = useCloudFeeds();
+  const { data: cloudFeedData, isLoading: isLoadingCloudFeeds } = cloudFeeds;
+  const energyQueries = useEnergyQueries();
+  const { data: energyQueryData, isLoading: isLoadingEnergyQueries } = energyQueries;
+  // Fetching new data while the old is on screen: shown by the pull-down indicator and the status line, also when
+  // the app starts the refresh itself (on start, on return to the app, on returning to this screen).
+  const isFetchingAny = devices.isFetching || cloudFeeds.isFetching || energyQueries.isFetching || isRefreshingUser;
+  const updatedAt = Math.min(
+    ...[devices.dataUpdatedAt, energyQueries.dataUpdatedAt].filter(time => time > 0).concat([Infinity])
+  );
+  const refreshFailed = devices.isError || energyQueries.isError || cloudFeeds.isError;
 
   const [itemData, setItemData] = useState<AllDataSourcesResponse[]>([]);
   const [allItemsDone, setAllItemsDone] = useState(true);
@@ -78,10 +89,11 @@ export default function DataSourceList({
 
   useEffect(() => {
     if (refresh) {
-      refreshData();
+      // Returning to this screen: refresh only what is stale (older than a minute).
+      queryClient.refetchQueries({ stale: true, type: "active" });
       onRefresh();
     }
-  }, [refresh, refetch, onRefresh, refetchEnergyQueries]);
+  }, [refresh, onRefresh, queryClient]);
 
   useEffect(() => {
     let itemDone = true;
@@ -104,12 +116,18 @@ export default function DataSourceList({
     }, 20000); // 10000 milliseconds = 10 seconds
   };
 
-  if (isLoading || isFetching || isLoadingEnergyQueries) {
+  // Only a full-screen spinner when there is nothing to show yet (first start without saved data).
+  if (isLoading || isLoadingCloudFeeds || isLoadingEnergyQueries) {
     return <StatusIndicator isLoading />;
   }
 
   return (
     <View style={{ flex: 1 }}>
+      <RefreshStatus
+        fetching={isFetchingAny}
+        updatedAt={Number.isFinite(updatedAt) ? updatedAt : 0}
+        failed={refreshFailed}
+      />
       <ProgressBar progress={progress} />
       <FlatList<AllDataSourcesResponse>
         data={itemData || data}
@@ -130,15 +148,17 @@ export default function DataSourceList({
         ListEmptyComponent={
           <StatusIndicator isError errorText={t("screens.device_overview.device_list.empty_collection")} />
         }
-        refreshControl={<RefreshControl enabled onRefresh={refreshData} refreshing={refresh} />}
-        refreshing={isRefetching}
+        refreshControl={<RefreshControl enabled onRefresh={refreshData} refreshing={isFetchingAny} />}
         scrollEnabled={scrollEnabled}
       />
     </View>
   );
 
   function refreshData() {
+    // Pulled down: everything on this screen, stale or not.
+    refetchUser();
     refetch();
-    refetchEnergyQueries();
+    energyQueries.refetch();
+    cloudFeeds.refetch();
   }
 }

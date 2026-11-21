@@ -14,7 +14,8 @@ describe("classifyProvisionError", () => {
   });
 
   it("separates a lost connection from an unclear end after the credentials", () => {
-    expect(classifyProvisionError("Device is not connected.", "credentials")).toBe("session");
+    // After the credentials a lost connection usually means the device went online: wait for its measurement.
+    expect(classifyProvisionError("Device is not connected.", "credentials")).toBe("unclear");
     expect(classifyProvisionError("Failed to create session", "credentials")).toBe("session");
     // The device ended the Bluetooth session while reading the Wi-Fi status: it may well be online.
     expect(classifyProvisionError("Failed to get wifi status (session ended)", "credentials")).toBe("unclear");

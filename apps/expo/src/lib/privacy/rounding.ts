@@ -66,6 +66,17 @@ export const DEFAULT_SIGNATURE_ROUNDING: RoundingRules = {
       { value: 205 },
     ],
   },
+  // Five classes around the NTA 8800 forfaitary ladder after the maatwerk factor 0.5 (values 0.17-2.1).
+  // Not yet checked with AnonyMate's rounding analysis together with the four above (modelbijsluiter §B3).
+  qv10__dm3_s_1_m_2: {
+    bins: [
+      { lt: 0.35, value: 0.3 },
+      { lt: 0.65, value: 0.5 },
+      { lt: 1.0, value: 0.8 },
+      { lt: 1.5, value: 1.25 },
+      { value: 1.8 },
+    ],
+  },
 };
 
 /** Parse the `rounding` JSON of an energy query type; invalid or empty -> {} (defaults apply). */

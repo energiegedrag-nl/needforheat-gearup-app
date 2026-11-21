@@ -36,12 +36,16 @@ describe("rounding rules", () => {
     expect(out).toEqual({ heat_tr_building_cond__W_K_1: 220, th_mass_building__Wh_K_1: 10000 });
   });
 
-  it("has defaults for the four signature quantities", () => {
+  it("has defaults for the four signature quantities and qv10, none for the heat island", () => {
     expect(Object.keys(DEFAULT_SIGNATURE_ROUNDING).sort()).toEqual([
       "aperture_inf__cm2",
       "aperture_sol__m2",
       "heat_tr_building_cond__W_K_1",
+      "qv10__dm3_s_1_m_2",
       "th_mass_building__Wh_K_1",
     ]);
+    // no default: uhi__K leaves the phone only with a campaign rule
+    expect(roundForUpload({ uhi__K: 1.3 }, {})).toEqual({});
+    expect(roundForUpload({ uhi__K: 1.3 }, { uhi__K: { step: 0.5 } })).toEqual({ uhi__K: 1.5 });
   });
 });

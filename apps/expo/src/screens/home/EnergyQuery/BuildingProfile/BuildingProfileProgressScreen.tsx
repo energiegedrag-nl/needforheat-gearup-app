@@ -119,7 +119,13 @@ export default function BuildingProfileProgressScreen({ navigation, route }: Bui
         values.th_mass_building__Wh_K_1 = signature.C__Wh_K_1;
         values.aperture_sol__m2 = signature.Asol__m2;
         values.aperture_inf__cm2 = signature.Ainf__cm2;
+        // Air tightness behind Ainf (NTA 8800 forfaitary, after the maatwerk factor): the quantity a
+        // blower-door test measures, so a later measured value can replace it (modelbijsluiter §C5).
+        values.qv10__dm3_s_1_m_2 = signature.qv10__dm3_s_1_m_2;
       }
+      // Urban heat island at the home (RIVM, per PC4, bundled): uploaded only when the campaign sets a
+      // rounding rule for it (no default), because it is a location quasi-identifier (modelbijsluiter §C6).
+      if (dwelling.uhi__K !== null) values.uhi__K = dwelling.uhi__K;
 
       const formulas = dataSource.item.Formula;
       if (formulas) {

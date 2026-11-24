@@ -62,7 +62,7 @@ graph LR
     PC6[BAG: adressen van de postcode] --> W[Woning kiezen, lokaal]
     W --> T[BAG: panden in een tegel van 300 m]
     T --> G[C1 Gevels per richting en buren]
-    T --> D3[3DBAG: oppervlakken, dak, bouwlagen<br/>tussen 7 andere panden]
+    T --> D3[3DBAG: oppervlakken, dak, bouwlagen, muurhoogte<br/>tussen 7 andere groepen panden]
     EP[EP-online: label, optioneel] --> TY
     G --> TY[C1 Woningtype]
     D3 --> TY
@@ -127,7 +127,7 @@ de woning wordt geleerd, en als achtergrondkenmerk in analyses over meerdere won
 |---|---|---|
 | [BAG](https://api.pdok.nl/kadaster/bag/ogc/v2) (Kadaster, via PDOK; geen sleutel) | verblijfsobjecten: adres, gebruiksoppervlak, gebruiksdoel, ligging | **per postcode (PC6)**, ongeveer 10-25 adressen; de woning wordt lokaal gekozen |
 | idem | panden: contour, bouwjaar, gebruiksdoel, aantal verblijfsobjecten | **per tegel van 300 m** op een vast raster van 200 m (niet rond de woning); in een binnenstad bijvoorbeeld 458 panden, 440 KB |
-| [3DBAG](https://3dbag.nl) (TU Delft; geen sleutel) | oppervlakken buitenmuur, grond, dak (plat/schuin), scheidingsmuur; daktype; bouwlagen | het eigen pand **plus 7 andere woonpanden uit de tegel**, in willekeurige volgorde (anonimiteitsset van 8) |
+| [3DBAG](https://3dbag.nl) (TU Delft; geen sleutel) | oppervlakken buitenmuur, grond, dak (plat/schuin), scheidingsmuur; daktype; bouwlagen; gebouwdelen LoD1.3 met hun hoogte (voor de hoogte van gedeelde muren) | het eigen pand met de panden waar het een muur mee deelt (en hun buren), **plus 7 andere woonpanden uit de tegel, elk met de hunne**, in willekeurige volgorde (anonimiteitsset van 8) |
 | [EP-online](https://www.ep-online.nl) (RVO; sleutel) | label, type, compactheid, warmtebehoefte | per adres (kan niet anders); alleen als de server een sleutel uitgeeft. Voorwaarden RVO: de sleutel niet aan derden geven, dus niet in campagnes met deelnemers |
 | RVO-voorbeeldwoningen 2022 | U-waarden, raamaandeel, deur, compactheid per type en bouwjaarklasse | meegeleverd in de app (via AnonyMate) |
 | KNMI De Bilt (260), uurwaarden stookseizoen 2025-26 | instralingsverhouding per gevelrichting (§C4), infiltratieconstante k (§C5) | als constanten in de code |
@@ -183,6 +183,10 @@ geometrie (vrijstaand, rij van vier, twee-onder-een-kap, schuur, aanraken op een
 - **Woningtype uit de buren** tegen EP-online (eengezinswoningen met label): 90,1% goed rond Zwolle,
   91,1% rond Leiden, tegen 68,8% en 69,7% met het aandeel scheidingsmuur uit 3DBAG (AnonyMate, commit
   `e97f2ff`).
+- **Muurhoogte bij de buren** (minstens 4 m, 3DBAG LoD1.3): tegen 142.946 labels volgens NTA 8800 in
+  vier gebieden twee-onder-een-kap van 62% naar 82% goed, alle woningen van 94,5% naar 95,0%
+  (AnonyMate, PR #96, 24-11-2026). Vooral twee-onder-een-kappen die via hun garages aan elkaar vastzitten
+  heetten eerder tussenwoning.
 - **q_v;10-ladder**: reproduceert 3,0 / 1,8 / 1,2 / 0,7 / 0,4 van het openbare Hestia-model (PBL) en de
   RVO-voorbeeldwoningen.
 - **Instralingsverhouding**: het gemiddelde over N/O/Z/W is geschaald op de NTA 8800-waarde 0,731; het
@@ -217,8 +221,15 @@ verschillen hier beschrijven.
    (deels) gedeeld als een rand van een ander pand er binnen **0,5 m** van ligt en bijna evenwijdig loopt
    (hoek < 15°); blootgesteld is wat overblijft. De hoofdas is de richting van de langste rand; een
    *zijgevel* is een blootgestelde rand waarvan de normaal loodrecht op de hoofdas staat (binnen 45°).
-4. **Buren en blok.** Twee panden met een woning zijn buren bij minstens **2 m** gedeelde muur; buren die
-   aan elkaar vast zitten vormen een blok.
+4. **Buren en blok.** Twee panden met een woning zijn buren bij minstens **2 m** gedeelde muur die
+   minstens **4 m** hoog is; buren die aan elkaar vast zitten vormen een blok. De hoogte komt uit de
+   gebouwdelen (LoD1.3) van 3DBAG: om de meter langs de gedeelde muur, per kant de hoogte boven het
+   maaiveld van het dichtstbijzijnde deel van dat pand (70e percentiel van het dak), de muur zo hoog
+   als de laagste kant. Zo zijn twee-onder-een-kappen die via hun garages aan elkaar vastzitten geen
+   rij. Een onbekende hoogte (bijvoorbeeld nieuwbouw die nog niet in 3DBAG staat) telt als hoog.
+   Daarvoor vraagt de app de delen van het pand, van de panden waarmee het minstens 2 m muur deelt en
+   van hún buren (twee stappen, hooguit 12 panden); de 7 lokpanden komen elk met dezelfde groep mee.
+   Zelfde regel als AnonyMate (`anonymate.gevel`, PR #96).
 5. **Woningtype**, in deze volgorde: geregistreerd type (EP-online) → uit de buren (geen buren:
    vrijstaand; blok van twee: twee-onder-een-kap; één buur in een langer blok: hoekwoning; anders
    tussenwoning) → uit 3DBAG (niet aaneengebouwd: vrijstaand; aandeel scheidingsmuur < 0,44:
@@ -374,7 +385,7 @@ kiezen* (Slim stroomgebruik thuis, kladbloknotitie 8):
 |---|---|---|
 | BAG verblijfsobjecten | een postcode (PC6) | ongeveer 10-25 adressen |
 | BAG panden | een vaste tegel van 300 m | honderden panden |
-| 3DBAG | 8 panden uit de tegel, door elkaar | 8 |
+| 3DBAG | 8 groepen aaneengebouwde panden uit de tegel (elk een pand met zijn buren en hun buren), door elkaar | 8 |
 | EP-online (alleen met sleutel) | het adres | 1 |
 | Hitte-eiland | niets (in de app, verwerkt in H) | alle |
 

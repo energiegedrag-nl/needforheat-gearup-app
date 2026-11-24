@@ -281,6 +281,14 @@
           "subtitle": "U heeft onderstaande weerzone verzonden op",
           "back_button": "Ga terug"
         },
+        "uploaded_screen": {
+          "title": "Verzonden gegevens",
+          "subtitle": "U heeft onderstaande gegevens verzonden op",
+          "empty": "De server heeft (nog) geen gegevens van deze vraag.",
+          "back_button": "Ga terug",
+          "yes": "ja",
+          "no": "nee"
+        },
         "location_permission": {
           "alert": {
             "title": "Locatiemachtiging",

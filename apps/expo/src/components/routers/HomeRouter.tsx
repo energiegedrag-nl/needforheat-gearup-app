@@ -11,6 +11,7 @@ import AlreadyInvitedScreen from "@/screens/home/AlreadyInvitedScreen";
 import ConnectScreen from "@/screens/home/ConnectScreen";
 import BuildingProfileProgressScreen from "@/screens/home/EnergyQuery/BuildingProfile/BuildingProfileProgressScreen";
 import HomeAddressSelectScreen from "@/screens/home/EnergyQuery/BuildingProfile/HomeAddressSelectScreen";
+import EnergyQueryUploadedScreen from "@/screens/home/EnergyQuery/EnergyQueryUploadedScreen";
 import InformationScreen from "@/screens/home/EnergyQuery/InformationScreen";
 import HomeSelectScreen from "@/screens/home/EnergyQuery/WeatherInterpolationLocation/HomeSelectScreen";
 import WeatherLocationPostedScreen from "@/screens/home/EnergyQuery/WeatherInterpolationLocation/WeatherLocationPostedScreen";
@@ -143,6 +144,14 @@ export default function HomeRouter() {
           ...disableNavigation,
         }}
         component={WeatherLocationPostedScreen}
+      />
+      <HomeStack.Screen
+        name="EnergyQueryUploadedScreen"
+        options={{
+          title: t("screens.home_stack.energy_query.uploaded_screen.title") as string,
+          ...disableNavigation,
+        }}
+        component={EnergyQueryUploadedScreen}
       />
       <HomeStack.Screen
         name="BuildingProfileProgressScreen"

@@ -93,11 +93,12 @@ export default function DeviceListItem(props: WifiNetworkListItemProps) {
   };
 
   const openResult = () => {
-    if (item.data_source?.category === "energy_query_type") {
-      if (item.name === "weather-interpolation-location") {
-        navigate("WeatherLocationPostedScreen");
-      }
+    if (item.data_source?.category !== "energy_query_type") return;
+    if (item.name === "weather-interpolation-location") {
+      navigate("WeatherLocationPostedScreen");
+      return;
     }
+    if (item.name) navigate("EnergyQueryUploadedScreen", { queryType: item.name });
   };
 
   const openHelpUrl = () => {

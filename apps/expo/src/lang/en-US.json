@@ -281,6 +281,14 @@
           "subtitle": "You sent this weather zone at",
           "back_button": "Go back"
         },
+        "uploaded_screen": {
+          "title": "Data Sent",
+          "subtitle": "You sent the data below at",
+          "empty": "The server holds no data for this question (yet).",
+          "back_button": "Go back",
+          "yes": "yes",
+          "no": "no"
+        },
         "location_permission": {
           "alert": {
             "title": "Location Permission",

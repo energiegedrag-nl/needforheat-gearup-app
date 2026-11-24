@@ -9,14 +9,17 @@
  *   2. all buildings (panden) in a **300 m tile** on a fixed 200 m grid around it (not centred on
  *      the home), with footprint, construction year, use and number of dwellings. From these
  *      footprints: the exposed façade per orientation and the neighbours (facades.ts).
- * - 3DBAG (no key): envelope areas, roof type, storeys of the building, asked for together with
- *   seven other residential buildings from the same tile, in random order (an anonymity set of 8).
+ * - 3DBAG (no key): envelope areas, roof type, storeys of the building, and the LoD1.3 parts of
+ *   the building and the buildings it shares a wall with (and theirs), for the height of those
+ *   walls (facades.ts: a wall between garages makes no neighbours). Asked for together with seven
+ *   other residential buildings from the same tile, each with the buildings it shares a wall with,
+ *   in random order: eight such groups, an anonymity set of 8.
  * - EP-online (optional, needs a key): registered energy label, type, compactness, heat demand.
  *   This one is asked per address (no other way); the key is personal, the server hands it out at
  *   run time and the app does not store it.
  * - Urban heat island: from a table per PC4 bundled with the app (uhi.ts); no request at all.
  */
-import { Footprint, Neighbourhood } from "./facades";
+import { Footprint, Neighbourhood, Part, partsFromCityJson } from "./facades";
 import { DwellingInput, normaliseDwellingType, normaliseLabel } from "./signature";
 import { uhiForPostcode } from "./uhi";
 
@@ -28,7 +31,7 @@ const RD = "http://www.opengis.net/def/crs/EPSG/0/28992";
 /** Tile grid and margin [m]: the tile is grid-aligned, so it does not point at the home. */
 const TILE__m = 200;
 const TILE_MARGIN__m = 50;
-/** 3DBAG: the building itself plus this many others from the tile. */
+/** 3DBAG: the building itself plus this many others from the tile (each with the buildings around it). */
 const DECOYS_3DBAG = 7;
 const MAX_PAGES = 5;
 
@@ -116,22 +119,52 @@ function shapeFrom3dBag(body: any): { input: Partial<DwellingInput>; attributes:
   return { input, attributes: a };
 }
 
-/** 3DBAG of one building, asked for among others from the same tile (in random order). */
-export async function fetch3dBagAmong(pandId: string, others: string[]) {
-  const pool = others.filter(id => id !== pandId);
-  for (let i = pool.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [pool[i], pool[j]] = [pool[j], pool[i]];
+function shuffle<T>(xs: T[], random: () => number): T[] {
+  for (let i = xs.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [xs[i], xs[j]] = [xs[j], xs[i]];
   }
-  const ids = [pandId, ...pool.slice(0, DECOYS_3DBAG)];
-  for (let i = ids.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [ids[i], ids[j]] = [ids[j], ids[i]];
+  return xs;
+}
+
+/**
+ * The buildings to ask the 3DBAG for: the building with the buildings around it (`around`, e.g.
+ * Neighbourhood.around), and seven other residential buildings of the tile, outside that group,
+ * each with theirs. The request holds eight such groups in random order, so which one is the home
+ * stays hidden.
+ */
+export function request3dBag(
+  pandId: string,
+  others: string[],
+  around: (id: string) => string[] = id => [id],
+  random: () => number = Math.random
+): string[] {
+  const own = around(pandId);
+  const pool = shuffle(others.filter(id => !own.includes(id)), random);
+  const ids = new Set(own);
+  for (const decoy of pool.slice(0, DECOYS_3DBAG)) for (const id of around(decoy)) ids.add(id);
+  return shuffle([...ids], random);
+}
+
+function partsOf(body: any): Part[] {
+  try {
+    return partsFromCityJson(body);
+  } catch {
+    return [];
   }
+}
+
+/**
+ * 3DBAG of one building, asked for among others from the same tile (in random order; see
+ * request3dBag), and the LoD1.3 parts of all buildings that came back.
+ */
+export async function fetch3dBagAmong(pandId: string, others: string[], around?: (id: string) => string[]) {
+  const ids = request3dBag(pandId, others, around);
   const bodies = await Promise.all(
     ids.map(id => getJson(`${BAG3D}/NL.IMBAG.Pand.${id}`).catch(err => (id === pandId ? Promise.reject(err) : null)))
   );
-  return shapeFrom3dBag(bodies[ids.indexOf(pandId)]);
+  const parts = bodies.flatMap(body => (body ? partsOf(body) : []));
+  return { ...shapeFrom3dBag(bodies[ids.indexOf(pandId)]), parts };
 }
 
 /** Field names of EP-online vary (Pand_energieklasse / Energieklasse): compare them normalised. */
@@ -201,12 +234,14 @@ export async function fetchDwelling(
   }));
   const hood = new Neighbourhood(footprints);
   const facades = hood.exposedPerSector(pandId);
-  const { neighbours, block } = hood.neighboursAndBlock(pandId);
   onProgress?.("bag");
 
-  // 3. 3DBAG, among seven other residential buildings of the tile
+  // 3. 3DBAG, with the buildings around it and among seven other residential buildings of the
+  //    tile; the LoD1.3 parts give the height of the shared walls, so then the neighbours
   const others = footprints.filter(f => f.dwelling && f.id !== pandId).map(f => f.id);
-  const { input: shape, attributes } = await fetch3dBagAmong(pandId, others);
+  const { input: shape, attributes, parts: lod13 } = await fetch3dBagAmong(pandId, others, id => hood.around(id));
+  hood.setParts(lod13);
+  const { neighbours, block } = hood.neighboursAndBlock(pandId);
   onProgress?.("3dbag");
 
   let label: Partial<DwellingInput> = {};

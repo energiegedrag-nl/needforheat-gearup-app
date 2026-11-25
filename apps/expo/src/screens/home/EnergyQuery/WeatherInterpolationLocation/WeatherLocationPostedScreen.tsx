@@ -32,6 +32,7 @@ export default function WeatherLocationPostedScreen({ navigation }: WeatherLocat
     longitudeDelta: 1,
   });
   const [h3Cell, setH3Cell] = useState<FeatureCollection>();
+  const timeZone = measurements?.find(measurement => measurement.property.name === "device_timezone__tmz")?.value;
 
   useEffect(() => {
     //Set location to measurements
@@ -129,7 +130,7 @@ export default function WeatherLocationPostedScreen({ navigation }: WeatherLocat
             {`${t("screens.home_stack.energy_query.weather_location_posted_screen.subtitle")}\n${readableDateTime(
               toLocalDateTime(query?.activated_at),
               resolvedLanguage === "nl-NL" ? "nl-NL" : "en-US"
-            )}`}
+            )}${timeZone ? `\n${t("screens.home_stack.energy_query.weather_location_posted_screen.time_zone")}: ${timeZone}` : ""}`}
           </Text>
         </View>
         <View style={style.mapcontainer}>

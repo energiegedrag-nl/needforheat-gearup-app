@@ -134,3 +134,14 @@ export function roundForUpload(
   }
   return out;
 }
+
+/**
+ * Thermal inertia τ = C / H in whole hours, from the rounded C and H (as uploaded), so it adds no
+ * information to them; null without both or with H not positive.
+ */
+export function thermalInertiaFromRounded(rounded: Record<string, number>): number | null {
+  const H = rounded.heat_tr_building_cond__W_K_1;
+  const C = rounded.th_mass_building__Wh_K_1;
+  if (!(H > 0) || !Number.isFinite(C)) return null;
+  return Math.round(C / H);
+}

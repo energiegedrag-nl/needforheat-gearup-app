@@ -1,3 +1,15 @@
+# [3.8.0](https://github.com/energiegedrag-nl/needforheat-gearup-app/compare/v3.7.0...v3.8.0) (2026-11-25)
+
+
+### Bug Fixes
+
+* feedback on the 3.7.0 APK (timeline text, map start, refresh, explanation) ([76d1d6b](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/76d1d6b3629ad19154d52817ecc26fa60b89e35d))
+
+
+### Features
+
+* **energy-query:** the question at once, its explanation behind a question mark in the header ([59c3900](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/59c39003811c2891b2992d1d4b6096d90aa72123))
+
 # [3.7.0](https://github.com/energiegedrag-nl/needforheat-gearup-app/compare/v3.6.0...v3.7.0) (2026-11-25)
 
 

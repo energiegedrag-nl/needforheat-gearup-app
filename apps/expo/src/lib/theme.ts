@@ -1,10 +1,20 @@
 import { defaultSpacing } from "@rneui/base";
 import { createTheme } from "@rneui/themed";
 
+/**
+ * The energiegedrag.nl look: navy and amber, as the element tile 'Eg' of the icon
+ * (assets/brand/make_icons.py). The only place for brand colours; white text on primary, success
+ * and error meets WCAG AA (contrast >= 4.5).
+ */
+export const BRAND = {
+  navy: "#12304F",
+  amber: "#F2A541",
+};
+
 export const theme = createTheme({
   lightColors: {
-    primary: "#45B97C", // Dark green
-    secondary: "#B1D249", // Apple green
+    primary: BRAND.navy,
+    secondary: BRAND.amber,
     background: "#F0F2F3", // Not quite white
     white: "#FFFFFF",
     black: "#231F20",
@@ -16,8 +26,8 @@ export const theme = createTheme({
     grey5: "#FF00D6", // Unused
     greyOutline: "#FF00D6", // Unused
     searchBg: "#FF00D6", // Unused
-    success: "#45B97C", // Dark green
-    error: "#EE3135",
+    success: "#237A4B", // Green, only for 'done'
+    error: "#C8333A",
     warning: "#F5A61A",
     disabled: "#A6A8AB", // grey3
   },

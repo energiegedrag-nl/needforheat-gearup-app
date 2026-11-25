@@ -8,6 +8,7 @@ import { fetchCloudFeeds } from "@/api/account";
 import { fetchDevices } from "@/api/device";
 import { fetchEnergyQueries } from "@/api/energyquery";
 import { fetchUser } from "@/api/user";
+import { BRAND } from "@/lib/theme";
 import { checkMissedUpload, processDataSource } from "@/utils/tools";
 
 export default function useSuperLateDataSourceNotifier() {
@@ -73,7 +74,7 @@ export default function useSuperLateDataSourceNotifier() {
           subtitle: Platform.OS === "ios" ? undefined : (t("notifications.subText") as string),
           badge: badgeCounter,
           sound: !silentNotification,
-          color: "#ee3135",
+          color: BRAND.navy,
         },
         // Show immediately; on Android in channel "777" (created in index.js).
         trigger: Platform.OS === "android" ? { channelId: "777" } : null,

@@ -19,7 +19,7 @@ export default function UnauthenticatedHomeScreen() {
     <Box padded style={styles.container}>
       <Box>
         <Box style={styles.logoContainer}>
-          <Image style={styles.logo} source={require("../../../../assets/adaptive-icon.png")} />
+          <Image style={styles.logo} source={require("../../../../assets/logo.png")} />
           <Text style={styles.title}>{t("screens.home_stack.home.unauthenticated.title")}</Text>
         </Box>
         <Text style={styles.subtitle}>{t("screens.home_stack.home.unauthenticated.subtitle")}</Text>
@@ -57,8 +57,9 @@ const useStyles = makeStyles(theme => ({
     paddingHorizontal: theme.spacing.lg,
   },
   logo: {
-    width: 150,
-    height: 150,
+    width: 128,
+    height: 128,
+    marginBottom: theme.spacing.lg,
   },
   logoContainer: {
     minWidth: "100%",

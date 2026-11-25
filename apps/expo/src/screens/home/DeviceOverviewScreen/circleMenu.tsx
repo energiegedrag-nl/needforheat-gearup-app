@@ -1,6 +1,8 @@
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 
+import { BRAND } from "@/lib/theme";
+
 const CircleMenu = ({ onClickEvent }: { onClickEvent: () => void }) => {
   return (
     <View style={styles.container}>
@@ -16,7 +18,7 @@ const CircleMenu = ({ onClickEvent }: { onClickEvent: () => void }) => {
             width: 80,
             height: 80,
             borderRadius: 40,
-            backgroundColor: "#45B97C",
+            backgroundColor: BRAND.navy,
             justifyContent: "center",
             alignItems: "center",
           }}

@@ -9,8 +9,8 @@ import useEnergyQuery from "@/hooks/energyquery/useEnergyQuery";
 import usePropertyLabels from "@/hooks/propertylabels/usePropertyLabels";
 import useTranslation from "@/hooks/translation/useTranslation";
 import useMeasurements from "@/hooks/upload/useMeasurements";
+import { screenRows, TAU } from "@/lib/units/rows";
 import { formatValue, splitPropertyName } from "@/lib/units/units";
-import { Measurement } from "@/types/api";
 import { HomeStackParamList } from "@/types/navigation";
 import { readableDateTime, toLocalDateTime } from "@/utils/tools";
 
@@ -19,20 +19,11 @@ type UploadedDataScreenProps = NativeStackScreenProps<HomeStackParamList, "Uploa
 /** For a device: look this far back for its latest measurements. */
 const DEVICE_DAYS = 2;
 
-/** The latest value per property, sorted by property name. */
-function latestPerProperty(measurements: Measurement[]) {
-  const latest = new Map<string, Measurement>();
-  for (const m of measurements) {
-    const seen = latest.get(m.property.name);
-    if (!seen || m.time > seen.time) latest.set(m.property.name, m);
-  }
-  return [...latest.values()].sort((a, b) => a.property.name.localeCompare(b.property.name));
-}
-
 /**
  * What the server holds of an energy query or a device, read back from the server: per property its
  * display name, the latest value as the server holds it (after rounding in the app) and the unit; for
- * an energy query when it was sent, for a device when the latest measurement was taken.
+ * an energy query when it was sent, for a device when the latest measurement was taken. Derived values
+ * (τ = C/H) and the order come from lib/units/rows.
  */
 export default function UploadedDataScreen({ navigation, route }: UploadedDataScreenProps) {
   const { source, name } = route.params;
@@ -52,7 +43,7 @@ export default function UploadedDataScreen({ navigation, route }: UploadedDataSc
     no: t("screens.home_stack.uploaded_screen.no") as string,
   };
 
-  const rows = useMemo(() => latestPerProperty(measurements ?? []), [measurements]);
+  const rows = useMemo(() => screenRows(measurements ?? []), [measurements]);
   const latest = rows.length ? Math.max(...rows.map(m => m.time)) : undefined;
   const when = isDevice ? latest : query?.activated_at ?? latest;
   const subtitle = isDevice ? "subtitle_device" : "subtitle_energy_query";
@@ -76,7 +67,10 @@ export default function UploadedDataScreen({ navigation, route }: UploadedDataSc
             const { name: propertyName, suffix } = splitPropertyName(m.property.name);
             return (
               <View key={m.property.name} style={style.row} testID="uploaded-property">
-                <Text style={style.name}>{labels?.[m.property.name] ?? propertyName}</Text>
+                <Text style={style.name}>
+                  {labels?.[m.property.name] ??
+                    (m.property.name === TAU ? t("screens.home_stack.uploaded_screen.thermal_inertia") : propertyName)}
+                </Text>
                 <Text style={style.value}>{formatValue(m.value, suffix, locale, words)}</Text>
               </View>
             );

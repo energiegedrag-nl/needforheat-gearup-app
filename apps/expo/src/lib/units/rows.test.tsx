@@ -43,4 +43,13 @@ describe("rows of the uploaded-data screen", () => {
       "temp_in__degC",
     ]);
   });
+
+  it("uses τ from the server when it is there, once", () => {
+    const rows = screenRows([
+      m("heat_tr_building_cond__W_K_1", "155"),
+      m("th_mass_building__Wh_K_1", "15000"),
+      m(TAU, "97"),
+    ]);
+    expect(rows.filter(r => r.property.name === TAU)).toEqual([m(TAU, "97")]);
+  });
 });

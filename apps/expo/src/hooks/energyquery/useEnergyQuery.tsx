@@ -8,6 +8,7 @@ export default function useEnergyQuery(queryType: string, onSuccess?: any, onErr
     queryKey: ["energy_queries", queryType],
     queryFn: () => fetchEnergyQuery(queryType),
     retry: false,
+    enabled: !!queryType,
     onSuccess,
     onError,
   });

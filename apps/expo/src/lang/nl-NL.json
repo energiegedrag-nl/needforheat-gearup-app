@@ -236,6 +236,16 @@
           }
         }
       },
+      "uploaded_screen": {
+        "title": "Verzonden gegevens",
+        "subtitle_energy_query": "U heeft onderstaande gegevens verzonden op",
+        "subtitle_device": "Laatste metingen, de nieuwste van",
+        "empty": "De server heeft (nog) geen gegevens van deze vraag.",
+        "empty_device": "De server heeft van dit apparaat de afgelopen twee dagen geen metingen.",
+        "back_button": "Ga terug",
+        "yes": "ja",
+        "no": "nee"
+      },
       "energy_query": {
         "information_screen": {
           "title": "Toelichting",
@@ -280,14 +290,6 @@
           "title": "Verzonden weerzone",
           "subtitle": "U heeft onderstaande weerzone verzonden op",
           "back_button": "Ga terug"
-        },
-        "uploaded_screen": {
-          "title": "Verzonden gegevens",
-          "subtitle": "U heeft onderstaande gegevens verzonden op",
-          "empty": "De server heeft (nog) geen gegevens van deze vraag.",
-          "back_button": "Ga terug",
-          "yes": "ja",
-          "no": "nee"
         },
         "location_permission": {
           "alert": {

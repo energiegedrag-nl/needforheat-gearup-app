@@ -25,6 +25,12 @@ const DEVICE_DAYS = 2;
  * an energy query when it was sent, for a device when the latest measurement was taken. Derived values
  * (τ = C/H) and the order come from lib/units/rows.
  */
+/** Names for properties the server may have no label for (older servers, or no seed). */
+const FALLBACK_LABELS: Record<string, string> = {
+  [TAU]: "screens.home_stack.uploaded_screen.thermal_inertia",
+  device_timezone__tmz: "screens.home_stack.uploaded_screen.time_zone",
+};
+
 export default function UploadedDataScreen({ navigation, route }: UploadedDataScreenProps) {
   const { source, name } = route.params;
   const isDevice = source === "device";
@@ -69,7 +75,7 @@ export default function UploadedDataScreen({ navigation, route }: UploadedDataSc
               <View key={m.property.name} style={style.row} testID="uploaded-property">
                 <Text style={style.name}>
                   {labels?.[m.property.name] ??
-                    (m.property.name === TAU ? t("screens.home_stack.uploaded_screen.thermal_inertia") : propertyName)}
+                    (FALLBACK_LABELS[m.property.name] ? t(FALLBACK_LABELS[m.property.name]) : propertyName)}
                 </Text>
                 <Text style={style.value}>{formatValue(m.value, suffix, locale, words)}</Text>
               </View>

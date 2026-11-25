@@ -1,3 +1,10 @@
+# [3.7.0](https://github.com/energiegedrag-nl/needforheat-gearup-app/compare/v3.6.0...v3.7.0) (2026-11-25)
+
+
+### Features
+
+* **look:** neutral energiegedrag.nl look instead of the Windesheim style ([d61f27c](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/d61f27cd72f0431cab71b19eca47edfc29929f86))
+
 # [3.6.0](https://github.com/energiegedrag-nl/needforheat-gearup-app/compare/v3.5.0...v3.6.0) (2026-11-25)
 
 

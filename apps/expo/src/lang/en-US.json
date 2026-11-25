@@ -279,7 +279,8 @@
         "weather_location_posted_screen": {
           "title": "Weather Zone Sent",
           "subtitle": "You sent this weather zone at",
-          "back_button": "Go back"
+          "back_button": "Go back",
+          "time_zone": "Time zone"
         },
         "location_permission": {
           "alert": {

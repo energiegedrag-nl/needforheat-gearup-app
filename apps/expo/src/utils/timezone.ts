@@ -7,20 +7,27 @@ let timeZone: string | null = null;
 export const fetchTimeZone = async () => {
   timeZone = await SecureStore.getItemAsync("timeZone");
 
-  //If unknown, try to fetch from server
-  if (!timeZone) {
-    const properties = await fetchEnergyQueryProperties("building-profile");
-    const timeZoneProperty = properties.find(property => property.name === "device_timezone__tmz");
-    if (timeZoneProperty) {
-      const measurements = await fetchEnergyQueryMeasurements("building-profile", { property: timeZoneProperty?.id });
-      if (measurements[0]) {
-        const timeZoneMeasurement = measurements[0];
-        await SecureStore.setItemAsync("timeZone", timeZoneMeasurement.value);
-        timeZone = timeZoneMeasurement.value;
-      }
-    }
+  // If unknown, try the server: sent with the weather zone; before 25-11-2026 with the heat signature.
+  for (const queryType of TIME_ZONE_SOURCES) {
+    if (timeZone) break;
+    timeZone = await timeZoneFromServer(queryType);
   }
+  if (timeZone) await SecureStore.setItemAsync("timeZone", timeZone);
 };
+
+const TIME_ZONE_SOURCES = ["weather-interpolation-location", "building-profile"];
+
+async function timeZoneFromServer(queryType: string): Promise<string | null> {
+  try {
+    const properties = await fetchEnergyQueryProperties(queryType);
+    const property = properties.find(p => p.name === "device_timezone__tmz");
+    if (!property) return null;
+    const measurements = await fetchEnergyQueryMeasurements(queryType, { property: property.id });
+    return measurements[0]?.value ?? null;
+  } catch {
+    return null; // not answered (yet)
+  }
+}
 
 export const getTimeZone = () => {
   return timeZone;

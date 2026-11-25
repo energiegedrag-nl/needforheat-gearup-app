@@ -1,6 +1,6 @@
 import { describe, expect, it } from "@jest/globals";
 
-import { applyRule, DEFAULT_SIGNATURE_ROUNDING, parseRoundingRules, roundForUpload } from "./rounding";
+import { DEFAULT_SIGNATURE_ROUNDING, applyRule, parseRoundingRules, roundForUpload, thermalInertiaFromRounded } from "./rounding";
 
 describe("rounding rules", () => {
   it("rounds to a step and clamps the tails", () => {
@@ -46,5 +46,16 @@ describe("rounding rules", () => {
     ]);
     // a value without a rule (default or campaign) never leaves the phone
     expect(roundForUpload({ something_else__0: 1.3 }, {})).toEqual({});
+  });
+});
+
+describe("thermal inertia from the rounded values", () => {
+  it("is C / H of the rounded values, in whole hours", () => {
+    expect(thermalInertiaFromRounded({ heat_tr_building_cond__W_K_1: 155, th_mass_building__Wh_K_1: 15000 })).toBe(97);
+  });
+
+  it("is null without both, or with H zero", () => {
+    expect(thermalInertiaFromRounded({ th_mass_building__Wh_K_1: 15000 })).toBeNull();
+    expect(thermalInertiaFromRounded({ heat_tr_building_cond__W_K_1: 0, th_mass_building__Wh_K_1: 15000 })).toBeNull();
   });
 });

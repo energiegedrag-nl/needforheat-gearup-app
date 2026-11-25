@@ -279,7 +279,8 @@
         "weather_location_posted_screen": {
           "title": "Verzonden weerzone",
           "subtitle": "U heeft onderstaande weerzone verzonden op",
-          "back_button": "Ga terug"
+          "back_button": "Ga terug",
+          "time_zone": "Tijdzone"
         },
         "location_permission": {
           "alert": {

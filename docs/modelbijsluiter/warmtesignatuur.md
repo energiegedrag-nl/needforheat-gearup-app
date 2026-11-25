@@ -83,8 +83,11 @@ graph LR
 ```
 
 **Wat eruit komt.** Per woning één set: H, C, A_sol, A_inf en q_v;10, elk afgerond in grove klassen
-(§3, §C7). τ en de gebruikte methode gaan niet mee (ze maken de afgeronde waarden weer scherper of
-verraden of er een label is). H is gecorrigeerd voor het stedelijk hitte-eiland, zodat hij vergelijkbaar
+(§3, §C7), en τ in hele uren, berekend uit de *afgeronde* C en H (zo zegt τ niets wat die twee niet al
+zeggen; uit de exacte waarden zou τ ze weer scherper maken). De gebruikte methode gaat niet mee (die
+verraadt of er een label is). De tijdzone van de telefoon gaat sinds 25-11-2026 mee met de weerzone, niet
+meer met de warmtesignatuur; de weerzone zelf gaat als midden van de verschoven cel met 3 decimalen
+(ongeveer 111 × 69 m, ruim fijner dan de cel van ongeveer 9 km). H is gecorrigeerd voor het stedelijk hitte-eiland, zodat hij vergelijkbaar
 is met een H die met KNMI-weer is geleerd; de hitte-eilandwaarde zelf verlaat de telefoon niet.
 
 **Waar het op leunt.** De U-waarden en ramen komen uit de RVO-voorbeeldwoningen 2022 bij bouwjaar en

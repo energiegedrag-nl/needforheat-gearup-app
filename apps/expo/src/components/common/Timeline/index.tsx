@@ -50,7 +50,7 @@ export default function Timeline(props: TimelineProps) {
   });
 
   return (
-    <View>
+    <View style={styles.root}>
       {items.map((item, index) => {
         const pending = !item.loading && !item.finished && !item.error;
         return (
@@ -80,10 +80,15 @@ export default function Timeline(props: TimelineProps) {
 }
 
 const useStyles = makeStyles(theme => ({
+  // The timeline takes the full width of its parent (Box sizes to its content by default); with only a
+  // maximum width, the text column below collapsed to nothing, hiding the titles and the progress bar.
+  root: {
+    width: "100%",
+  },
   itemContainer: {
     flexDirection: "row",
     alignItems: "center",
-    maxWidth: "85%",
+    width: "85%",
   },
   iconContainer: {
     paddingHorizontal: 16,
@@ -95,9 +100,12 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "center",
     alignItems: "center",
   },
+  // Grow and shrink from the text's own width (not flex: 1, whose basis of 0 gives no width at all when
+  // the row sizes to its content).
   contentContainer: {
     paddingVertical: 10,
-    flex: 1,
+    flexGrow: 1,
+    flexShrink: 1,
   },
   titleText: {
     fontWeight: "bold",

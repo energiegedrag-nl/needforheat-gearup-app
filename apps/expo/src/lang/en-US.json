@@ -521,6 +521,7 @@
     "retry": "Try again",
     "back_to_home": "Back to home",
     "go_back": "Go back",
+    "explanation": "Explanation",
     "password": "Password",
     "error": "Error",
     "unknown_error": "An unknown error has occurred.",

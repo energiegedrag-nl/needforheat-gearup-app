@@ -3,11 +3,11 @@ import { Button, useTheme } from "@rneui/themed";
 import { evaluate } from "mathjs";
 import { useEffect, useRef, useState } from "react";
 
-import { postEnergyQuery } from "@/api/energyquery";
 import { StatusMessage } from "@/components/common/StatusMessage";
 import Timeline from "@/components/common/Timeline";
 import Box from "@/components/elements/Box";
 import useAPIKey from "@/hooks/API/useAPIKey";
+import usePostEnergyQuery from "@/hooks/energyquery/usePostEnergyQuery";
 import useTranslation from "@/hooks/translation/useTranslation";
 import { fetchDwelling, heatSignature } from "@/lib/heatSignature";
 import { applyUhiToH } from "@/lib/heatSignature/uhi";
@@ -22,6 +22,7 @@ export default function BuildingProfileProgressScreen({ navigation, route }: Bui
   const { theme } = useTheme();
   const { t } = useTranslation();
   const { location, dataSource } = route.params;
+  const postEnergyQuery = usePostEnergyQuery();
   // EP-online key, handed out by the server at run time (optional; personal, so not stored).
   const {
     data: epOnlineKey,
@@ -242,7 +243,7 @@ export default function BuildingProfileProgressScreen({ navigation, route }: Bui
 
   return (
     <Box padded style={{ flex: 1, justifyContent: "space-between" }}>
-      <Box>
+      <Box fullWidth>
         <Timeline items={timelineData} />
       </Box>
       <Box padded>

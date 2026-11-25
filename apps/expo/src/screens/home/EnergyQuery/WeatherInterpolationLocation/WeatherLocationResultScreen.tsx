@@ -9,9 +9,9 @@ import { Alert, Text, View } from "react-native";
 import { getTimeZone } from "react-native-localize";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-import { postEnergyQuery } from "@/api/energyquery";
 import Box from "@/components/elements/Box";
 import OpenMap, { GeoJsonOverlay, OpenMapRef } from "@/components/map/OpenMap";
+import usePostEnergyQuery from "@/hooks/energyquery/usePostEnergyQuery";
 import useTranslation from "@/hooks/translation/useTranslation";
 import { EnergyQuery } from "@/types/api";
 import { UserLocation } from "@/types/energyquery";
@@ -28,6 +28,7 @@ export default function WeatherLocationResultScreen({ navigation, route }: Weath
   const { location, dataSource } = route.params;
   const { theme } = useTheme();
   const { t } = useTranslation();
+  const postEnergyQuery = usePostEnergyQuery();
   const style = useStyles();
   const refMap = useRef<OpenMapRef>(null);
   const [locationState, setLocationState] = useState<UserLocation>(location);

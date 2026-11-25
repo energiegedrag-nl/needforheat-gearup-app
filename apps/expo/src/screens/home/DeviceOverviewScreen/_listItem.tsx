@@ -93,11 +93,17 @@ export default function DeviceListItem(props: WifiNetworkListItemProps) {
   };
 
   const openResult = () => {
-    if (item.data_source?.category === "energy_query_type") {
-      if (item.name === "weather-interpolation-location") {
-        navigate("WeatherLocationPostedScreen");
-      }
+    if (!item.name) return;
+    if (item.data_source?.category === "device_type") {
+      navigate("UploadedDataScreen", { source: "device", name: item.name });
+      return;
     }
+    if (item.data_source?.category !== "energy_query_type") return;
+    if (item.name === "weather-interpolation-location") {
+      navigate("WeatherLocationPostedScreen");
+      return;
+    }
+    navigate("UploadedDataScreen", { source: "energy_query", name: item.name });
   };
 
   const openHelpUrl = () => {

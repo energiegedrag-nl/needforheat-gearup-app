@@ -18,6 +18,7 @@ import WeatherLocationResultScreen from "@/screens/home/EnergyQuery/WeatherInter
 import HomeScreen from "@/screens/home/HomeScreen";
 import ProvisionScreen from "@/screens/home/ProvisionScreen";
 import QrScannerScreen from "@/screens/home/QrScannerScreen";
+import UploadedDataScreen from "@/screens/home/UploadedDataScreen";
 import SearchDeviceScreen from "@/screens/home/SearchDeviceScreen";
 import WifiOverviewScreen from "@/screens/home/WifiOverviewScreen";
 import { HomeStackParamList } from "@/types/navigation";
@@ -143,6 +144,14 @@ export default function HomeRouter() {
           ...disableNavigation,
         }}
         component={WeatherLocationPostedScreen}
+      />
+      <HomeStack.Screen
+        name="UploadedDataScreen"
+        options={{
+          title: t("screens.home_stack.uploaded_screen.title") as string,
+          ...disableNavigation,
+        }}
+        component={UploadedDataScreen}
       />
       <HomeStack.Screen
         name="BuildingProfileProgressScreen"

@@ -236,6 +236,17 @@
           }
         }
       },
+      "uploaded_screen": {
+        "title": "Verzonden gegevens",
+        "subtitle_energy_query": "U heeft onderstaande gegevens verzonden op",
+        "subtitle_device": "Laatste metingen, de nieuwste van",
+        "empty": "De server heeft (nog) geen gegevens van deze vraag.",
+        "empty_device": "De server heeft van dit apparaat de afgelopen twee dagen geen metingen.",
+        "back_button": "Ga terug",
+        "yes": "ja",
+        "no": "nee",
+        "thermal_inertia": "Thermische inertie (τ)"
+      },
       "energy_query": {
         "information_screen": {
           "title": "Toelichting",

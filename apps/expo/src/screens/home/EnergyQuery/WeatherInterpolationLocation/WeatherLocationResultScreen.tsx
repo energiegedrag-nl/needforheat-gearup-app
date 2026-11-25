@@ -32,6 +32,8 @@ export default function WeatherLocationResultScreen({ navigation, route }: Weath
   const refMap = useRef<OpenMapRef>(null);
   const [locationState, setLocationState] = useState<UserLocation>(location);
   const [disableButtons, setDisableButtons] = useState<boolean>(false);
+  // The phone's time zone is sent with the weather zone: show it before sending.
+  const timeZone = getTimeZone();
 
   //H3: level 5 after a random offset (σ ≈ 10 km) that is drawn once per installation; see utils/weatherLocation.
   const [offset, setOffset] = useState<NoiseOffset | null>(null);
@@ -74,7 +76,6 @@ export default function WeatherLocationResultScreen({ navigation, route }: Weath
 
     const currentLocaleTimeInUnix = Math.floor(Date.now() / 1000);
     // The time zone of the phone goes with the weather zone (both say where the home is, coarsely).
-    const timeZone = getTimeZone();
     await SecureStore.setItemAsync("timeZone", timeZone);
     fetchTimeZone(); // update in RAM
     const measurements = [
@@ -194,6 +195,9 @@ export default function WeatherLocationResultScreen({ navigation, route }: Weath
           <Text style={style.subtitle}>
             {t("screens.home_stack.energy_query.weather_location_result_screen.subtitle")}
           </Text>
+          <Text style={style.timeZone}>
+            {t("screens.home_stack.energy_query.weather_location_result_screen.time_zone", { timeZone })}
+          </Text>
         </View>
         <View style={style.mapcontainer}>
           <OpenMap
@@ -284,6 +288,13 @@ const useStyles = makeStyles(theme => ({
     padding: 8,
     borderRadius: 5,
     marginBottom: 5,
+  },
+  timeZone: {
+    textAlign: "center",
+    fontSize: 14,
+    color: theme.colors.grey1,
+    marginTop: 4,
+    marginBottom: 8,
   },
   subtitle: {
     justifyContent: "center",

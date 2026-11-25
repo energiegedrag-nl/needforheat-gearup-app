@@ -245,7 +245,8 @@
         "back_button": "Go back",
         "yes": "yes",
         "no": "no",
-        "thermal_inertia": "Thermal inertia (τ)"
+        "thermal_inertia": "Thermal inertia (τ)",
+        "time_zone": "Time zone"
       },
       "energy_query": {
         "information_screen": {
@@ -268,6 +269,7 @@
         },
         "weather_location_result_screen": {
           "title": "Weather zone to send",
+          "time_zone": "Time zone of your phone: {{timeZone}} (sent along)",
           "subtitle": "This is the weather zone for your home. For your privacy the location is shifted at random (usually less than 10 to 20 km), so your home need not lie inside it. Is this zone in your region?",
           "send_button": "Yes (send zone)",
           "back_button": "No (go back)",

@@ -244,7 +244,8 @@
         "empty_device": "De server heeft van dit apparaat de afgelopen twee dagen geen metingen.",
         "back_button": "Ga terug",
         "yes": "ja",
-        "no": "nee"
+        "no": "nee",
+        "thermal_inertia": "Thermische inertie (τ)"
       },
       "energy_query": {
         "information_screen": {

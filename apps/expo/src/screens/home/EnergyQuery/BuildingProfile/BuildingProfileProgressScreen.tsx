@@ -45,6 +45,7 @@ export default function BuildingProfileProgressScreen({ navigation, route }: Bui
   const [isSuccesError, setisSuccesError] = useState<boolean>(false);
   //End timeline items
 
+  // Expected durations (s) until the phone has timed the steps itself; step 2 includes 3DBAG and the neighbours.
   const timelineData = [
     {
       title: t("screens.home_stack.energy_query.building_profile_progress.alert.initial_data.title"),
@@ -52,6 +53,8 @@ export default function BuildingProfileProgressScreen({ navigation, route }: Bui
       finished: isBAGReceived,
       loading: !isBAGReceived && !isBAGReceivedError,
       error: isBAGReceivedError,
+      timingKey: "building_profile.bag",
+      expected__s: 3,
     },
     {
       title: t("screens.home_stack.energy_query.building_profile_progress.alert.data.title"),
@@ -59,6 +62,8 @@ export default function BuildingProfileProgressScreen({ navigation, route }: Bui
       finished: is3DBAGReceived,
       loading: isBAGReceived && !is3DBAGReceived && !is3DBAGReceivedError,
       error: is3DBAGReceivedError,
+      timingKey: "building_profile.3dbag",
+      expected__s: 15,
     },
     {
       title: t("screens.home_stack.energy_query.building_profile_progress.alert.calculating.title"),
@@ -66,6 +71,8 @@ export default function BuildingProfileProgressScreen({ navigation, route }: Bui
       finished: isCalculating,
       loading: is3DBAGReceived && !isCalculating && !isCalculatingError && !isUnsuitable,
       error: isCalculatingError || isUnsuitable,
+      timingKey: "building_profile.calculating",
+      expected__s: 2,
     },
     {
       title: t("screens.home_stack.energy_query.building_profile_progress.alert.sending.title"),
@@ -73,6 +80,8 @@ export default function BuildingProfileProgressScreen({ navigation, route }: Bui
       finished: isSucces,
       loading: isCalculating && !isSucces && !isSuccesError,
       error: isSuccesError,
+      timingKey: "building_profile.sending",
+      expected__s: 3,
     },
   ];
   const onLeave = () => navigation.navigate("HomeScreen");

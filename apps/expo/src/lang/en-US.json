@@ -486,6 +486,12 @@
     }
   },
   "components": {
+    "timeline": {
+      "busy": "{{elapsed}} s busy",
+      "left": "{{elapsed}} s · about {{left}} s left",
+      "almost": "{{elapsed}} s · almost done",
+      "longer": "{{elapsed}} s · takes longer than usual"
+    },
     "wifi_network_list": {
       "empty_collection": "No Wi-Fi networks found."
     },

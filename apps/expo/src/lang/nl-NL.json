@@ -487,6 +487,12 @@
     }
   },
   "components": {
+    "timeline": {
+      "busy": "{{elapsed}} s bezig",
+      "left": "{{elapsed}} s · nog ± {{left}} s",
+      "almost": "{{elapsed}} s · bijna klaar",
+      "longer": "{{elapsed}} s · duurt langer dan normaal"
+    },
     "wifi_network_list": {
       "empty_collection": "Geen wifinetwerken gevonden."
     },

@@ -72,6 +72,7 @@ export default function ProvisionScreen({ navigation, route }: ProvisionScreenPr
       }),
       finished: isProvisioningSuccess || isReceivingMeasurements,
       loading: isProvisioning,
+      timingKey: "provision.wifi",
       error: showProvisioningError,
     },
     {
@@ -81,6 +82,7 @@ export default function ProvisionScreen({ navigation, route }: ProvisionScreenPr
       }),
       finished: isReceivingMeasurements,
       loading: isReceivingMeasurementsLoading,
+      timingKey: "provision.first_measurement",
       error: isReceivingMeasurementsError,
     },
   ];

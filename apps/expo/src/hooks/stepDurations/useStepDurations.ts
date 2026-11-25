@@ -15,13 +15,13 @@ export default function useStepDurations() {
   useEffect(() => {
     SecureStore.getItemAsync(KEY)
       .then(raw => raw && setDurations(JSON.parse(raw)))
-      .catch(() => {});
+      .catch(() => undefined);
   }, []);
 
   const record = useCallback((key: string, actual__s: number) => {
     setDurations(previous => {
       const next = { ...previous, [key]: updateExpected(previous[key], actual__s) };
-      SecureStore.setItemAsync(KEY, JSON.stringify(next)).catch(() => {});
+      SecureStore.setItemAsync(KEY, JSON.stringify(next)).catch(() => undefined);
       return next;
     });
   }, []);

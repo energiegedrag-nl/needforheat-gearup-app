@@ -16,6 +16,13 @@ import { HomeStackParamList } from "@/types/navigation";
 import { WEATHER_H3_RESOLUTION } from "@/utils/weatherLocation";
 import { readableDateTime, toLocalDateTime } from "@/utils/tools";
 
+/**
+ * The cell takes about this share of the map area, so the map shows where the cell lies; the map is
+ * then 1/sqrt(share) times the cell in each direction.
+ */
+const CELL_SHARE_OF_MAP = 0.1;
+const MAP_PER_CELL = 1 / Math.sqrt(CELL_SHARE_OF_MAP);
+
 type WeatherLocationPostedScreenProps = NativeStackScreenProps<HomeStackParamList, "WeatherLocationPostedScreen">;
 
 export default function WeatherLocationPostedScreen({ navigation }: WeatherLocationPostedScreenProps) {
@@ -62,7 +69,7 @@ export default function WeatherLocationPostedScreen({ navigation }: WeatherLocat
         };
         //End H3
         setH3Cell(cellBoundariesGeoJson);
-        setLocationState(getRegionForCoordinates(cellBoundaries));
+        setLocationState(getRegionForCoordinates(cellBoundaries, MAP_PER_CELL - 1));
       }
     }
   }, [measurements]);

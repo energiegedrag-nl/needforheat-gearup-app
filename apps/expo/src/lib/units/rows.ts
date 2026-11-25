@@ -7,7 +7,7 @@ export type Row = { property: { name: string }; value: string; time: number };
 
 const H = "heat_tr_building_cond__W_K_1";
 const C = "th_mass_building__Wh_K_1";
-/** Thermal inertia τ = C/H [h]: not uploaded (it follows from C and H), shown because it says a lot. */
+/** Thermal inertia τ = C/H [h]: uploaded with the heat signature since 25-11-2026; derived for older answers. */
 export const TAU = "thermal_inertia__h";
 
 /** Known properties first, in this order; the rest after them, by name. */
@@ -23,8 +23,9 @@ export function latestPerProperty<T extends Row>(measurements: T[]): T[] {
   return [...latest.values()];
 }
 
-/** Derived rows: τ = C/H in whole hours, when both are there and H > 0. */
+/** Derived rows: τ = C/H in whole hours, when the server has no τ, both are there and H > 0. */
 export function derivedRows(rows: Row[]): Row[] {
+  if (rows.some(r => r.property.name === TAU)) return [];
   const h = rows.find(r => r.property.name === H);
   const c = rows.find(r => r.property.name === C);
   if (!h || !c) return [];

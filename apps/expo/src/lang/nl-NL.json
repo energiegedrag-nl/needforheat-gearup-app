@@ -236,6 +236,18 @@
           }
         }
       },
+      "uploaded_screen": {
+        "title": "Verzonden gegevens",
+        "subtitle_energy_query": "U heeft onderstaande gegevens verzonden op",
+        "subtitle_device": "Laatste metingen, de nieuwste van",
+        "empty": "De server heeft (nog) geen gegevens van deze vraag.",
+        "empty_device": "De server heeft van dit apparaat de afgelopen twee dagen geen metingen.",
+        "back_button": "Ga terug",
+        "yes": "ja",
+        "no": "nee",
+        "thermal_inertia": "Thermische inertie (τ)",
+        "time_zone": "Tijdzone"
+      },
       "energy_query": {
         "information_screen": {
           "title": "Toelichting",
@@ -257,6 +269,7 @@
         },
         "weather_location_result_screen": {
           "title": "Te verzenden weerzone",
+          "time_zone": "Tijdzone van uw telefoon: {{timeZone}} (wordt meegestuurd)",
           "subtitle": "Dit is de weerzone voor uw woning. Voor uw privacy verschuiven we de locatie willekeurig (meestal minder dan 10 tot 20 km), dus uw huis hoeft er niet precies in te liggen. Ligt deze zone in uw regio?",
           "send_button": "Ja (verzenden)",
           "back_button": "Nee (opnieuw)",
@@ -279,7 +292,8 @@
         "weather_location_posted_screen": {
           "title": "Verzonden weerzone",
           "subtitle": "U heeft onderstaande weerzone verzonden op",
-          "back_button": "Ga terug"
+          "back_button": "Ga terug",
+          "time_zone": "Tijdzone"
         },
         "location_permission": {
           "alert": {
@@ -473,6 +487,12 @@
     }
   },
   "components": {
+    "timeline": {
+      "busy": "{{elapsed}} s bezig",
+      "left": "{{elapsed}} s · nog ± {{left}} s",
+      "almost": "{{elapsed}} s · bijna klaar",
+      "longer": "{{elapsed}} s · duurt langer dan normaal"
+    },
     "wifi_network_list": {
       "empty_collection": "Geen wifinetwerken gevonden."
     },

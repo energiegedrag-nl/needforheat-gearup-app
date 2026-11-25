@@ -1,9 +1,7 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Button, useTheme } from "@rneui/themed";
-import * as SecureStore from "expo-secure-store";
 import { evaluate } from "mathjs";
 import { useEffect, useRef, useState } from "react";
-import { getTimeZone } from "react-native-localize";
 
 import { postEnergyQuery } from "@/api/energyquery";
 import { StatusMessage } from "@/components/common/StatusMessage";
@@ -13,11 +11,10 @@ import useAPIKey from "@/hooks/API/useAPIKey";
 import useTranslation from "@/hooks/translation/useTranslation";
 import { fetchDwelling, heatSignature } from "@/lib/heatSignature";
 import { applyUhiToH } from "@/lib/heatSignature/uhi";
-import { parseRoundingRules, roundForUpload } from "@/lib/privacy/rounding";
+import { parseRoundingRules, roundForUpload, thermalInertiaFromRounded } from "@/lib/privacy/rounding";
 import { useDisableBackButton } from "@/hooks/useDisableBackButton";
 import { EnergyQuery } from "@/types/api";
 import { HomeStackParamList } from "@/types/navigation";
-import { fetchTimeZone } from "@/utils/timezone";
 
 type BuildingProfileProgressScreenProps = NativeStackScreenProps<HomeStackParamList, "BuildingProfileProgressScreen">;
 
@@ -48,6 +45,7 @@ export default function BuildingProfileProgressScreen({ navigation, route }: Bui
   const [isSuccesError, setisSuccesError] = useState<boolean>(false);
   //End timeline items
 
+  // Expected durations (s) until the phone has timed the steps itself; step 2 includes 3DBAG and the neighbours.
   const timelineData = [
     {
       title: t("screens.home_stack.energy_query.building_profile_progress.alert.initial_data.title"),
@@ -55,6 +53,8 @@ export default function BuildingProfileProgressScreen({ navigation, route }: Bui
       finished: isBAGReceived,
       loading: !isBAGReceived && !isBAGReceivedError,
       error: isBAGReceivedError,
+      timingKey: "building_profile.bag",
+      expected__s: 3,
     },
     {
       title: t("screens.home_stack.energy_query.building_profile_progress.alert.data.title"),
@@ -62,6 +62,8 @@ export default function BuildingProfileProgressScreen({ navigation, route }: Bui
       finished: is3DBAGReceived,
       loading: isBAGReceived && !is3DBAGReceived && !is3DBAGReceivedError,
       error: is3DBAGReceivedError,
+      timingKey: "building_profile.3dbag",
+      expected__s: 15,
     },
     {
       title: t("screens.home_stack.energy_query.building_profile_progress.alert.calculating.title"),
@@ -69,6 +71,8 @@ export default function BuildingProfileProgressScreen({ navigation, route }: Bui
       finished: isCalculating,
       loading: is3DBAGReceived && !isCalculating && !isCalculatingError && !isUnsuitable,
       error: isCalculatingError || isUnsuitable,
+      timingKey: "building_profile.calculating",
+      expected__s: 2,
     },
     {
       title: t("screens.home_stack.energy_query.building_profile_progress.alert.sending.title"),
@@ -76,6 +80,8 @@ export default function BuildingProfileProgressScreen({ navigation, route }: Bui
       finished: isSucces,
       loading: isCalculating && !isSucces && !isSuccesError,
       error: isSuccesError,
+      timingKey: "building_profile.sending",
+      expected__s: 3,
     },
   ];
   const onLeave = () => navigation.navigate("HomeScreen");
@@ -121,8 +127,8 @@ export default function BuildingProfileProgressScreen({ navigation, route }: Bui
       measurements.push({ value: String(value), property: { name }, time: currentLocaleTimeInUnix });
     try {
       // Everything computed here is rounded with the campaign's rules (or the defaults) before upload;
-      // values without a rule are not uploaded. Not uploaded either: tau (= C / H, so it would narrow
-      // the rounded values down) and the method used (it reveals whether a label exists).
+      // values without a rule are not uploaded. Not uploaded either: the method used (it reveals whether a
+      // label exists).
       const rules = parseRoundingRules(dataSource.item.Rounding);
       const values: Record<string, number> = {};
       const signature = heatSignature(dwelling.input, "passend");
@@ -180,7 +186,12 @@ export default function BuildingProfileProgressScreen({ navigation, route }: Bui
           if (propertyMatch && Number.isFinite(number)) values[propertyMatch[1]] = number;
         }
       }
-      for (const [name, value] of Object.entries(roundForUpload(values, rules))) add(name, value);
+      const rounded = roundForUpload(values, rules);
+      for (const [name, value] of Object.entries(rounded)) add(name, value);
+      // Thermal inertia τ = C / H in whole hours, from the *rounded* C and H: so it tells no more than
+      // they do (from the exact values it would narrow them down).
+      const tau = thermalInertiaFromRounded(rounded);
+      if (tau !== null) add("thermal_inertia__h", tau);
       if (!measurements.length) throw new Error("nothing calculated");
       setisCalculating(true);
     } catch {
@@ -189,11 +200,7 @@ export default function BuildingProfileProgressScreen({ navigation, route }: Bui
       return;
     }
 
-    // Add timezone measurement
-    const timeZone = getTimeZone();
-    await SecureStore.setItemAsync("timeZone", timeZone);
-    fetchTimeZone(); //Update in RAM
-    add("device_timezone__tmz", timeZone);
+    // The time zone goes with the weather zone (WeatherLocationResultScreen), not here.
 
     // Creating energy query
     const energyQuery: EnergyQuery = {

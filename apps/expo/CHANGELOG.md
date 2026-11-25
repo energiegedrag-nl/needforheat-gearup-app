@@ -1,3 +1,16 @@
+# [3.5.0](https://github.com/energiegedrag-nl/needforheat-gearup-app/compare/v3.4.0...v3.5.0) (2026-11-25)
+
+
+### Features
+
+* **energy-query:** show what an energy query sent, and when ([5168595](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/5168595e6299bcaf5649bbefaca6f3e0bcc5de9d))
+* **energy-query:** time zone with the weather zone, τ with the heat signature ([0172f72](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/0172f72fa8dc20347ec36c8fd066175cc1721430))
+* **signature:** a wall between garages makes no neighbours (3DBAG LoD1.3) ([cb047ef](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/cb047efd0d06119e69158b6a388f27a8e76e0d6f)), closes [anonymate-nl/anonymate#96](https://github.com/anonymate-nl/anonymate/issues/96)
+* **uploaded:** display names from the server, and the latest measurements of a device ([d0fcb6a](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/d0fcb6ad98c680736650ff6ba8a338f045a5e6ed))
+* **uploaded:** thermal inertia τ = C/H, and H, C, τ, A_sol, A_inf first ([9ebf171](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/9ebf171a6d9b717db351728047156210a65d5b7b))
+* **uploaded:** use τ from the server when it is there ([7afc393](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/7afc39391d510deb2fed15ad73e2773817d6fd5e))
+* **weather-zone:** show the sent cell as about a tenth of the map ([058df1c](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/058df1cb329006ffa4276e07a15ecbaf01c7264b))
+
 # [3.4.0](https://github.com/energiegedrag-nl/needforheat-gearup-app/compare/v3.3.2...v3.4.0) (2026-11-21)
 
 

@@ -4,7 +4,9 @@ import * as Burnt from "burnt";
 import { FeatureCollection } from "geojson";
 import { cellToBoundary, CoordPair } from "h3-js";
 import { useEffect, useRef, useState } from "react";
+import * as SecureStore from "expo-secure-store";
 import { Alert, Text, View } from "react-native";
+import { getTimeZone } from "react-native-localize";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 import { postEnergyQuery } from "@/api/energyquery";
@@ -14,7 +16,11 @@ import useTranslation from "@/hooks/translation/useTranslation";
 import { EnergyQuery } from "@/types/api";
 import { UserLocation } from "@/types/energyquery";
 import { HomeStackParamList } from "@/types/navigation";
+import { fetchTimeZone } from "@/utils/timezone";
 import { getNoiseOffset, NoiseOffset, weatherCell, weatherCellCentre } from "@/utils/weatherLocation";
+
+/** Decimals of the uploaded latitude and longitude. */
+const COORDINATE_DECIMALS = 3;
 
 type WeatherLocationResultScreenProps = NativeStackScreenProps<HomeStackParamList, "WeatherLocationResultScreen">;
 
@@ -26,6 +32,8 @@ export default function WeatherLocationResultScreen({ navigation, route }: Weath
   const refMap = useRef<OpenMapRef>(null);
   const [locationState, setLocationState] = useState<UserLocation>(location);
   const [disableButtons, setDisableButtons] = useState<boolean>(false);
+  // The phone's time zone is sent with the weather zone: show it before sending.
+  const timeZone = getTimeZone();
 
   //H3: level 5 after a random offset (σ ≈ 10 km) that is drawn once per installation; see utils/weatherLocation.
   const [offset, setOffset] = useState<NoiseOffset | null>(null);
@@ -67,6 +75,15 @@ export default function WeatherLocationResultScreen({ navigation, route }: Weath
     }
 
     const currentLocaleTimeInUnix = Math.floor(Date.now() / 1000);
+    // The time zone of the phone goes with the weather zone (both say where the home is, coarsely).
+    await SecureStore.setItemAsync("timeZone", timeZone);
+    fetchTimeZone(); // update in RAM
+    const measurements = [
+      // The centre of the (shifted) weather cell; 3 decimals (about 100 m) is far finer than the cell.
+      { value: resultLocation[0].toFixed(COORDINATE_DECIMALS), property: { name: "latitude" }, time: currentLocaleTimeInUnix },
+      { value: resultLocation[1].toFixed(COORDINATE_DECIMALS), property: { name: "longitude" }, time: currentLocaleTimeInUnix },
+      { value: timeZone, property: { name: "device_timezone__tmz" }, time: currentLocaleTimeInUnix },
+    ];
 
     const energyQuery: EnergyQuery = {
       energy_query_type: {
@@ -74,26 +91,11 @@ export default function WeatherLocationResultScreen({ navigation, route }: Weath
       },
       uploads: [
         {
-          measurements: [
-            {
-              value: resultLocation[0].toString(),
-              property: {
-                name: "latitude",
-              },
-              time: currentLocaleTimeInUnix,
-            },
-            {
-              value: resultLocation[1].toString(),
-              property: {
-                name: "longitude",
-              },
-              time: currentLocaleTimeInUnix,
-            },
-          ],
+          measurements,
           instance_id: dataSource.item.ID,
           instance_type: "energy_query_type",
           device_time: currentLocaleTimeInUnix,
-          size: 2,
+          size: measurements.length,
         },
       ],
     };
@@ -193,6 +195,9 @@ export default function WeatherLocationResultScreen({ navigation, route }: Weath
           <Text style={style.subtitle}>
             {t("screens.home_stack.energy_query.weather_location_result_screen.subtitle")}
           </Text>
+          <Text style={style.timeZone}>
+            {t("screens.home_stack.energy_query.weather_location_result_screen.time_zone", { timeZone })}
+          </Text>
         </View>
         <View style={style.mapcontainer}>
           <OpenMap
@@ -283,6 +288,13 @@ const useStyles = makeStyles(theme => ({
     padding: 8,
     borderRadius: 5,
     marginBottom: 5,
+  },
+  timeZone: {
+    textAlign: "center",
+    fontSize: 14,
+    color: theme.colors.grey1,
+    marginTop: 4,
+    marginBottom: 8,
   },
   subtitle: {
     justifyContent: "center",

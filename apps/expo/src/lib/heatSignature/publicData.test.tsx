@@ -1,6 +1,6 @@
 import { describe, expect, it } from "@jest/globals";
 
-import { chooseVerblijfsobject, splitAddress, tileAround } from "./publicData";
+import { chooseVerblijfsobject, request3dBag, splitAddress, tileAround } from "./publicData";
 import { applyUhiToH, uhiForPostcode } from "./uhi";
 
 const vbo = (huisnummer: number, huisletter: string | null = null, toevoeging: string | null = null) => ({
@@ -41,5 +41,30 @@ describe("finding the home without sending the address", () => {
     expect(applyUhiToH(200, 1)).toBeCloseTo(200 * (10.89 / 11.89), 6);
     expect(applyUhiToH(200, null)).toBe(200);
     expect(applyUhiToH(200, 1, 0)).toBe(200);
+  });
+});
+
+describe("asking the 3DBAG for the parts of the buildings around the home", () => {
+  // a fixed sequence instead of Math.random
+  const seeded =
+    (seed = 1) =>
+    () =>
+      (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const groups: Record<string, string[]> = { home: ["home", "n1", "n2"], d1: ["d1", "d1n"], d2: ["d2"] };
+  const around = (id: string) => groups[id] ?? [id];
+
+  it("asks for the home with its group among seven other groups, each building once", () => {
+    const others = ["n1", "n2", "d1", "d1n", "d2", "d3", "d4", "d5", "d6", "d7", "d8", "d9"];
+    const ids = request3dBag("home", others, around, seeded());
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(ids).toEqual(expect.arrayContaining(["home", "n1", "n2"]));
+    // the decoys come from outside the group of the home, and bring their own group along
+    const decoys = ids.filter(id => !["home", "n1", "n2"].includes(id) && id !== "d1n");
+    expect(decoys).toHaveLength(7);
+    if (ids.includes("d1")) expect(ids).toContain("d1n");
+  });
+
+  it("without other residential buildings it asks for the group of the home only", () => {
+    expect(request3dBag("home", ["n1", "n2"], around, seeded()).sort()).toEqual(["home", "n1", "n2"]);
   });
 });

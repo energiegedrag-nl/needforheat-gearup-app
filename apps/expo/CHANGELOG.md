@@ -1,3 +1,11 @@
+# [3.6.0](https://github.com/energiegedrag-nl/needforheat-gearup-app/compare/v3.5.0...v3.6.0) (2026-11-25)
+
+
+### Features
+
+* **timeline:** numbered circles for steps not started; progress bar for slow steps ([7acab16](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/7acab16bcbbe311ac860798008f151f774ef93df))
+* **weather-location:** show the time zone that is sent with the weather zone ([6786bed](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/6786bedee4d5596c59177abcd86ce8a63e2c4c91))
+
 # [3.5.0](https://github.com/energiegedrag-nl/needforheat-gearup-app/compare/v3.4.0...v3.5.0) (2026-11-25)
 
 

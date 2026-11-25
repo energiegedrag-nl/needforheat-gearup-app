@@ -236,6 +236,16 @@
           }
         }
       },
+      "uploaded_screen": {
+        "title": "Data Sent",
+        "subtitle_energy_query": "You sent the data below at",
+        "subtitle_device": "Latest measurements, the newest from",
+        "empty": "The server holds no data for this question (yet).",
+        "empty_device": "The server holds no measurements of this device from the last two days.",
+        "back_button": "Go back",
+        "yes": "yes",
+        "no": "no"
+      },
       "energy_query": {
         "information_screen": {
           "title": "Clarification",
@@ -280,14 +290,6 @@
           "title": "Weather Zone Sent",
           "subtitle": "You sent this weather zone at",
           "back_button": "Go back"
-        },
-        "uploaded_screen": {
-          "title": "Data Sent",
-          "subtitle": "You sent the data below at",
-          "empty": "The server holds no data for this question (yet).",
-          "back_button": "Go back",
-          "yes": "yes",
-          "no": "no"
         },
         "location_permission": {
           "alert": {

@@ -11,7 +11,6 @@ import AlreadyInvitedScreen from "@/screens/home/AlreadyInvitedScreen";
 import ConnectScreen from "@/screens/home/ConnectScreen";
 import BuildingProfileProgressScreen from "@/screens/home/EnergyQuery/BuildingProfile/BuildingProfileProgressScreen";
 import HomeAddressSelectScreen from "@/screens/home/EnergyQuery/BuildingProfile/HomeAddressSelectScreen";
-import EnergyQueryUploadedScreen from "@/screens/home/EnergyQuery/EnergyQueryUploadedScreen";
 import InformationScreen from "@/screens/home/EnergyQuery/InformationScreen";
 import HomeSelectScreen from "@/screens/home/EnergyQuery/WeatherInterpolationLocation/HomeSelectScreen";
 import WeatherLocationPostedScreen from "@/screens/home/EnergyQuery/WeatherInterpolationLocation/WeatherLocationPostedScreen";
@@ -19,6 +18,7 @@ import WeatherLocationResultScreen from "@/screens/home/EnergyQuery/WeatherInter
 import HomeScreen from "@/screens/home/HomeScreen";
 import ProvisionScreen from "@/screens/home/ProvisionScreen";
 import QrScannerScreen from "@/screens/home/QrScannerScreen";
+import UploadedDataScreen from "@/screens/home/UploadedDataScreen";
 import SearchDeviceScreen from "@/screens/home/SearchDeviceScreen";
 import WifiOverviewScreen from "@/screens/home/WifiOverviewScreen";
 import { HomeStackParamList } from "@/types/navigation";
@@ -146,12 +146,12 @@ export default function HomeRouter() {
         component={WeatherLocationPostedScreen}
       />
       <HomeStack.Screen
-        name="EnergyQueryUploadedScreen"
+        name="UploadedDataScreen"
         options={{
-          title: t("screens.home_stack.energy_query.uploaded_screen.title") as string,
+          title: t("screens.home_stack.uploaded_screen.title") as string,
           ...disableNavigation,
         }}
-        component={EnergyQueryUploadedScreen}
+        component={UploadedDataScreen}
       />
       <HomeStack.Screen
         name="BuildingProfileProgressScreen"

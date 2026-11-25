@@ -88,7 +88,14 @@ export default function DeviceListItem(props: WifiNetworkListItemProps) {
     } else if (item.data_source?.category === "cloud_feed_type") {
       navigate("AddOnlineDataSourceScreen");
     } else if (item.data_source?.category === "energy_query_type") {
-      navigate("InformationScreen", { dataSource: item.data_source });
+      // Straight to the question; the explanation is behind the question mark there.
+      if (item.data_source.item.Name === "weather-interpolation-location") {
+        navigate("HomeSelectScreen", { dataSource: item.data_source });
+      } else if (item.data_source.item.Name === "building-profile") {
+        navigate("HomeAddressSelectScreen", { dataSource: item.data_source });
+      } else {
+        navigate("InformationScreen", { dataSource: item.data_source });
+      }
     }
   };
 

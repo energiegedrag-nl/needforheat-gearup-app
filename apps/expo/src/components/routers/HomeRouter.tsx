@@ -3,6 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator, NativeStackNavigationOptions } from "@react-navigation/native-stack";
 import { Platform } from "react-native";
 
+import HelpHeaderButton from "@/components/common/HelpHeaderButton";
 import useTranslation from "@/hooks/translation/useTranslation";
 import ActivateDeviceScreen from "@/screens/home/ActivateDeviceScreen";
 import AddDeviceScreen from "@/screens/home/AddDeviceScreen";
@@ -114,27 +115,48 @@ export default function HomeRouter() {
       />
 
       {/* EnergyQuery */}
+      {/* A tap on an energy query opens the question at once; the explanation is behind the question mark in the
+          header. Back is allowed on the question itself, to cancel. */}
       <HomeStack.Screen
         name="InformationScreen"
-        options={{ title: t("screens.home_stack.energy_query.information_screen.title") as string, ...disableNavigation }}
+        options={{ title: t("screens.home_stack.energy_query.information_screen.title") as string }}
         component={InformationScreen}
       />
       <HomeStack.Screen
         name="HomeSelectScreen"
-        options={{ title: t("screens.home_stack.energy_query.homeselect_screen.title") as string, ...disableNavigation }}
+        options={({ navigation, route }) => ({
+          title: t("screens.home_stack.energy_query.homeselect_screen.title") as string,
+          headerRight: () => (
+            <HelpHeaderButton
+              onPress={() => navigation.navigate("InformationScreen", { dataSource: route.params.dataSource })}
+            />
+          ),
+        })}
         component={HomeSelectScreen}
       />
       <HomeStack.Screen
         name="HomeAddressSelectScreen"
-        options={{ title: t("screens.home_stack.energy_query.homeaddress_screen.title") as string, ...disableNavigation }}
+        options={({ navigation, route }) => ({
+          title: t("screens.home_stack.energy_query.homeaddress_screen.title") as string,
+          headerRight: () => (
+            <HelpHeaderButton
+              onPress={() => navigation.navigate("InformationScreen", { dataSource: route.params.dataSource })}
+            />
+          ),
+        })}
         component={HomeAddressSelectScreen}
       />
       <HomeStack.Screen
         name="WeatherLocationResultScreen"
-        options={{
+        options={({ navigation, route }) => ({
           title: t("screens.home_stack.energy_query.weather_location_result_screen.title") as string,
           ...disableNavigation,
-        }}
+          headerRight: () => (
+            <HelpHeaderButton
+              onPress={() => navigation.navigate("InformationScreen", { dataSource: route.params.dataSource })}
+            />
+          ),
+        })}
         component={WeatherLocationResultScreen}
       />
       <HomeStack.Screen

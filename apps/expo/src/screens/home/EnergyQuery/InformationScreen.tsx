@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Button, useTheme } from "@rneui/themed";
+import { Button } from "@rneui/themed";
 
 import ManualContent from "@/components/common/ManualContent";
 import Box from "@/components/elements/Box";
@@ -9,20 +9,10 @@ import { getManualUrl } from "@/utils/tools";
 
 type InformationScreenProps = NativeStackScreenProps<HomeStackParamList, "InformationScreen">;
 
+/** The explanation of an energy query, opened from the question mark on the question; back to the question. */
 export default function InformationScreen({ navigation, route }: InformationScreenProps) {
   const { dataSource } = route.params;
-  const { theme } = useTheme();
   const { t, resolvedLanguage } = useTranslation();
-
-  const onExecuteQuery = () => {
-    if (dataSource.item.Name === "weather-interpolation-location") {
-      navigation.navigate("HomeSelectScreen", { dataSource });
-    } else if (dataSource.item.Name === "building-profile") {
-      navigation.navigate("HomeAddressSelectScreen", { dataSource });
-    }
-  };
-
-  const onCancel = () => navigation.navigate("HomeScreen");
 
   return (
     <Box padded style={{ flex: 1 }}>
@@ -30,25 +20,10 @@ export default function InformationScreen({ navigation, route }: InformationScre
       <Box style={{ flexDirection: "row", marginTop: 16, width: "100%" }}>
         <Button
           containerStyle={{ flex: 1 }}
-          title={t("common.cancel") as string}
-          color="grey2"
-          onPress={onCancel}
-          icon={{
-            name: "close-outline",
-            type: "ionicon",
-            color: theme.colors.white,
-          }}
-        />
-        <Button
-          containerStyle={{ flex: 1, marginLeft: theme.spacing.md }}
           title={t("screens.home_stack.energy_query.information_screen.button") as string}
           color="primary"
-          onPress={onExecuteQuery}
-          icon={{
-            name: "flash-outline",
-            type: "ionicon",
-            color: theme.colors.white,
-          }}
+          onPress={() => navigation.goBack()}
+          icon={{ name: "checkmark-outline", type: "ionicon", color: "white" }}
         />
       </Box>
     </Box>

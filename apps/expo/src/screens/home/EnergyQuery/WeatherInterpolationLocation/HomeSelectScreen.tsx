@@ -1,15 +1,15 @@
-import Geolocation, { GeolocationResponse } from "@react-native-community/geolocation";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Button, Icon, makeStyles, useTheme } from "@rneui/themed";
 import { openSettings } from "expo-linking";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Alert, Text, View } from "react-native";
+import { ActivityIndicator, Alert, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 import Box from "@/components/elements/Box";
 import OpenMap, { OpenMapRef, Region } from "@/components/map/OpenMap";
 import usePreciseLocationPermission from "@/hooks/location/usePreciseLocationPermission";
 import useTranslation from "@/hooks/translation/useTranslation";
+import { currentPosition, NL_CENTRE, ZONE_VIEW } from "@/lib/location/startRegion";
 import { UserLocation } from "@/types/energyquery";
 import { HomeStackParamList } from "@/types/navigation";
 
@@ -22,21 +22,30 @@ export default function HomeSelectScreen({ navigation, route }: HomeSelectScreen
   const style = useStyles();
   const refMap = useRef<OpenMapRef>(null);
   const [, setLocationPermission] = useState<boolean>(false);
-  const [location, setLocation] = useState<UserLocation>({
-    latitude: 52.501076707906,
-    longitude: 6.079587294142308,
-    latitudeDelta: 4,
-    longitudeDelta: 4,
-  });
+  // Where the map starts: the phone's position when it has one, else the middle of the country; at about the
+  // size of a weather zone. The map is shown once that is known, so it does not start somewhere else first.
+  const [location, setLocation] = useState<UserLocation>({ ...NL_CENTRE, ...ZONE_VIEW });
+  const [mapReady, setMapReady] = useState<boolean>(false);
 
   useEffect(() => {
-    const checkPermission = async () => {
-      const permission = await checkPreciseLocationPermission();
+    const start = async () => {
+      let permission = await checkPreciseLocationPermission();
+      if (!permission) {
+        try {
+          await requestPreciseLocationPermission();
+          permission = await checkPreciseLocationPermission();
+        } catch {
+          permission = false;
+        }
+      }
       setLocationPermission(permission);
-      if (!permission) askForPreciseLocationPermission(false);
-      else onPressMyLocation();
+      const here = permission ? await currentPosition() : null;
+      if (here) {
+        setLocation({ ...here, ...ZONE_VIEW });
+      }
+      setMapReady(true);
     };
-    checkPermission();
+    start();
   }, []);
 
   const onContinue = () => {
@@ -108,30 +117,13 @@ export default function HomeSelectScreen({ navigation, route }: HomeSelectScreen
   //Location permission END
 
   const onPressMyLocation = async () => {
-    const permission = await checkPreciseLocationPermission();
-    setLocationPermission(permission);
-
-    if (permission) {
-      Geolocation.getCurrentPosition(pos => succes(pos));
-      const succes = (position: GeolocationResponse) => {
-        if (position) {
-          setLocation({
-            longitude: position.coords.longitude,
-            latitude: position.coords.latitude,
-            longitudeDelta: 0.0008,
-            latitudeDelta: 0.0008,
-          });
-          refMap.current?.animateToRegion(
-            {
-              longitude: position.coords.longitude,
-              latitude: position.coords.latitude,
-              longitudeDelta: 0.0008,
-              latitudeDelta: 0.0008,
-            },
-            20
-          );
-        }
-      };
+    if (await checkPreciseLocationPermission()) {
+      const here = await currentPosition();
+      if (here) {
+        const region = { ...here, ...ZONE_VIEW };
+        setLocation(region);
+        refMap.current?.animateToRegion(region, 300);
+      }
     } else {
       await askForPreciseLocationPermission();
       onPressMyLocation();
@@ -173,14 +165,18 @@ export default function HomeSelectScreen({ navigation, route }: HomeSelectScreen
           <Text style={style.subtitle}>{t("screens.home_stack.energy_query.homeselect_screen.subtitle")}</Text>
         </View>
         <View style={style.mapcontainer}>
-          <OpenMap
-            ref={refMap}
-            region={location}
-            showsUserLocation
-            pitchEnabled={false}
-            style={style.map}
-            onRegionChangeComplete={handleRegionChangeCompleted}
-          />
+          {mapReady ? (
+            <OpenMap
+              ref={refMap}
+              region={location}
+              showsUserLocation
+              pitchEnabled={false}
+              style={style.map}
+              onRegionChangeComplete={handleRegionChangeCompleted}
+            />
+          ) : (
+            <ActivityIndicator size="large" color={theme.colors.primary} style={style.map} />
+          )}
           <View style={style.zoomControlsiOS}>
             <TouchableOpacity onPress={handleZoomIn} style={style.zoomButton}>
               <Icon name="add" color="white" size={30} />

@@ -1,9 +1,8 @@
-import Geolocation, { GeolocationResponse } from "@react-native-community/geolocation";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Button, Icon, makeStyles, useTheme } from "@rneui/themed";
 import { openSettings } from "expo-linking";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Alert, Text, View } from "react-native";
+import { ActivityIndicator, Alert, Text, View } from "react-native";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 
 import Box from "@/components/elements/Box";
@@ -11,6 +10,7 @@ import OpenMap, { OpenMapRef, Region } from "@/components/map/OpenMap";
 import { NL_ADDRESS_REGEX } from "@/constants";
 import usePreciseLocationPermission from "@/hooks/location/usePreciseLocationPermission";
 import useTranslation from "@/hooks/translation/useTranslation";
+import { currentPosition, NL_CENTRE, STREET_VIEW, ZONE_VIEW } from "@/lib/location/startRegion";
 import { UserLocation } from "@/types/energyquery";
 import { HomeStackParamList } from "@/types/navigation";
 import { geocodeAddress, reverseGeocode } from "@/utils/geocoding";
@@ -24,12 +24,10 @@ export default function HomeAddressSelectScreen({ navigation, route }: HomeAddre
   const style = useStyles();
   const refMap = useRef<OpenMapRef>(null);
   const [, setLocationPermission] = useState<boolean>(false);
-  const [location, setLocation] = useState<UserLocation>({
-    latitude: 52.501076707906,
-    longitude: 6.079587294142308,
-    latitudeDelta: 4,
-    longitudeDelta: 4,
-  });
+  // Where the map starts: the phone's position when it has one, else the middle of the country; at about the
+  // size of a weather zone. The map is shown once that is known, so it does not start somewhere else first.
+  const [location, setLocation] = useState<UserLocation>({ ...NL_CENTRE, ...ZONE_VIEW });
+  const [mapReady, setMapReady] = useState<boolean>(false);
   const [selectedAddress, setSelectedAddress] = useState<string>("");
 
   const setAdressChange = async (address: string) => {
@@ -85,13 +83,25 @@ export default function HomeAddressSelectScreen({ navigation, route }: HomeAddre
   };
 
   useEffect(() => {
-    const checkPermission = async () => {
-      const permission = await checkPreciseLocationPermission();
+    const start = async () => {
+      let permission = await checkPreciseLocationPermission();
+      if (!permission) {
+        try {
+          await requestPreciseLocationPermission();
+          permission = await checkPreciseLocationPermission();
+        } catch {
+          permission = false;
+        }
+      }
       setLocationPermission(permission);
-      if (!permission) askForPreciseLocationPermission(false);
-      else onPressMyLocation();
+      const here = permission ? await currentPosition() : null;
+      if (here) {
+        setLocation({ ...here, ...STREET_VIEW });
+        getAddressFromCoordinates(here.latitude, here.longitude);
+      }
+      setMapReady(true);
     };
-    checkPermission();
+    start();
   }, []);
 
   const onContinue = () => {
@@ -194,27 +204,13 @@ export default function HomeAddressSelectScreen({ navigation, route }: HomeAddre
 
   const onPressMyLocation = async () => {
     if (await checkPreciseLocationPermission()) {
-      Geolocation.getCurrentPosition(pos => succes(pos));
-      const succes = (position: GeolocationResponse) => {
-        if (position) {
-          setLocation({
-            longitude: position.coords.longitude,
-            latitude: position.coords.latitude,
-            longitudeDelta: 0.0008,
-            latitudeDelta: 0.0008,
-          });
-          refMap.current?.animateToRegion(
-            {
-              longitude: position.coords.longitude,
-              latitude: position.coords.latitude,
-              longitudeDelta: 0.0008,
-              latitudeDelta: 0.0008,
-            },
-            20
-          );
-          getAddressFromCoordinates(position.coords.latitude, position.coords.longitude);
-        }
-      };
+      const here = await currentPosition();
+      if (here) {
+        const region = { ...here, ...STREET_VIEW };
+        setLocation(region);
+        refMap.current?.animateToRegion(region, 300);
+        getAddressFromCoordinates(here.latitude, here.longitude);
+      }
     } else {
       await askForPreciseLocationPermission();
       onPressMyLocation();
@@ -257,14 +253,18 @@ export default function HomeAddressSelectScreen({ navigation, route }: HomeAddre
           <Text style={style.subtitle}>{t("screens.home_stack.energy_query.homeaddress_screen.subtitle")}</Text>
         </View>
         <View style={style.mapcontainer}>
-          <OpenMap
-            ref={refMap}
-            region={location}
-            showsUserLocation
-            pitchEnabled={false}
-            style={style.map}
-            onRegionChangeComplete={handleRegionChangeCompleted}
-          />
+          {mapReady ? (
+            <OpenMap
+              ref={refMap}
+              region={location}
+              showsUserLocation
+              pitchEnabled={false}
+              style={style.map}
+              onRegionChangeComplete={handleRegionChangeCompleted}
+            />
+          ) : (
+            <ActivityIndicator size="large" color={theme.colors.primary} style={style.map} />
+          )}
           <View style={style.zoomControlsiOS}>
             <TouchableOpacity onPress={handleZoomIn} style={style.zoomButton}>
               <Icon name="add" color="white" size={30} />

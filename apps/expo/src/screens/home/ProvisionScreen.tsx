@@ -138,7 +138,7 @@ export default function ProvisionScreen({ navigation, route }: ProvisionScreenPr
 
   return (
     <Box padded style={{ flex: 1, justifyContent: "space-between" }}>
-      <Box>
+      <Box fullWidth>
         <Timeline items={timelineData} />
 
         <Box padded>

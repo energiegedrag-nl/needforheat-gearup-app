@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { createRunOncePlugin, withAppBuildGradle } = require("@expo/config-plugins");
+const { createRunOncePlugin, withAppBuildGradle } = require("expo/config-plugins");
 
 const withAppBuildGradleModified = config => {
   return withAppBuildGradle(config, async file => {

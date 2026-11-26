@@ -5,6 +5,7 @@
     "scheme": "nfh",
     "version": "3.8.0",
     "jsEngine": "hermes",
+    "newArchEnabled": false,
     "privacy": "hidden",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -92,15 +93,26 @@
         "expo-build-properties",
         {
           "android": {
-            "compileSdkVersion": 34,
-            "targetSdkVersion": 34,
-            "minSdkVersion": 23
+            "compileSdkVersion": 36,
+            "targetSdkVersion": 36,
+            "minSdkVersion": 24
           }
         }
       ],
       "expo-font",
       "expo-localization",
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "react-native-permissions",
+        {
+          "iosPermissions": [
+            "Bluetooth",
+            "Camera",
+            "LocationWhenInUse",
+            "Notifications"
+          ]
+        }
+      ]
     ]
   }
 }

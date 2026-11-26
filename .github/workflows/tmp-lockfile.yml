@@ -1,0 +1,35 @@
+name: tmp lockfile (expo sdk 54)
+# Temporary: the lockfile for the Expo SDK 54 upgrade is made here, because yarn 1 runs out of memory
+# linking this monorepo on a small laptop. Removed again before the pull request is merged.
+on:
+  push:
+    branches: [chore/expo-sdk-54]
+jobs:
+  lockfile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies (updates yarn.lock)
+        run: yarn install --non-interactive
+      - uses: actions/upload-artifact@v4
+        with:
+          name: yarn-lock
+          path: yarn.lock
+      - name: TypeScript
+        if: always()
+        run: yarn ci:tsc
+      - name: ESLint
+        if: always()
+        run: yarn ci:eslint
+      - name: Unit tests
+        if: always()
+        working-directory: apps/expo
+        run: yarn jest --ci --config jest.unit.config.js
+      - name: Expo doctor
+        if: always()
+        working-directory: apps/expo
+        run: npx expo-doctor || true

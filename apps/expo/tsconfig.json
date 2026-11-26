@@ -21,7 +21,6 @@
     ],
     "types": [
       "jest",
-      "react-native",
       "react-test-renderer"
     ],
     "forceConsistentCasingInFileNames": true

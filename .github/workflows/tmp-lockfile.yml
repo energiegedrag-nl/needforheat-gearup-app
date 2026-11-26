@@ -5,41 +5,35 @@ on:
   push:
     branches: [chore/expo-sdk-54]
 jobs:
-  bisect:
+  lockfile:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
-    strategy:
-      fail-fast: false
-      matrix:
-        variant: [as-is, fresh-lock, react18, rn-dev-074, old-jest-expo, old-permissions, old-bottom-sheet, no-rneui-types]
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Variant
-        run: |
-          python3 - "${{ matrix.variant }}" <<'PY'
-          import json, sys, os
-          v = sys.argv[1]
-          p = "apps/expo/package.json"; d = json.load(open(p))
-          dep, dev = d["dependencies"], d["devDependencies"]
-          if v == "fresh-lock": os.remove("yarn.lock")
-          if v == "react18":
-              dep.update({"react": "18.3.1", "react-dom": "18.3.1"}); dev.update({"react-test-renderer": "18.3.1", "@testing-library/react-native": "12.0.0", "@types/react-test-renderer": "^18.0.0"})
-          if v == "rn-dev-074":
-              for k in ["@react-native/babel-preset", "@react-native/eslint-config", "@react-native/metro-config", "@react-native/typescript-config"]: dev[k] = "0.74.84"
-          if v == "old-jest-expo": dev["jest-expo"] = "~51.0.1"
-          if v == "old-permissions": dep["react-native-permissions"] = "3.6.1"
-          if v == "old-bottom-sheet": dep["@gorhom/bottom-sheet"] = "5.0.0-alpha.10"
-          if v == "no-rneui-types": dev.pop("@types/react-native-vector-icons", None)
-          json.dump(d, open(p, "w"), indent=2)
-          PY
-      - name: Install
-        env:
-          NODE_OPTIONS: --max-old-space-size=12288
-        run: timeout 900 /usr/bin/time -v yarn install --non-interactive 2>&1 | grep -E 'Done in|FATAL|Maximum resident|Elapsed|^error' ; test -f node_modules/.yarn-integrity
+      - name: Install dependencies (updates yarn.lock)
+        run: yarn install --non-interactive 2>&1 | grep -vE '^warning'; test -f node_modules/.yarn-integrity
+      - name: Lockfile changed?
+        run: git diff --stat yarn.lock
       - uses: actions/upload-artifact@v4
         with:
-          name: yarn-lock-${{ matrix.variant }}
+          name: yarn-lock
           path: yarn.lock
+      - name: TypeScript
+        if: always()
+        working-directory: apps/expo
+        run: yarn ci:tsc
+      - name: ESLint
+        if: always()
+        working-directory: apps/expo
+        run: yarn ci:eslint
+      - name: Unit tests
+        if: always()
+        working-directory: apps/expo
+        run: yarn jest --ci --config jest.unit.config.js
+      - name: Expo doctor
+        if: always()
+        working-directory: apps/expo
+        run: npx expo-doctor || true

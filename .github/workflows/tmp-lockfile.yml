@@ -14,7 +14,9 @@ jobs:
         with:
           node-version: 22
       - name: Install dependencies (updates yarn.lock)
-        run: yarn install --non-interactive
+        env:
+          NODE_OPTIONS: --max-old-space-size=12288
+        run: /usr/bin/time -v yarn install --non-interactive 2>&1 | grep -vE '^warning' | tail -40; test -f node_modules/.yarn-integrity
       - uses: actions/upload-artifact@v4
         with:
           name: yarn-lock

@@ -11,7 +11,7 @@ import useTranslation from "@/hooks/translation/useTranslation";
 import { Maybe, WifiEntry } from "@/types";
 
 type Props = {
-  bottomSheetRef: React.RefObject<BottomSheetModalMethods>;
+  bottomSheetRef: React.RefObject<BottomSheetModalMethods | null>;
   network: Maybe<WifiEntry>;
   onProvision: (network: WifiEntry, password?: string) => void;
 };

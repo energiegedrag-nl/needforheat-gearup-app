@@ -7,9 +7,10 @@ import { HIDDEN_PROPERTY_NAMES } from "@/constants";
 import useTranslation from "@/hooks/translation/useTranslation";
 import useProperties from "@/hooks/upload/useProperties";
 import { Property } from "@/types/api";
+import { ListItemTouchableOpacity } from "@/lib/listItemTouchables";
 
 type PropertyBottomSheetProps = {
-  bottomSheetRef: React.RefObject<BottomSheetModalMethods>;
+  bottomSheetRef: React.RefObject<BottomSheetModalMethods | null>;
   deviceName: string;
   onPropertySelect: (property: Property | undefined) => void;
   propertyId?: number;
@@ -52,7 +53,7 @@ export default function PropertyBottomSheet({
         {properties
           ?.filter(property => !HIDDEN_PROPERTY_NAMES.includes(property.name))
           ?.map(property => (
-            <ListItem key={property.id} onPress={() => onPress(property)} Component={TouchableOpacity}>
+            <ListItem key={property.id} onPress={() => onPress(property)} Component={ListItemTouchableOpacity}>
               <Text bold={propertyId === property.id}>
                 {t(`hooks.property_translation.${property.name}`, { defaultValue: property.name })}
               </Text>

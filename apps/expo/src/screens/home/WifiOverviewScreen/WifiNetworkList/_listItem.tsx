@@ -1,10 +1,11 @@
 import { ListItem, useTheme, makeStyles } from "@rneui/themed";
-import { TouchableOpacity } from "react-native";
+
 import Ionicon from "react-native-vector-icons/Ionicons";
 import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import useStoredWifiNetworks from "@/hooks/wifi/useStoredWifiNetworks";
 import { WifiEntry } from "@/types";
+import { ListItemTouchableOpacity } from "@/lib/listItemTouchables";
 
 type WifiNetworkListItemProps = {
   item: WifiEntry;
@@ -30,7 +31,7 @@ export default function WifiNetworkListItem(props: WifiNetworkListItemProps) {
   const style = useStyles();
 
   return (
-    <ListItem style={style.listItem} onPress={() => onConnect(item)} Component={TouchableOpacity}>
+    <ListItem style={style.listItem} onPress={() => onConnect(item)} Component={ListItemTouchableOpacity}>
       <MaterialIcon
         name={`wifi-strength-${convertRSSIToLevel(item.rssi ?? -70)}`}
         size={20}

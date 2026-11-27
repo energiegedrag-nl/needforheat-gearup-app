@@ -1,18 +1,14 @@
 name: tmp-crashlog
-on:
-  workflow_run:
-    workflows: ["Android APK"]
-    types: [completed]
+on: push
 jobs:
   crashlog:
-    if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
       - uses: actions/download-artifact@v4
         with:
           name: android-apk
-          run-id: ${{ github.event.workflow_run.id }}
+          run-id: 45950667299
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path: apk
       - run: ls -lR apk
@@ -31,11 +27,15 @@ jobs:
             adb install -r "$(find apk -name '*.apk' | head -1)"
             adb logcat -c
             adb shell monkey -p nl.energiegedrag.app -c android.intent.category.LAUNCHER 1
-            sleep 25
+            sleep 40
+            adb shell pidof nl.energiegedrag.app && echo APP_DRAAIT_NOG || echo APP_IS_WEG
+            adb exec-out screencap -p > screen.png
             adb logcat -d > logcat.txt || true
             grep -n -A40 -E "FATAL EXCEPTION|AndroidRuntime|ReactNativeJS|SoLoader|UnsatisfiedLink" logcat.txt | head -300 || true
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: logcat
-          path: logcat.txt
+          path: |
+            logcat.txt
+            screen.png

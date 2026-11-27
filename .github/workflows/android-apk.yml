@@ -38,7 +38,7 @@ jobs:
           # packaging the release APK (native libraries uncompressed, legacy packaging) needs more than
           # the default 2 GB of Gradle heap since Expo SDK 54
           sed -i '/^org.gradle.jvmargs=/d' android/gradle.properties
-          echo "org.gradle.jvmargs=-Xmx6g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8" >> android/gradle.properties
+          printf '\norg.gradle.jvmargs=-Xmx6g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8\n' >> android/gradle.properties
       - name: Build release APK
         working-directory: apps/expo/android
         run: ./gradlew assembleRelease --no-daemon --stacktrace

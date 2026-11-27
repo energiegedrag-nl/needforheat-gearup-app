@@ -1,0 +1,38 @@
+name: tmp-crashlog
+on: push
+jobs:
+  crashlog:
+    if: github.ref == 'refs/heads/chore/expo-sdk-54'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: android-apk
+          run-id: 45917830933
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: apk
+      - run: ls -lR apk
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          target: google_apis
+          disable-animations: true
+          script: |
+            adb install -r "$(find apk -name '*.apk' | head -1)"
+            adb logcat -c
+            adb shell monkey -p nl.energiegedrag.app -c android.intent.category.LAUNCHER 1
+            sleep 25
+            adb logcat -d > logcat.txt || true
+            grep -n -A40 -E "FATAL EXCEPTION|AndroidRuntime|ReactNativeJS|SoLoader|UnsatisfiedLink" logcat.txt | head -300 || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: logcat
+          path: logcat.txt

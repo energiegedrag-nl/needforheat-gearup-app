@@ -1,4 +1,4 @@
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 import { useFocusEffect } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
@@ -17,7 +17,7 @@ import { DataSourceListType } from "@/types/api";
 export default function DeviceOverviewScreen() {
   const { user, isLoading } = useContext(UserContext);
   const [refreshDeviceList, setRefreshDeviceList] = useState(false);
-  const refExplanationSheet = useRef<BottomSheetModal>(null);
+  const refExplanationSheet = useRef<BottomSheetModalMethods>(null);
 
   useEffect(() => {
     const showExplanationIfFirstTime = async () => {

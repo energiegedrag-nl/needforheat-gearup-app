@@ -7,7 +7,7 @@
  */
 import NetInfo from "@react-native-community/netinfo";
 import { dehydrate, focusManager, hydrate, onlineManager, QueryClient } from "@tanstack/react-query";
-import * as FileSystem from "expo-file-system";
+import * as FileSystem from "expo-file-system/legacy";
 import { AppState, Platform } from "react-native";
 
 import { isUsableQueryCache, QUERY_CACHE_VERSION, shouldPersistQuery } from "./policy";

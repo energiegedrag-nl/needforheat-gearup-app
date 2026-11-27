@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 import { Text, makeStyles } from "@rneui/themed";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useIsFetching, useQueryClient } from "@tanstack/react-query";
@@ -26,8 +26,8 @@ export default function MeasurementsScreen() {
   const { isLoading } = useContext(UserContext);
   const { user } = useContext(UserContext);
 
-  const deviceBottomSheetRef = useRef<BottomSheetModal>(null);
-  const propertyBottomSheetRef = useRef<BottomSheetModal>(null);
+  const deviceBottomSheetRef = useRef<BottomSheetModalMethods>(null);
+  const propertyBottomSheetRef = useRef<BottomSheetModalMethods>(null);
 
   const devicesQuery = useDevices();
   const { data: devices } = devicesQuery;

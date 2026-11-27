@@ -1,13 +1,14 @@
 import { MANUAL_URL } from "@env";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ListItem, makeStyles, Text, useTheme } from "@rneui/themed";
-import { Alert, FlatList, Linking, TouchableOpacity } from "react-native";
+import { Alert, FlatList, Linking } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import Box from "@/components/elements/Box";
 import useTranslation from "@/hooks/translation/useTranslation";
 import useUser from "@/hooks/user/useUser";
 import { InfoStackParamList } from "@/types/navigation";
+import { ListItemTouchableOpacity } from "@/lib/listItemTouchables";
 
 type InfoItemBase = { title: string; icon: string };
 type InfoItemURI = InfoItemBase & { uri: string };
@@ -24,7 +25,7 @@ function InfoListItem({ item, onPress }: InfoItemProps) {
   const styles = useStyles();
 
   return (
-    <ListItem Component={TouchableOpacity} onPress={onPress} style={styles.item}>
+    <ListItem Component={ListItemTouchableOpacity} onPress={onPress} style={styles.item}>
       <Ionicons style={styles.icon} name={item.icon} size={theme.spacing.xl} />
       <ListItem.Content>
         <Text h4>{item.title}</Text>

@@ -1,6 +1,9 @@
 import { registerRootComponent } from "expo";
 import * as Notifications from "expo-notifications";
 
+// Before App: h3-js needs a UTF-16LE TextDecoder as soon as it loads.
+import "./src/lib/textDecoderUtf16";
+
 import App from "./App";
 
 // Local notifications only (no push service): see src/hooks/notification/useNotificationChecker.tsx.

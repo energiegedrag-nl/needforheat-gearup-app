@@ -1,5 +1,5 @@
 import { API_URL, BUILD_COMMIT } from "@env";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 import { makeStyles, Text } from "@rneui/themed";
 import { toast } from "burnt";
 import { nativeBuildVersion } from "expo-application";
@@ -16,7 +16,7 @@ import useTranslation from "@/hooks/translation/useTranslation";
 export default function SettingsScreen() {
   const styles = useStyles();
   const { t, languages, resolvedLanguage } = useTranslation();
-  const bottomSheetRef = useRef<BottomSheetModal>(null);
+  const bottomSheetRef = useRef<BottomSheetModalMethods>(null);
 
   const onDeleteWifiPasswords = () => {
     Alert.alert(

@@ -5,8 +5,9 @@ import * as SecureStore from "expo-secure-store";
 
 import useTranslation, { LanguageCode } from "@/hooks/translation/useTranslation";
 import { STORE_LANGUAGE_KEY } from "@/lib/languageDetector";
+import { ListItemTouchableOpacity } from "@/lib/listItemTouchables";
 
-type Props = { bottomSheetRef: React.RefObject<BottomSheetModalMethods> };
+type Props = { bottomSheetRef: React.RefObject<BottomSheetModalMethods | null> };
 
 export default function LanguageBottomSheet({ bottomSheetRef }: Props) {
   const { languages, changeLanguage } = useTranslation();
@@ -25,7 +26,7 @@ export default function LanguageBottomSheet({ bottomSheetRef }: Props) {
     >
       <BottomSheetScrollView>
         {Object.entries(languages).map(([code, language], index) => (
-          <ListItem key={`language-${index}`} onPress={() => onChangeLanguagePress(code)} Component={TouchableOpacity}>
+          <ListItem key={`language-${index}`} onPress={() => onChangeLanguagePress(code)} Component={ListItemTouchableOpacity}>
             <Text>{language}</Text>
           </ListItem>
         ))}

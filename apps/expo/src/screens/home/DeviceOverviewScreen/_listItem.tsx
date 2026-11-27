@@ -7,7 +7,7 @@ import { format } from "date-fns";
 import { enUS, nl } from "date-fns/locale";
 import { DateTime } from "luxon";
 import { useEffect, useState } from "react";
-import { Platform, ToastAndroid, TouchableHighlight, TouchableOpacity, View } from "react-native";
+import { Platform, ToastAndroid, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 
 import TimeProgressBar from "./timeProgressBar";
@@ -20,6 +20,7 @@ import { HomeStackParamList } from "@/types/navigation";
 import { capitalizeFirstLetter, checkMissedUpload, getManualUrl, toLocalDateTime } from "@/utils/tools";
 import "intl";
 import "intl/locale-data/jsonp/en";
+import { ListItemTouchableHighlight } from "@/lib/listItemTouchables";
 
 type WifiNetworkListItemProps = {
   item: AllDataSourcesResponse;
@@ -262,7 +263,7 @@ export default function DeviceListItem(props: WifiNetworkListItemProps) {
           { borderBottomWidth: 1 },
           { borderBottomColor: "#dbdbd9" },
         ]}
-        Component={TouchableHighlight}
+        Component={ListItemTouchableHighlight}
       >
         <ListItem.Content>
           <ListItem.Title style={{ color: item.connected === 1 ? "#cccccc" : "black" }}>

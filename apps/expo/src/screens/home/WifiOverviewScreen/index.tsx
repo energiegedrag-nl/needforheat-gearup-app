@@ -1,4 +1,4 @@
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 import { useIsFocused } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useEffect, useRef, useState } from "react";
@@ -22,7 +22,7 @@ type WifiOverviewScreenProps = NativeStackScreenProps<HomeStackParamList, "WifiO
 export default function WifiOverviewScreen({ navigation, route }: WifiOverviewScreenProps) {
   const { device, proofOfPossession, device_TypeName, normalName } = route.params;
   const [selectedNetwork, setSelectedNetwork] = useState<Maybe<WifiEntry>>(null);
-  const bottomSheetRef = useRef<BottomSheetModal>(null);
+  const bottomSheetRef = useRef<BottomSheetModalMethods>(null);
   const { t } = useTranslation();
   const focused = useIsFocused();
   const { storedWifiNetworks } = useStoredWifiNetworks();

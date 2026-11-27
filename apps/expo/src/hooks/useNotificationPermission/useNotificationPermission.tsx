@@ -1,38 +1,37 @@
 import { Platform } from "react-native";
-import { checkMultiple, Permission, PERMISSIONS, requestMultiple } from "react-native-permissions";
+import { checkNotifications, PermissionStatus, requestNotifications } from "react-native-permissions";
 
-const NOTIFICATION_PERMISSIONS = Platform.select<Permission[]>({
-  android: [PERMISSIONS.ANDROID.POST_NOTIFICATIONS],
-  ios: [],
-  default: [],
-});
+// Android 13+ asks for POST_NOTIFICATIONS; react-native-permissions 5 handles that through
+// checkNotifications/requestNotifications. On iOS the app does not ask here (as before).
+const ASKS_FOR_NOTIFICATIONS = Platform.OS === "android";
 
 export default function useNotificationPermission() {
   const requestNotificationPermission = async () => {
-    const hasCameraPermission = await checkNotificationPermission();
-    if (hasCameraPermission) return;
+    const hasNotificationPermission = await checkNotificationPermission();
+    if (hasNotificationPermission === 2) return;
 
     // Request permissions if not granted
-    const requestStatusses = await requestMultiple(NOTIFICATION_PERMISSIONS);
-    if (Object.values(requestStatusses).some(status => status !== "granted")) {
+    const { status } = await requestNotifications([]);
+    if (status !== "granted") {
       throw new Error("Notification permission not granted");
     }
   };
 
   const checkNotificationPermission = async () => {
-    const checkStatusses = await checkMultiple(NOTIFICATION_PERMISSIONS);
-    const statusValues = Object.values(checkStatusses).map(status => {
-      if (status === "granted") {
-        return 2; // "granted" -> 2
-      } else if (status === "denied") {
-        return 1; // "denied" -> 1
-      } else {
-        return 0; // "default" -> 0 (or any other status)
-      }
-    });
-    const allGranted = statusValues.every(value => value === 2);
-    return allGranted ? 2 : statusValues.includes(1) ? 1 : 0;
+    if (!ASKS_FOR_NOTIFICATIONS) return 2;
+    const { status } = await checkNotifications();
+    return toLevel(status);
   };
 
   return { requestNotificationPermission, checkNotificationPermission };
+}
+
+function toLevel(status: PermissionStatus) {
+  if (status === "granted") {
+    return 2; // "granted" -> 2
+  } else if (status === "denied") {
+    return 1; // "denied" -> 1
+  } else {
+    return 0; // "default" -> 0 (or any other status)
+  }
 }

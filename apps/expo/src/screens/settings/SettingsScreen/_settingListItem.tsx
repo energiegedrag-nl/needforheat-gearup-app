@@ -1,7 +1,8 @@
 import { ListItem, makeStyles, Text } from "@rneui/themed";
-import { TouchableOpacity } from "react-native";
+
 
 import Box from "../../../components/elements/Box";
+import { ListItemTouchableOpacity } from "@/lib/listItemTouchables";
 
 export type SettingItem = {
   title: string;
@@ -18,7 +19,7 @@ export default function SettingListItem({ item }: SettingItemProps) {
   const styles = useStyles(item);
 
   return (
-    <ListItem Component={TouchableOpacity} onPress={item.onPress} style={styles.item}>
+    <ListItem Component={ListItemTouchableOpacity} onPress={item.onPress} style={styles.item}>
       <ListItem.Content>
         <Box fullWidth style={styles.content}>
           <Text style={styles.title}>{item.title}</Text>

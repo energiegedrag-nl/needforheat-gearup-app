@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 
 type HomeSelectExplanationBottomSheetProps = {
-  bottomSheetRef: React.RefObject<BottomSheetModalMethods>;
+  bottomSheetRef: React.RefObject<BottomSheetModalMethods | null>;
 };
 
 export default function DataSourceExplanationSheet({ bottomSheetRef }: HomeSelectExplanationBottomSheetProps) {

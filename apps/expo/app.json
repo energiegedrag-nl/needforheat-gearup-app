@@ -3,7 +3,7 @@
     "name": "NeedForHeat GearUp",
     "slug": "needforheat-gearup",
     "scheme": "nfh",
-    "version": "3.8.0",
+    "version": "4.0.0",
     "jsEngine": "hermes",
     "newArchEnabled": false,
     "orientation": "portrait",

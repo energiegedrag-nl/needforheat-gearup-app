@@ -1,3 +1,27 @@
+# [4.0.0](https://github.com/energiegedrag-nl/needforheat-gearup-app/compare/v3.8.0...v4.0.0) (2026-11-27)
+
+
+### Bug Fixes
+
+* bottom sheet refs typed as BottomSheetModalMethods (bottom-sheet 5.2) ([d2559ab](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/d2559abedb351ad8a7ac6c0d007e087f0ec28097))
+* **deps:** drop the unused @react-native-vector-icons/ionicons ([f1d8d32](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/f1d8d32aa4d868b1654bd36d8b28ac407e9a3eed))
+* typecheck, lint and expo-doctor on Expo SDK 54 ([84b1333](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/84b1333bcf7879bb5b50289dbe5cdb25c1ea0a24))
+* types and APIs after React 19, RN 0.81 and the library upgrades ([5e12617](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/5e1261763130a4adf7fb68d815f7256e5eac936b))
+
+
+### Features
+
+* Expo SDK 54, React Native 0.81 and Android 16 (API 36) ([22bcfcd](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/22bcfcdfa99c90445f475594c631b16cdb166c3a))
+
+
+### BREAKING CHANGES
+
+* Android 6 (API 23) is no longer supported; the app now needs Android 7
+(API 24) or newer. The minimum iOS version rises to 15.1 (Expo SDK 54).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JjieB2cnz3zJsMRgxVcgeS
+
 # [3.8.0](https://github.com/energiegedrag-nl/needforheat-gearup-app/compare/v3.7.0...v3.8.0) (2026-11-25)
 
 

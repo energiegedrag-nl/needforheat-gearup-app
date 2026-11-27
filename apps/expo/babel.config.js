@@ -1,7 +1,10 @@
 module.exports = function (api) {
   api.cache(false);
   return {
-    presets: ["@react-native/babel-preset"],
+    // Expo SDK 54 expects babel-preset-expo (its Metro serializer relies on it); with
+    // @react-native/babel-preset the release bundle crashes at startup ("Property 'require'
+    // doesn't exist"). The reanimated plugin is listed explicitly below, so the preset's own is off.
+    presets: [["babel-preset-expo", { reanimated: false }]],
     plugins: [
       [
         "module:react-native-dotenv",

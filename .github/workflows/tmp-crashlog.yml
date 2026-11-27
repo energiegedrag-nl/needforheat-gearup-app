@@ -1,15 +1,18 @@
 name: tmp-crashlog
-on: push
+on:
+  workflow_run:
+    workflows: ["Android APK"]
+    types: [completed]
 jobs:
   crashlog:
-    if: github.ref == 'refs/heads/chore/expo-sdk-54'
+    if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
       - uses: actions/download-artifact@v4
         with:
           name: android-apk
-          run-id: 45917830933
+          run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path: apk
       - run: ls -lR apk

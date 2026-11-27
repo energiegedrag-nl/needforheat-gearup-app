@@ -12,7 +12,7 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
   const result = context.resolveRequest(context, moduleName, platform);
   if (
     result.type === 'sourceFile' &&
-    result.filePath.replace(/\/g, '/').endsWith('/use-latest-callback/esm.mjs')
+    result.filePath.split(path.sep).join('/').endsWith('/use-latest-callback/esm.mjs')
   ) {
     return { type: 'sourceFile', filePath: path.join(path.dirname(result.filePath), 'lib', 'src', 'index.js') };
   }

@@ -14,7 +14,7 @@ export default function EnergyBackdrop({ style, children, ...rest }: ViewProps) 
         <Defs>
           <LinearGradient id="energy" x1="0" y1="0" x2="1" y2="1">
             <Stop offset="0" stopColor={BRAND.midnight} />
-            <Stop offset="0.55" stopColor="#0E2F9E" />
+            <Stop offset="0.55" stopColor={BRAND.deep} />
             <Stop offset="1" stopColor={BRAND.volt} />
           </LinearGradient>
           <RadialGradient id="glow" cx="88" cy="8" r="55" gradientUnits="userSpaceOnUse">

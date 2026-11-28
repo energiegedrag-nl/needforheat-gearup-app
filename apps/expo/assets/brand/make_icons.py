@@ -2,9 +2,11 @@
 periodic table, number 21 (°C, a usual thermostat setting) and unit J (joule). Needs Pillow; uses Roboto
 from ../fonts (Apache 2.0). Run from anywhere: python make_icons.py
 
-Colours "Volt" (also in src/lib/theme.ts, BRAND): the tile runs from electric blue (VOLT) to a cyan
-spark (SPARK) with white text, glowing on midnight blue (MIDNIGHT).
+Colours and texts come from ../../brand.json (see BRANDING.md): the tile runs from the primary colour
+(VOLT) to the accent (SPARK) with white text, glowing on the backdrop (MIDNIGHT). Usually run through
+apply_brand.py, which also updates app.json.
 """
+import json
 from pathlib import Path
 
 from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont
@@ -12,10 +14,21 @@ from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont
 HERE = Path(__file__).resolve().parent
 ASSETS = HERE.parent
 FONTS = ASSETS / "fonts"
-MIDNIGHT = (7, 19, 48)  # #071330
-DEEP = (14, 47, 158)  # #0E2F9E
-VOLT = (29, 79, 224)  # #1D4FE0
-SPARK = (34, 200, 245)  # #22C8F5
+BRAND_FILE = ASSETS.parent / "brand.json"
+BRAND = json.loads(BRAND_FILE.read_text(encoding="utf-8"))
+
+
+def rgb(hex_colour: str) -> tuple:
+    h = hex_colour.lstrip("#")
+    return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
+
+
+MIDNIGHT = rgb(BRAND["brand"]["backdrop"])
+DEEP = rgb(BRAND["brand"]["deep"])
+VOLT = rgb(BRAND["brand"]["primary"])
+MID = rgb(BRAND["brand"]["mid"])
+SPARK = rgb(BRAND["brand"]["accent"])
+ICON = BRAND["icon"]
 WHITE = (255, 255, 255)
 SS = 4  # supersampling
 
@@ -87,7 +100,7 @@ def tile(img: Image.Image, x: float, y: float, s: float, name: bool = False, glo
         layer.putalpha(halo)
         img.alpha_composite(layer, (x - pad, y - pad + int(s * 0.03)))
 
-    face = diagonal_gradient(s, [(0.0, VOLT), (0.55, (24, 130, 236)), (1.0, SPARK)]).convert("RGBA")
+    face = diagonal_gradient(s, [(0.0, VOLT), (0.55, MID), (1.0, SPARK)]).convert("RGBA")
     # A soft sheen over the top half, as light on glass.
     sheen = Image.new("L", (s, s), 0)
     ImageDraw.Draw(sheen).ellipse((-s * 0.4, -s * 0.95, s * 1.3, s * 0.42), fill=30)
@@ -101,18 +114,18 @@ def tile(img: Image.Image, x: float, y: float, s: float, name: bool = False, glo
     symbol_y = s * (0.52 if name else 0.57)
     # A soft shadow under the symbol for depth.
     shadow = Image.new("L", (s, s), 0)
-    ImageDraw.Draw(shadow).text((s / 2, symbol_y + s * 0.02), "Eg", font=font("Black", s * 0.50), fill=110,
+    ImageDraw.Draw(shadow).text((s / 2, symbol_y + s * 0.02), ICON["symbol"], font=font("Black", s * 0.50), fill=110,
                                 anchor="mm")
     shadow = shadow.filter(ImageFilter.GaussianBlur(s * 0.018))
     face = Image.composite(Image.new("RGBA", (s, s), (6, 30, 110, 255)), face, shadow)
 
     d = ImageDraw.Draw(face)
     pad = s * 0.1
-    d.text((pad, pad * 0.75), "21", font=font("Bold", s * 0.15), fill=WHITE)
-    d.text((s - pad, pad * 0.75), "J", font=font("Medium", s * 0.14), fill=(255, 255, 255, 220), anchor="ra")
-    d.text((s / 2, symbol_y), "Eg", font=font("Black", s * 0.50), fill=WHITE, anchor="mm")
+    d.text((pad, pad * 0.75), ICON["number"], font=font("Bold", s * 0.15), fill=WHITE)
+    d.text((s - pad, pad * 0.75), ICON["unit"], font=font("Medium", s * 0.14), fill=(255, 255, 255, 220), anchor="ra")
+    d.text((s / 2, symbol_y), ICON["symbol"], font=font("Black", s * 0.50), fill=WHITE, anchor="mm")
     if name:
-        d.text((s / 2, s * 0.855), "Energiegedrag", font=font("Medium", s * 0.105), fill=(255, 255, 255, 235),
+        d.text((s / 2, s * 0.855), ICON["caption"], font=font("Medium", s * 0.105), fill=(255, 255, 255, 235),
                anchor="mm")
 
     face.putalpha(mask)

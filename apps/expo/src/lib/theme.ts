@@ -2,20 +2,24 @@ import { defaultSpacing } from "@rneui/base";
 import { Colors, createTheme, CreateThemeOptions } from "@rneui/themed";
 import { Theme as NavigationTheme } from "@react-navigation/native";
 
+import brandFile from "../../brand.json";
+
 /**
  * "Volt": the energiegedrag.nl look. Electric blue with a cyan spark on midnight blue, as the element tile 'Eg'
- * of the icon (assets/brand/make_icons.py). The only place for brand colours.
+ * of the icon. All colours come from brand.json, the one place for a deployment's brand (see BRANDING.md).
  *
  * Contrast (WCAG): text on background and surface >= 4.5 in both modes, white text on primary, success and error
  * >= 4.5 in light mode and on primary and error in dark mode; muted text >= 4.5 everywhere.
  */
 export const BRAND = {
   /** Midnight blue: splash, icon background, the dark backdrop. */
-  midnight: "#071330",
+  midnight: brandFile.brand.backdrop,
+  /** The middle of the backdrop gradient. */
+  deep: brandFile.brand.deep,
   /** Electric blue: the brand colour. */
-  volt: "#1D4FE0",
+  volt: brandFile.brand.primary,
   /** Cyan spark: highlights and the end of the gradient. */
-  spark: "#22C8F5",
+  spark: brandFile.brand.accent,
 };
 
 export type ColorScheme = "light" | "dark";
@@ -45,69 +49,9 @@ declare module "@rneui/themed" {
   }
 }
 
-const LIGHT: Partial<Colors> = {
-  primary: BRAND.volt,
-  secondary: "#0E7FA8",
-  background: "#F3F6FC",
-  white: "#FFFFFF", // RNEUI: surfaces
-  black: "#0E1A33", // RNEUI: text
-  grey0: "#26324D",
-  grey1: "#3E4A63",
-  grey2: "#56627C",
-  grey3: "#8B96AE",
-  grey4: "#D5DCEA",
-  grey5: "#EBEFF7",
-  greyOutline: "#C3CBDC",
-  searchBg: "#E9EEF8",
-  divider: "#DCE3F0",
-  success: "#15803D",
-  error: "#C62F3B",
-  warning: "#B45309",
-  disabled: "#A9B3C7",
+const LIGHT: Partial<Colors> = brandFile.light;
 
-  onPrimary: "#FFFFFF",
-  tint: BRAND.volt,
-  surface: "#FFFFFF",
-  surfaceAlt: "#E9EEF8",
-  border: "#DCE3F0",
-  text: "#0E1A33",
-  textMuted: "#56627C",
-  primarySoft: "#E4ECFF",
-  successSoft: "#DDF5E6",
-  accent: BRAND.spark,
-};
-
-const DARK: Partial<Colors> = {
-  primary: "#3A6BF5",
-  secondary: "#22C8F5",
-  background: "#0A1020",
-  white: "#131C33", // RNEUI: surfaces
-  black: "#E8EEFC", // RNEUI: text
-  grey0: "#D3DBEE",
-  grey1: "#B7C2DC",
-  grey2: "#9AA8C8",
-  grey3: "#6E7B9A",
-  grey4: "#2A3553",
-  grey5: "#1B2540",
-  greyOutline: "#34405F",
-  searchBg: "#1B2540",
-  divider: "#26314F",
-  success: "#22A55B",
-  error: "#E5484D",
-  warning: "#F5B544",
-  disabled: "#3A4565",
-
-  onPrimary: "#FFFFFF",
-  tint: "#7FA2FF",
-  surface: "#131C33",
-  surfaceAlt: "#1B2540",
-  border: "#26314F",
-  text: "#E8EEFC",
-  textMuted: "#9AA8C8",
-  primarySoft: "#18295A",
-  successSoft: "#123826",
-  accent: BRAND.spark,
-};
+const DARK: Partial<Colors> = brandFile.dark;
 
 /** "#RRGGBB" with an opacity, as "rgba(...)" (for charts and washes). */
 export function withAlpha(hex: string, alpha: number): string {

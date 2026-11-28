@@ -60,9 +60,19 @@ const OpenMap = forwardRef<OpenMapRef, OpenMapProps>(function OpenMap(
   // Last region reported by the map itself; echoing it back must not move the camera again.
   const reportedRegion = useRef<Region | null>(null);
   const initialRegion = useRef(region);
+  // Fitting bounds before the map has loaded (and knows its size) gives a far too high zoom. That happened when the
+  // data was already cached (opening a screen a second time): the screen set its region right after mounting.
+  // Until the map has loaded, keep only the latest region and move there once it has.
+  const loaded = useRef(false);
+  const pendingRegion = useRef<Region | null>(null);
 
-  const moveTo = (target: Region, duration = 300) =>
+  const moveTo = (target: Region, duration = 300) => {
+    if (!loaded.current) {
+      pendingRegion.current = target;
+      return;
+    }
     cameraRef.current?.setCamera({ bounds: toBounds(target), animationDuration: duration });
+  };
 
   useImperativeHandle(ref, () => ({ animateToRegion: (target, duration) => moveTo(target, duration) }), []);
 
@@ -72,6 +82,15 @@ const OpenMap = forwardRef<OpenMapRef, OpenMapProps>(function OpenMap(
     }
   }, [region.latitude, region.longitude, region.latitudeDelta, region.longitudeDelta]);
 
+  const onDidFinishLoadingMap = () => {
+    loaded.current = true;
+    const pending = pendingRegion.current;
+    pendingRegion.current = null;
+    if (pending && !sameRegion(initialRegion.current, pending)) {
+      moveTo(pending, 0);
+    }
+  };
+
   return (
     <MapView
       style={style}
@@ -80,6 +99,7 @@ const OpenMap = forwardRef<OpenMapRef, OpenMapProps>(function OpenMap(
       rotateEnabled={false}
       attributionEnabled
       logoEnabled={false}
+      onDidFinishLoadingMap={onDidFinishLoadingMap}
       onRegionDidChange={feature => {
         const [longitude, latitude] = feature.geometry.coordinates;
         const [ne, sw] = feature.properties.visibleBounds;

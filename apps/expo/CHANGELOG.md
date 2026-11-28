@@ -1,3 +1,18 @@
+# [4.1.0](https://github.com/energiegedrag-nl/needforheat-gearup-app/compare/v4.0.0...v4.1.0) (2026-11-28)
+
+
+### Bug Fixes
+
+* geen tijdzone achter de verzenddatum van de weerzone ([adca366](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/adca36650f10591e87001d78c3db890592e27506))
+* underlayColor bestaat niet op ListItem.Swipeable ([4a7e24d](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/4a7e24dae5ca7aba15771ea6948768b073a31c7c))
+
+
+### Features
+
+* brand.json als enige plek voor de huisstijl ([0165206](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/0165206237a37d034fb2026312f3953f6c3ac811))
+* kortere kop op schermen met verzonden gegevens ([f64676f](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/f64676fabb371f0ae76e415394a3a269c387c4b8))
+* Volt-ontwerp met licht en donker thema ([24aacda](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/24aacda0683412afea196b05a98ff4a39cd70333))
+
 # [4.0.0](https://github.com/energiegedrag-nl/needforheat-gearup-app/compare/v3.8.0...v4.0.0) (2026-11-27)
 
 

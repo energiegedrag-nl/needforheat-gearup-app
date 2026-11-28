@@ -1,3 +1,10 @@
+## [4.1.2](https://github.com/energiegedrag-nl/needforheat-gearup-app/compare/v4.1.1...v4.1.2) (2026-11-28)
+
+
+### Bug Fixes
+
+* FAQ in de taal van de app, niet die van de telefoon ([beff52a](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/beff52a722160234fb5fb956cbac94309297ecd8))
+
 ## [4.1.1](https://github.com/energiegedrag-nl/needforheat-gearup-app/compare/v4.1.0...v4.1.1) (2026-11-28)
 
 

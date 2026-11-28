@@ -35,8 +35,8 @@ const useStyles = makeStyles(theme => ({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 4,
-    marginBottom: 8,
+    marginTop: 8,
+    marginBottom: 2,
   },
   track: {
     flex: 1,

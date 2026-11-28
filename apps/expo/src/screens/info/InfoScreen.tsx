@@ -1,11 +1,12 @@
 import { MANUAL_URL } from "@env";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ListItem, makeStyles, Text, useTheme } from "@rneui/themed";
-import { Alert, FlatList, Linking, View } from "react-native";
+import { Alert, FlatList, View } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import Box from "@/components/elements/Box";
 import useTranslation from "@/hooks/translation/useTranslation";
+import useOpenManualPage from "@/hooks/useOpenManualPage";
 import useUser from "@/hooks/user/useUser";
 import { InfoStackParamList } from "@/types/navigation";
 import { ListItemTouchableOpacity } from "@/lib/listItemTouchables";
@@ -44,6 +45,7 @@ export default function InfoScreen({ navigation }: InfoScreenProps) {
   const { theme } = useTheme();
   const { t, resolvedLanguage } = useTranslation();
   const { user } = useUser();
+  const openManualPage = useOpenManualPage();
 
   // Campaign pages come from the campaign (returned by the API with the user); without a campaign,
   // the generic pages on our own manual server (MANUAL_URL) are used.
@@ -73,7 +75,8 @@ export default function InfoScreen({ navigation }: InfoScreenProps) {
   const onPress = async (item: InfoItem) => {
     if ("uri" in item) {
       try {
-        await Linking.openURL(item.uri);
+        // In the app's language and light or dark mode, not the phone's.
+        await openManualPage(item.uri);
       } catch {
         Alert.alert(
           t("screens.info_stack.info.unsuported_url_alert.title"),

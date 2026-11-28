@@ -128,12 +128,13 @@ export default function DataSourceList({
 
   return (
     <View style={{ flex: 1 }}>
+      {/* Progress right under the title, then when the list was brought up to date. */}
+      <ProgressBar progress={progress} />
       <RefreshStatus
         fetching={isFetchingAny}
         updatedAt={Number.isFinite(updatedAt) ? updatedAt : 0}
         failed={refreshFailed}
       />
-      <ProgressBar progress={progress} />
       <FlatList<AllDataSourcesResponse>
         data={itemData || data}
         contentContainerStyle={{ flexGrow: 1 }}

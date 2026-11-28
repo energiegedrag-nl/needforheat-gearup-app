@@ -17,7 +17,13 @@ import { useOpenExternalLink } from "@/hooks/useOpenExternalLink";
 import { MANUAL_NAMES_STALE_TIME_MS } from "@/lib/queryCache/policy";
 import { AllDataSourcesResponse, DataSourceType } from "@/types/api";
 import { HomeStackParamList } from "@/types/navigation";
-import { capitalizeFirstLetter, checkMissedUpload, getManualUrl, toLocalDateTime } from "@/utils/tools";
+import {
+  capitalizeFirstLetter,
+  checkMissedUpload,
+  getManualUrl,
+  localizedManualUrl,
+  toLocalDateTime,
+} from "@/utils/tools";
 import "intl";
 import "intl/locale-data/jsonp/en";
 import { ListItemTouchableHighlight } from "@/lib/listItemTouchables";
@@ -115,9 +121,10 @@ export default function DeviceListItem(props: WifiNetworkListItemProps) {
     navigate("UploadedDataScreen", { source: "energy_query", name: item.name });
   };
 
-  const openHelpUrl = () => {
+  // The FAQ opens in the browser: in the app's language, not the phone's (the browser would send the latter).
+  const openHelpUrl = async () => {
     if (item.data_source?.faq_url) {
-      openUrl(item.data_source.faq_url, false);
+      openUrl(await localizedManualUrl(item.data_source.faq_url, resolvedLanguage), false);
     }
   };
 

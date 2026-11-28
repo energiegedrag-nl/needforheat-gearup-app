@@ -150,12 +150,12 @@ export default function AddOnlineDataSourceScreen({ navigation, route }: AddOnli
         {data?.some(item => !item.connected) && (
           <Button
             title={t("common.cancel") as string}
-            color="grey2"
+            type="outline"
             onPress={onCancel}
             icon={{
               name: "close-outline",
               type: "ionicon",
-              color: theme.colors.white,
+              color: theme.colors.tint,
             }}
             buttonStyle={{ width: "100%" }}
             containerStyle={{ width: "100%" }}

@@ -1,8 +1,8 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Button, makeStyles, useTheme } from "@rneui/themed";
+import { Button, makeStyles, useTheme, Text } from "@rneui/themed";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
-import { ActivityIndicator, ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, ScrollView, View } from "react-native";
 
 import Box from "@/components/elements/Box";
 import useEnergyQuery from "@/hooks/energyquery/useEnergyQuery";
@@ -62,7 +62,7 @@ export default function UploadedDataScreen({ navigation, route }: UploadedDataSc
           : ""}
       </Text>
       {isLoading ? (
-        <ActivityIndicator style={{ marginTop: theme.spacing.lg }} />
+        <ActivityIndicator color={theme.colors.tint} style={{ marginTop: theme.spacing.lg }} />
       ) : rows.length === 0 ? (
         <Text style={style.empty}>
           {t(isDevice ? "screens.home_stack.uploaded_screen.empty_device" : "screens.home_stack.uploaded_screen.empty")}
@@ -87,9 +87,9 @@ export default function UploadedDataScreen({ navigation, route }: UploadedDataSc
         <Button
           containerStyle={{ flex: 1 }}
           title={t("screens.home_stack.uploaded_screen.back_button") as string}
-          color="grey2"
+          type="outline"
           onPress={() => navigation.navigate("HomeScreen")}
-          icon={{ name: "arrow-back-circle-outline", type: "ionicon", color: theme.colors.white }}
+          icon={{ name: "arrow-back-circle-outline", type: "ionicon", color: theme.colors.tint }}
         />
       </Box>
     </Box>

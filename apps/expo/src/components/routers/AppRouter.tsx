@@ -34,14 +34,25 @@ export default function AppRouter({ fontsLoaded }: AppRouterProps) {
   }, [fontsLoaded, isAuthed]);
 
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false, tabBarActiveTintColor: theme.colors.primary }}>
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: theme.colors.tint,
+        tabBarInactiveTintColor: theme.colors.grey3,
+        tabBarStyle: { backgroundColor: theme.colors.surface, borderTopColor: theme.colors.border },
+        tabBarLabelStyle: { fontFamily: "RobotoMedium", fontSize: 11 },
+        // The measurements screen has its own header (no stack): the same flat look as the stacks.
+        headerStyle: { backgroundColor: theme.colors.background, shadowOpacity: 0, elevation: 0 },
+        headerTitleStyle: { fontFamily: "RobotoBold", color: theme.colors.text },
+      }}
+    >
       <Tab.Screen
         name="Home"
         component={HomeRouter}
         options={{
           title: t("screens.home_stack.title") as string,
-          tabBarIcon: ({ color, size }) => {
-            return <Ionicons name="list-outline" size={size} color={color} />;
+          tabBarIcon: ({ color, size, focused }) => {
+            return <Ionicons name={focused ? "flash" : "flash-outline"} size={size} color={color} />;
           },
         }}
       />
@@ -53,8 +64,8 @@ export default function AppRouter({ fontsLoaded }: AppRouterProps) {
             options={{
               title: t("screens.measurements.title") as string,
               headerShown: true,
-              tabBarIcon: ({ color, size }) => {
-                return <Ionicons name="stats-chart-outline" size={size} color={color} />;
+              tabBarIcon: ({ color, size, focused }) => {
+                return <Ionicons name={focused ? "stats-chart" : "stats-chart-outline"} size={size} color={color} />;
               },
             }}
           />
@@ -65,8 +76,14 @@ export default function AppRouter({ fontsLoaded }: AppRouterProps) {
         component={InfoRouter}
         options={{
           title: t("screens.info_stack.title") as string,
-          tabBarIcon: ({ color, size }) => {
-            return <Ionicons name="information-outline" size={size} color={color} />;
+          tabBarIcon: ({ color, size, focused }) => {
+            return (
+              <Ionicons
+                name={focused ? "information-circle" : "information-circle-outline"}
+                size={size}
+                color={color}
+              />
+            );
           },
         }}
       />
@@ -75,8 +92,8 @@ export default function AppRouter({ fontsLoaded }: AppRouterProps) {
         component={SettingsRouter}
         options={{
           title: t("screens.settings_stack.title") as string,
-          tabBarIcon: ({ color, size }) => {
-            return <Ionicons name="settings-outline" size={size} color={color} />;
+          tabBarIcon: ({ color, size, focused }) => {
+            return <Ionicons name={focused ? "settings" : "settings-outline"} size={size} color={color} />;
           },
         }}
       />

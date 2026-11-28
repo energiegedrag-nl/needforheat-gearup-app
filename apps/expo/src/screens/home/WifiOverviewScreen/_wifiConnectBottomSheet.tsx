@@ -9,6 +9,7 @@ import { BottomSheetTextInput } from "@/components/common/BottomSheetTextInput";
 import Box from "@/components/elements/Box";
 import useTranslation from "@/hooks/translation/useTranslation";
 import { Maybe, WifiEntry } from "@/types";
+import useSheetStyle from "@/hooks/theme/useSheetStyle";
 
 type Props = {
   bottomSheetRef: React.RefObject<BottomSheetModalMethods | null>;
@@ -17,6 +18,7 @@ type Props = {
 };
 
 export default function WifiConnectBottomSheet(props: Props) {
+  const sheetStyle = useSheetStyle();
   const { bottomSheetRef, network, onProvision } = props;
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -25,6 +27,7 @@ export default function WifiConnectBottomSheet(props: Props) {
 
   return (
     <BottomSheetModal
+      {...sheetStyle}
       onDismiss={() => setPassword("")}
       enableDynamicSizing
       animateOnMount={false}

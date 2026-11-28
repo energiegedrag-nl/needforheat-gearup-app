@@ -6,10 +6,12 @@ import * as SecureStore from "expo-secure-store";
 import useTranslation, { LanguageCode } from "@/hooks/translation/useTranslation";
 import { STORE_LANGUAGE_KEY } from "@/lib/languageDetector";
 import { ListItemTouchableOpacity } from "@/lib/listItemTouchables";
+import useSheetStyle from "@/hooks/theme/useSheetStyle";
 
 type Props = { bottomSheetRef: React.RefObject<BottomSheetModalMethods | null> };
 
 export default function LanguageBottomSheet({ bottomSheetRef }: Props) {
+  const sheetStyle = useSheetStyle();
   const { languages, changeLanguage } = useTranslation();
 
   async function onChangeLanguagePress(language: LanguageCode) {
@@ -20,6 +22,7 @@ export default function LanguageBottomSheet({ bottomSheetRef }: Props) {
 
   return (
     <BottomSheetModal
+      {...sheetStyle}
       enableDynamicSizing
       ref={bottomSheetRef}
       backdropComponent={props => <BottomSheetBackdrop {...props} pressBehavior="close" disappearsOnIndex={-1} />}

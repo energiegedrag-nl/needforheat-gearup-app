@@ -384,6 +384,12 @@
       "settings_screen": {
         "title": "Instellingen",
         "app_language": "Taal selecteren",
+        "appearance": {
+          "title": "Weergave",
+          "system": "Zoals de telefoon",
+          "light": "Licht",
+          "dark": "Donker"
+        },
         "wifi_passwords": {
           "title": "Opgeslagen wifiwachtwoorden verwijderen",
           "message": "Weet u het zeker? Na het verwijderen van de opgeslagen wifiwachtwoorden uit deze app zult u bij het koppelen van een nieuw meetapparaatje het wifiwachtwoord opnieuw moeten intypen.",

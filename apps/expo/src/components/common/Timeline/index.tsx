@@ -1,6 +1,6 @@
-import { makeStyles } from "@rneui/themed";
+import { makeStyles, Text } from "@rneui/themed";
 import { useEffect, useRef } from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 
 import BottomLine from "./_bottomLine";
 import SlowProgress from "./_slowProgress";
@@ -108,12 +108,14 @@ const useStyles = makeStyles(theme => ({
     flexShrink: 1,
   },
   titleText: {
-    fontWeight: "bold",
+    fontFamily: "RobotoBold",
     fontSize: 16,
     marginBottom: 5,
   },
   secondaryText: {
+    fontSize: 14,
     marginBottom: 4,
+    color: theme.colors.grey1,
   },
   pendingText: {
     color: theme.colors.grey2,

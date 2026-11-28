@@ -9,6 +9,7 @@ import useTranslation from "@/hooks/translation/useTranslation";
 import { DataSourceType } from "@/types/api";
 import { capitalizeFirstLetter, getManualUrl } from "@/utils/tools";
 import { ListItemTouchableOpacity } from "@/lib/listItemTouchables";
+import useSheetStyle from "@/hooks/theme/useSheetStyle";
 
 type DeviceBottomSheetProps = {
   bottomSheetRef: React.RefObject<BottomSheetModalMethods | null>;
@@ -30,6 +31,7 @@ export default function DeviceBottomSheet({
   onDisplayName,
   onDeviceId,
 }: DeviceBottomSheetProps) {
+  const sheetStyle = useSheetStyle();
   const { data: devices } = useDevices();
   const { resolvedLanguage } = useTranslation();
   const [deviceDataResponses, setDeviceDataResponses] = useState<DeviceDataResponse[]>([]);
@@ -96,6 +98,7 @@ export default function DeviceBottomSheet({
 
   return (
     <BottomSheetModal
+      {...sheetStyle}
       snapPoints={["25%", "70%"]}
       ref={bottomSheetRef}
       enablePanDownToClose

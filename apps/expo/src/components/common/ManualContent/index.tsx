@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { useTheme } from '@rneui/themed';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ScrollView } from 'react-native';
 import RenderHtml from 'react-native-render-html';
 import { decode } from 'html-entities';
@@ -15,6 +16,18 @@ type ManualContentProps = {
 
 export default function ManualContent({ manualUrl = '', languageHeader = '' }: ManualContentProps) {
   const [onLayout, width] = useLayoutWidth();
+  const { theme } = useTheme();
+  // The manual's HTML in the app's colours, readable in light and dark mode.
+  const baseStyle = useMemo(() => ({ color: theme.colors.text, fontSize: 16, lineHeight: 24 }), [theme]);
+  const tagsStyles = useMemo(
+    () => ({
+      a: { color: theme.colors.tint },
+      h1: { color: theme.colors.text },
+      h2: { color: theme.colors.text },
+      h3: { color: theme.colors.text },
+    }),
+    [theme]
+  );
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
   const [error, setError] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
@@ -65,6 +78,8 @@ export default function ManualContent({ manualUrl = '', languageHeader = '' }: M
         <RenderHtml
           source={{ html: htmlContent }}
           contentWidth={width}
+          baseStyle={baseStyle}
+          tagsStyles={tagsStyles}
           renderersProps={{ htmlParserOptions: { decodeEntities: true } }}
         />
       )}

@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Button } from "@rneui/themed";
+import { Button, useTheme } from "@rneui/themed";
 
 import ManualContent from "@/components/common/ManualContent";
 import Box from "@/components/elements/Box";
@@ -13,6 +13,7 @@ type InformationScreenProps = NativeStackScreenProps<HomeStackParamList, "Inform
 export default function InformationScreen({ navigation, route }: InformationScreenProps) {
   const { dataSource } = route.params;
   const { t, resolvedLanguage } = useTranslation();
+  const { theme } = useTheme();
 
   return (
     <Box padded style={{ flex: 1 }}>
@@ -23,7 +24,7 @@ export default function InformationScreen({ navigation, route }: InformationScre
           title={t("screens.home_stack.energy_query.information_screen.button") as string}
           color="primary"
           onPress={() => navigation.goBack()}
-          icon={{ name: "checkmark-outline", type: "ionicon", color: "white" }}
+          icon={{ name: "checkmark-outline", type: "ionicon", color: theme.colors.onPrimary }}
         />
       </Box>
     </Box>

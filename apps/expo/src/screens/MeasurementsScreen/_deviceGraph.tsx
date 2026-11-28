@@ -10,6 +10,7 @@ import StatusIndicator from "@/components/common/StatusIndicator";
 import Box from "@/components/elements/Box";
 import useTranslation from "@/hooks/translation/useTranslation";
 import useMeasurements from "@/hooks/upload/useMeasurements";
+import { withAlpha } from "@/lib/theme";
 import { Measurement, Property } from "@/types/api";
 import { getAverageValuePerDay } from "@/utils/aggregate";
 
@@ -53,19 +54,14 @@ export default function DeviceGraph(props: DeviceGraphProps) {
 
   const chartConfig: AbstractChartConfig = {
     backgroundColor: "transparent",
-    backgroundGradientTo: "white",
+    backgroundGradientTo: theme.colors.surface,
     backgroundGradientFromOpacity: 0,
-    backgroundGradientFrom: "white",
+    backgroundGradientFrom: theme.colors.surface,
     backgroundGradientToOpacity: 0,
-    color: (opacity = 1) => {
-      const themeColor = theme.colors.primary;
-
-      return `rgba(${parseInt(themeColor.slice(1, 3), 16)}, ${parseInt(themeColor.slice(3, 5), 16)}, ${parseInt(
-        themeColor.slice(5, 7),
-        16
-      )}, ${opacity})`;
-    },
-    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+    color: (opacity = 1) => withAlpha(theme.colors.tint, opacity),
+    labelColor: (opacity = 1) => withAlpha(theme.colors.text, opacity),
+    propsForDots: { r: "3", strokeWidth: "2", stroke: theme.colors.accent },
+    propsForBackgroundLines: { stroke: theme.colors.border, strokeDasharray: "4 6" },
     strokeWidth: 2,
     barPercentage: 0.5,
     useShadowColorFromDataset: false,
@@ -121,9 +117,11 @@ const useStyles = makeStyles(theme => ({
   },
   chart: {
     marginBottom: theme.spacing.md,
-    backgroundColor: "white",
+    backgroundColor: theme.colors.surface,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
     padding: theme.spacing.lg,
-    borderRadius: theme.spacing.lg,
+    borderRadius: 20,
     width: "100%",
     overflow: "hidden",
   },

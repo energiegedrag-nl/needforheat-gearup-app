@@ -1,3 +1,4 @@
+import { useTheme } from "@rneui/themed";
 import { TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 
@@ -8,6 +9,7 @@ type Props = {
 
 export default function WifiPasswordEyeIcon(props: Props) {
   const { visible, setVisible } = props;
+  const { theme } = useTheme();
 
   return (
     <TouchableOpacity
@@ -19,7 +21,7 @@ export default function WifiPasswordEyeIcon(props: Props) {
       }}
       onPress={() => setVisible(!visible)}
     >
-      <Icon name={visible ? "eye-off" : "eye"} size={20} />
+      <Icon name={visible ? "eye-off" : "eye"} size={20} color={theme.colors.grey2} />
     </TouchableOpacity>
   );
 }

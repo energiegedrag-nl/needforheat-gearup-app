@@ -384,6 +384,12 @@
       "settings_screen": {
         "title": "Settings",
         "app_language": "Select app language",
+        "appearance": {
+          "title": "Appearance",
+          "system": "Match phone",
+          "light": "Light",
+          "dark": "Dark"
+        },
         "wifi_passwords": {
           "title": "Delete stored Wi-Fi passwords",
           "message": "Are you sure? After removing the stored Wi-Fi passwords from this app, you will have to enter the password again when you want to add a new measurement device.",

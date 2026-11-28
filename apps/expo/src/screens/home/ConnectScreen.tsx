@@ -1,8 +1,8 @@
 import { useIsFocused } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useTheme } from "@rneui/themed";
+import { useTheme, Text } from "@rneui/themed";
 import { useEffect } from "react";
-import { ActivityIndicator, Alert, Text } from "react-native";
+import { ActivityIndicator, Alert } from "react-native";
 import RNExitApp from "react-native-exit-app";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
@@ -60,7 +60,7 @@ export default function ConnectScreen({ navigation, route }: ConnectScreenProps)
     return isConnected ? (
       <Ionicons name="checkmark" size={32} color={theme.colors.success} />
     ) : (
-      <ActivityIndicator size="large" />
+      <ActivityIndicator size="large" color={theme.colors.tint} />
     );
   };
 

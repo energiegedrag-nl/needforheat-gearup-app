@@ -1,53 +1,68 @@
+import { makeStyles, Text, useTheme } from "@rneui/themed";
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View } from "react-native";
 
+/** How many data sources are done, as "3/5" beside a bar: blue while busy, green when all are done. */
 const ProgressBar = ({ progress }: { progress: string }) => {
   const [connectedCount, totalCount] = progress.split("/").map(Number);
+  const { theme } = useTheme();
+  const styles = useStyles();
+  const complete = totalCount > 0 && connectedCount >= totalCount;
 
   return (
     <View style={styles.container}>
-      <View style={styles.progressBar}>
-        <View style={[styles.progress, { flex: connectedCount }]}>
-          <View style={styles.textWrapper}>
-            <Text style={styles.progressText}>{progress}</Text>
-          </View>
+      <View style={styles.track}>
+        <View
+          style={[
+            styles.fill,
+            {
+              flex: connectedCount,
+              backgroundColor: complete ? theme.colors.success : theme.colors.primary,
+            },
+          ]}
+        >
+          {/* The spark at the end of the bar. */}
+          {connectedCount > 0 && !complete ? <View style={styles.spark} /> : null}
         </View>
-        <View style={[styles.remainingProgress, { flex: totalCount - connectedCount }]} />
+        <View style={{ flex: Math.max(totalCount - connectedCount, 0) }} />
       </View>
+      <Text style={styles.label}>{progress}</Text>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles(theme => ({
   container: {
-    padding: 0,
-  },
-  progressBar: {
     flexDirection: "row",
-    height: 20,
-    backgroundColor: "#e3e4e6",
+    alignItems: "center",
+    marginTop: 4,
+    marginBottom: 8,
+  },
+  track: {
+    flex: 1,
+    flexDirection: "row",
+    height: 10,
+    backgroundColor: theme.colors.surfaceAlt,
     borderRadius: 5,
     overflow: "hidden",
-    alignItems: "center",
-    marginBottom: 5,
   },
-  progressText: {
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 15,
-  },
-  textWrapper: {
-    flex: 1,
+  fill: {
+    borderRadius: 5,
+    alignItems: "flex-end",
     justifyContent: "center",
-    alignItems: "center",
-    textAlign: "center",
   },
-  progress: {
-    backgroundColor: "green",
+  spark: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: theme.colors.accent,
   },
-  remainingProgress: {
-    backgroundColor: "#ddd",
+  label: {
+    marginLeft: 10,
+    fontFamily: "RobotoBold",
+    fontSize: 14,
+    color: theme.colors.grey1,
   },
-});
+}));
 
 export default ProgressBar;

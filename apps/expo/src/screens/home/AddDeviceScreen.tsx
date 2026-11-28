@@ -34,12 +34,12 @@ export default function AddDeviceScreen({ navigation, route }: AddDeviceScreenPr
         <Button
           containerStyle={{ flex: 1 }}
           title={t("common.cancel") as string}
-          color="grey2"
+          type="outline"
           onPress={onCancel}
           icon={{
             name: "close-outline",
             type: "ionicon",
-            color: theme.colors.white,
+            color: theme.colors.tint,
           }}
         />
         <Button
@@ -50,7 +50,7 @@ export default function AddDeviceScreen({ navigation, route }: AddDeviceScreenPr
           icon={{
             name: "wifi-outline",
             type: "ionicon",
-            color: theme.colors.white,
+            color: theme.colors.onPrimary,
           }}
         />
       </Box>

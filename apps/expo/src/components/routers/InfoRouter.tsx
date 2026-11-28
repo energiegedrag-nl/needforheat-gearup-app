@@ -1,5 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
+import useStackScreenOptions from "./useStackScreenOptions";
+
 import useTranslation from "@/hooks/translation/useTranslation";
 import AboutScreen from "@/screens/info/AboutScreen";
 import FAQScreen from "@/screens/info/FAQScreen";
@@ -11,9 +13,10 @@ const InfoStack = createNativeStackNavigator<InfoStackParamList>();
 
 export default function InfoStackScreen() {
   const { t } = useTranslation();
+  const screenOptions = useStackScreenOptions();
 
   return (
-    <InfoStack.Navigator initialRouteName="InfoScreen">
+    <InfoStack.Navigator initialRouteName="InfoScreen" screenOptions={screenOptions}>
       <InfoStack.Screen
         name="InfoScreen"
         options={{ title: t("screens.info_stack.info.title") as string }}

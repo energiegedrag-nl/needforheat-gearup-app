@@ -1,8 +1,8 @@
+import { useTheme } from "@rneui/themed";
 import { TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 
 import useTranslation from "@/hooks/translation/useTranslation";
-import { BRAND } from "@/lib/theme";
 
 /**
  * The question mark of the home screen, small, in the header: opens the explanation of the current step.
@@ -10,6 +10,7 @@ import { BRAND } from "@/lib/theme";
  */
 export default function HelpHeaderButton({ onPress }: { onPress: () => void }) {
   const { t } = useTranslation();
+  const { theme } = useTheme();
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -23,12 +24,12 @@ export default function HelpHeaderButton({ onPress }: { onPress: () => void }) {
           width: 36,
           height: 36,
           borderRadius: 18,
-          backgroundColor: BRAND.navy,
+          backgroundColor: theme.colors.primarySoft,
           justifyContent: "center",
           alignItems: "center",
         }}
       >
-        <Icon name="help" size={24} color="white" />
+        <Icon name="help" size={22} color={theme.colors.tint} />
       </View>
     </TouchableOpacity>
   );

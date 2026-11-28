@@ -1,8 +1,8 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Button, Icon, makeStyles, useTheme } from "@rneui/themed";
+import { Button, Icon, makeStyles, useTheme, Text } from "@rneui/themed";
 import { openSettings } from "expo-linking";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ActivityIndicator, Alert, Text, View } from "react-native";
+import { ActivityIndicator, Alert, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 import Box from "@/components/elements/Box";
@@ -179,18 +179,18 @@ export default function HomeSelectScreen({ navigation, route }: HomeSelectScreen
           )}
           <View style={style.zoomControlsiOS}>
             <TouchableOpacity onPress={handleZoomIn} style={style.zoomButton}>
-              <Icon name="add" color="white" size={30} />
+              <Icon name="add" color={theme.colors.onPrimary} size={30} />
             </TouchableOpacity>
             <TouchableOpacity onPress={handleZoomOut} style={style.zoomButton}>
-              <Icon name="remove" color="white" size={30} />
+              <Icon name="remove" color={theme.colors.onPrimary} size={30} />
             </TouchableOpacity>
           </View>
           <View pointerEvents="none">
-            <Icon name="location-pin" color="red" size={40} style={{ marginBottom: 30 }} />
+            <Icon name="location-pin" color={theme.colors.error} size={40} style={{ marginBottom: 30 }} />
           </View>
           <View style={style.myLocationiOS}>
             <TouchableOpacity onPress={onPressMyLocation}>
-              <Icon name="my-location" color="white" size={40} />
+              <Icon name="my-location" color={theme.colors.onPrimary} size={40} />
             </TouchableOpacity>
           </View>
         </View>
@@ -203,7 +203,7 @@ export default function HomeSelectScreen({ navigation, route }: HomeSelectScreen
             icon={{
               name: "location-outline",
               type: "ionicon",
-              color: theme.colors.white,
+              color: theme.colors.onPrimary,
             }}
           />
         </Box>

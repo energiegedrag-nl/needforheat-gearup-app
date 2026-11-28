@@ -1,17 +1,17 @@
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { NavigationContainer } from "@react-navigation/native";
-import { ThemeProvider } from "@rneui/themed";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
+import AppearanceProvider, { useAppearance } from "./AppearanceProvider";
 import NotificationProvider from "./NotificationProvider";
 import UserProvider from "./UserProvider";
 
 import { persistQueryCache, restoreQueryCache, wireFocusAndOnline } from "@/lib/queryCache";
 import { STALE_TIME_MS } from "@/lib/queryCache/policy";
-import { theme } from "@/lib/theme";
+import { navigationTheme } from "@/lib/theme";
 
 type ProviderProps = {
   children: ReactNode;
@@ -49,18 +49,25 @@ export default function Providers(props: ProviderProps) {
   return (
     <SafeAreaProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <ThemeProvider theme={theme}>
+        <AppearanceProvider>
           <QueryClientProvider client={queryClient}>
             <NotificationProvider>
-              <NavigationContainer>
+              <ThemedNavigationContainer>
                 <BottomSheetModalProvider>
                   <UserProvider>{props.children}</UserProvider>
                 </BottomSheetModalProvider>
-              </NavigationContainer>
+              </ThemedNavigationContainer>
             </NotificationProvider>
           </QueryClientProvider>
-        </ThemeProvider>
+        </AppearanceProvider>
       </GestureHandlerRootView>
     </SafeAreaProvider>
   );
+}
+
+/** Headers, tab bar and the background behind every screen in the colours of the scheme in use. */
+function ThemedNavigationContainer({ children }: { children: ReactNode }) {
+  const { scheme } = useAppearance();
+  const theme = useMemo(() => navigationTheme(scheme), [scheme]);
+  return <NavigationContainer theme={theme}>{children}</NavigationContainer>;
 }

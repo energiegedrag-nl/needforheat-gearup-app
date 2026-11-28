@@ -1,5 +1,5 @@
-import { makeStyles, useTheme } from "@rneui/themed";
-import { ActivityIndicator, Text, View } from "react-native";
+import { makeStyles, Text, useTheme } from "@rneui/themed";
+import { ActivityIndicator, View } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { TimelineItem } from ".";
@@ -18,21 +18,21 @@ export default function TimelineIcon(props: IconProps) {
   if (item.error) {
     return (
       <View style={[styles.iconWrapper, { backgroundColor: theme.colors.error }]}>
-        <Ionicons name="close" size={16} color={theme.colors.white} />
+        <Ionicons name="close" size={16} color={theme.colors.onPrimary} />
       </View>
     );
   }
   if (item.finished) {
     return (
       <View style={[styles.iconWrapper, { backgroundColor: theme.colors.success }]}>
-        <Ionicons name="checkmark" size={16} color={theme.colors.white} />
+        <Ionicons name="checkmark" size={16} color={theme.colors.onPrimary} />
       </View>
     );
   }
   if (item.loading) {
     return (
-      <View style={[styles.iconWrapper, styles.outlined, { borderColor: theme.colors.primary }]}>
-        <ActivityIndicator size="small" style={styles.loadingIndicator} color={theme.colors.primary} />
+      <View style={[styles.iconWrapper, styles.outlined, { borderColor: theme.colors.tint }]}>
+        <ActivityIndicator size="small" style={styles.loadingIndicator} color={theme.colors.tint} />
       </View>
     );
   }
@@ -58,7 +58,7 @@ const useStyles = makeStyles(theme => ({
   },
   number: {
     fontSize: 12,
-    fontWeight: "bold",
+    fontFamily: "RobotoBold",
     color: theme.colors.grey2,
   },
   loadingIndicator: {

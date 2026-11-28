@@ -292,7 +292,6 @@
         "weather_location_posted_screen": {
           "title": "Weather Zone Sent",
           "sent_at": "Sent on {{date}}",
-          "sent_at_zone": "Sent on {{date}} ({{timeZone}})",
           "back_button": "Go back"
         },
         "location_permission": {

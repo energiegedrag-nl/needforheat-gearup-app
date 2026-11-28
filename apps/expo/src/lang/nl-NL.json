@@ -292,7 +292,6 @@
         "weather_location_posted_screen": {
           "title": "Verzonden weerzone",
           "sent_at": "Verzonden op {{date}}",
-          "sent_at_zone": "Verzonden op {{date}} ({{timeZone}})",
           "back_button": "Ga terug"
         },
         "location_permission": {

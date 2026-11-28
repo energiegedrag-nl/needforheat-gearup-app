@@ -1,6 +1,6 @@
 # Branding
 
-Deploying this app under your own brand? Everything that sets the look lives in **one file, [`brand.json`](brand.json)**. Change it, run one script and app, icon, splash and manual pages follow.
+Deploying this app under your own brand? Everything that sets the look lives in **one file, [`brand.json`](brand.json)**. Change it, run one script and copy it twice: app, icon, splash, manual pages and Cockpit follow.
 
 ## What brand.json holds
 
@@ -27,6 +27,7 @@ Deploying this app under your own brand? Everything that sets the look lives in 
 
    This puts the colours into `app.json` (splash, adaptive icon, notifications) and makes `icon.png`, `adaptive-icon.png`, `logo.png` and `splash.png`. Bringing your own images instead? Put them in `assets/` and run `python apply_brand.py --no-icons`.
 3. Copy `brand.json` to the root of your copy of [needforheat-manuals](https://github.com/energiegedrag-nl/needforheat-manuals) and run `python tools/apply_brand.py` there, so manual, FAQ and privacy pages get the same colours, in light and dark mode.
+4. Copy `brand.json` to the root of your copy of [energiegedrag-cockpit](https://github.com/energiegedrag-nl/energiegedrag-cockpit) and rebuild it: the researchers' web portal takes the same name and colours.
 
 The unit test `src/lib/brand.test.tsx` fails in CI when `app.json` does not match `brand.json` or when a palette has too little contrast.
 

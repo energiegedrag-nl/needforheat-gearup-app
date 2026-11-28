@@ -13,7 +13,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import TimeProgressBar from "./timeProgressBar";
 
 import useTranslation from "@/hooks/translation/useTranslation";
-import { useOpenExternalLink } from "@/hooks/useOpenExternalLink";
+import useOpenManualPage from "@/hooks/useOpenManualPage";
 import { MANUAL_NAMES_STALE_TIME_MS } from "@/lib/queryCache/policy";
 import { AllDataSourcesResponse, DataSourceType } from "@/types/api";
 import { HomeStackParamList } from "@/types/navigation";
@@ -21,7 +21,6 @@ import {
   capitalizeFirstLetter,
   checkMissedUpload,
   getManualUrl,
-  localizedManualUrl,
   toLocalDateTime,
 } from "@/utils/tools";
 import "intl";
@@ -40,7 +39,7 @@ type WifiNetworkListItemProps = {
 export default function DeviceListItem(props: WifiNetworkListItemProps) {
   const { item, onSwipeBegin, onSwipeEnd, allItemsDone, refreshAfter20Seconds } = props;
   const { navigate } = useNavigation<NavigationProp<HomeStackParamList>>();
-  const { openUrl } = useOpenExternalLink();
+  const openManualPage = useOpenManualPage();
   const { theme } = useTheme();
   const style = useStyles();
   const { t, resolvedLanguage } = useTranslation();
@@ -121,10 +120,10 @@ export default function DeviceListItem(props: WifiNetworkListItemProps) {
     navigate("UploadedDataScreen", { source: "energy_query", name: item.name });
   };
 
-  // The FAQ opens in the browser: in the app's language, not the phone's (the browser would send the latter).
+  // The FAQ opens in the browser, in the app's language and light or dark mode (not the phone's).
   const openHelpUrl = async () => {
     if (item.data_source?.faq_url) {
-      openUrl(await localizedManualUrl(item.data_source.faq_url, resolvedLanguage), false);
+      await openManualPage(item.data_source.faq_url);
     }
   };
 

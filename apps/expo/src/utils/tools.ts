@@ -4,6 +4,8 @@ import { DateTime, Duration } from "luxon";
 
 import { getTimeZone } from "./timezone";
 
+import { ManualTheme, withManualTheme } from "@/lib/manualLinks";
+
 import { Maybe } from "@/types";
 import { AllDataSourcesResponse, DataSourceListType, DataSourceType, cloudFeedsResponse } from "@/types/api";
 
@@ -125,19 +127,27 @@ export function checkStatus(
 }
 
 /**
- * The address of a manual page in the app's language, to open in the browser. The manual server chooses the
- * language from Accept-Language, and a browser sends the phone's language, which can differ from the app's.
- * Following the server's redirects here with the app's language gives the final page (…/<campaign>/<language>/).
- * On any error the original address is returned.
+ * The address of a manual page to open in the browser, in the app's language and light or dark mode. A browser
+ * sends the phone's language and follows the phone's mode, which can both differ from the app's. The manual server
+ * chooses the language from Accept-Language: following its redirects here with the app's language gives the final
+ * page (…/<language>/). The redirects drop the query, so `theme` is added to that final page.
+ * On any error the original address is used.
  */
-export async function localizedManualUrl(url: string, language: string | undefined): Promise<string> {
-  if (!language) return url;
-  try {
-    const response = await fetch(url, { headers: { "Accept-Language": language } });
-    return response.ok && response.url ? response.url : url;
-  } catch {
-    return url;
+export async function manualPageUrl(
+  url: string,
+  language: string | undefined,
+  theme: ManualTheme
+): Promise<string> {
+  let page = url;
+  if (language) {
+    try {
+      const response = await fetch(url, { headers: { "Accept-Language": language } });
+      if (response.ok && response.url) page = response.url;
+    } catch {
+      // keep the original address
+    }
   }
+  return withManualTheme(page, theme);
 }
 
 export function getManualUrl(dataSource: DataSourceType | undefined) {

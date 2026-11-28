@@ -124,6 +124,22 @@ export function checkStatus(
   return 1;
 }
 
+/**
+ * The address of a manual page in the app's language, to open in the browser. The manual server chooses the
+ * language from Accept-Language, and a browser sends the phone's language, which can differ from the app's.
+ * Following the server's redirects here with the app's language gives the final page (…/<campaign>/<language>/).
+ * On any error the original address is returned.
+ */
+export async function localizedManualUrl(url: string, language: string | undefined): Promise<string> {
+  if (!language) return url;
+  try {
+    const response = await fetch(url, { headers: { "Accept-Language": language } });
+    return response.ok && response.url ? response.url : url;
+  } catch {
+    return url;
+  }
+}
+
 export function getManualUrl(dataSource: DataSourceType | undefined) {
   let manualType = "devices";
 

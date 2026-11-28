@@ -273,7 +273,6 @@ export default function DeviceListItem(props: WifiNetworkListItemProps) {
         style={[style.listItem]}
         containerStyle={[style.card, { backgroundColor: cardBackground }]}
         Component={ListItemTouchableHighlight}
-        underlayColor={theme.colors.surfaceAlt}
       >
         <View style={[style.badge, { backgroundColor: badgeBackground }]}>
           <Icon name={done ? categoryIcon : `${categoryIcon}-outline`} color={badgeColor} size={20} />

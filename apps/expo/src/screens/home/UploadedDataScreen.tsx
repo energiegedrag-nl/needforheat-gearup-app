@@ -52,13 +52,15 @@ export default function UploadedDataScreen({ navigation, route }: UploadedDataSc
   const rows = useMemo(() => screenRows(measurements ?? []), [measurements]);
   const latest = rows.length ? Math.max(...rows.map(m => m.time)) : undefined;
   const when = isDevice ? latest : query?.activated_at ?? latest;
-  const subtitle = isDevice ? "subtitle_device" : "subtitle_energy_query";
+  const subtitle = isDevice ? "latest_at" : "sent_at";
 
   return (
     <Box padded style={{ flex: 1 }}>
       <Text style={style.subtitle}>
         {when
-          ? `${t(`screens.home_stack.uploaded_screen.${subtitle}`)}\n${readableDateTime(toLocalDateTime(when), locale)}`
+          ? t(`screens.home_stack.uploaded_screen.${subtitle}`, {
+              date: readableDateTime(toLocalDateTime(when), locale),
+            })
           : ""}
       </Text>
       {isLoading ? (
@@ -98,10 +100,10 @@ export default function UploadedDataScreen({ navigation, route }: UploadedDataSc
 
 const useStyles = makeStyles(theme => ({
   subtitle: {
-    fontWeight: "bold",
     textAlign: "center",
     alignSelf: "center",
-    fontSize: 14,
+    fontSize: 13,
+    color: theme.colors.grey2,
     marginBottom: theme.spacing.md,
   },
   empty: {

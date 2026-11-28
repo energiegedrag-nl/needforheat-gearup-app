@@ -41,6 +41,8 @@ export default function WeatherLocationPostedScreen({ navigation }: WeatherLocat
   });
   const [h3Cell, setH3Cell] = useState<FeatureCollection>();
   const timeZone = measurements?.find(measurement => measurement.property.name === "device_timezone__tmz")?.value;
+  const sentAtKey = timeZone ? "sent_at_zone" : "sent_at";
+  const dateLocale = resolvedLanguage === "nl-NL" ? "nl-NL" : "en-US";
 
   useEffect(() => {
     //Set location to measurements
@@ -135,10 +137,10 @@ export default function WeatherLocationPostedScreen({ navigation }: WeatherLocat
       <Box padded style={{ flex: 1 }}>
         <View style={{ width: "100%" }}>
           <Text style={style.subtitle}>
-            {`${t("screens.home_stack.energy_query.weather_location_posted_screen.subtitle")}\n${readableDateTime(
-              toLocalDateTime(query?.activated_at),
-              resolvedLanguage === "nl-NL" ? "nl-NL" : "en-US"
-            )}${timeZone ? `\n${t("screens.home_stack.energy_query.weather_location_posted_screen.time_zone")}: ${timeZone}` : ""}`}
+            {t(`screens.home_stack.energy_query.weather_location_posted_screen.${sentAtKey}`, {
+              date: readableDateTime(toLocalDateTime(query?.activated_at), dateLocale),
+              timeZone,
+            })}
           </Text>
         </View>
         <View style={style.mapcontainer}>
@@ -212,11 +214,9 @@ const useStyles = makeStyles(theme => ({
     marginBottom: 5,
   },
   subtitle: {
-    justifyContent: "center",
-    alignItems: "center",
-    fontWeight: "bold",
     textAlign: "center",
     alignSelf: "center",
-    fontSize: 14,
+    fontSize: 13,
+    color: theme.colors.grey2,
   },
 }));

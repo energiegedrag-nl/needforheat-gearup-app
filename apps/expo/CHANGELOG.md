@@ -1,3 +1,10 @@
+# [4.2.0](https://github.com/energiegedrag-nl/needforheat-gearup-app/compare/v4.1.2...v4.2.0) (2026-11-28)
+
+
+### Features
+
+* handleidingen in licht/donker van de app; voortgang boven status op Databronnen ([828136f](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/828136f391bcf2d69de00087ab98a7578a401204))
+
 ## [4.1.2](https://github.com/energiegedrag-nl/needforheat-gearup-app/compare/v4.1.1...v4.1.2) (2026-11-28)
 
 

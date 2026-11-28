@@ -1,11 +1,11 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Button, Icon, makeStyles, useTheme } from "@rneui/themed";
+import { Button, Icon, makeStyles, useTheme, Text } from "@rneui/themed";
 import * as Burnt from "burnt";
 import { FeatureCollection } from "geojson";
 import { cellToBoundary, CoordPair } from "h3-js";
 import { useEffect, useRef, useState } from "react";
 import * as SecureStore from "expo-secure-store";
-import { Alert, Text, View } from "react-native";
+import { Alert, View } from "react-native";
 import { getTimeZone } from "react-native-localize";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
@@ -18,6 +18,7 @@ import { UserLocation } from "@/types/energyquery";
 import { HomeStackParamList } from "@/types/navigation";
 import { fetchTimeZone } from "@/utils/timezone";
 import { getNoiseOffset, NoiseOffset, weatherCell, weatherCellCentre } from "@/utils/weatherLocation";
+import { withAlpha } from "@/lib/theme";
 
 /** Decimals of the uploaded latitude and longitude. */
 const COORDINATE_DECIMALS = 3;
@@ -209,17 +210,17 @@ export default function WeatherLocationResultScreen({ navigation, route }: Weath
           >
             <GeoJsonOverlay
               geojson={cellBoundariesGeoJson}
-              strokeColor="#3388ff"
+              strokeColor={theme.colors.tint}
               strokeWidth={3}
-              fillColor="rgba(51, 136, 255, 0.2)"
+              fillColor={withAlpha(theme.colors.tint, 0.2)}
             />
           </OpenMap>
           <View style={style.zoomControls}>
             <TouchableOpacity onPress={handleZoomIn} style={style.zoomButton}>
-              <Icon name="add" color="white" size={30} />
+              <Icon name="add" color={theme.colors.onPrimary} size={30} />
             </TouchableOpacity>
             <TouchableOpacity onPress={handleZoomOut} style={style.zoomButton}>
-              <Icon name="remove" color="white" size={30} />
+              <Icon name="remove" color={theme.colors.onPrimary} size={30} />
             </TouchableOpacity>
           </View>
         </View>
@@ -229,12 +230,12 @@ export default function WeatherLocationResultScreen({ navigation, route }: Weath
             containerStyle={{ flex: 1, marginLeft: theme.spacing.md }}
             disabled={disableButtons}
             title={t("screens.home_stack.energy_query.weather_location_result_screen.back_button") as string}
-            color="grey2"
+            type="outline"
             onPress={onBack}
             icon={{
               name: "arrow-back-circle-outline",
               type: "ionicon",
-              color: theme.colors.white,
+              color: theme.colors.tint,
             }}
           />
           <Button
@@ -246,7 +247,7 @@ export default function WeatherLocationResultScreen({ navigation, route }: Weath
             icon={{
               name: "cloud-upload-outline",
               type: "ionicon",
-              color: theme.colors.white,
+              color: theme.colors.onPrimary,
             }}
           />
         </Box>

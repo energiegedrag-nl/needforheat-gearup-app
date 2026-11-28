@@ -1,3 +1,4 @@
+import { useTheme } from "@rneui/themed";
 import { useQueryClient } from "@tanstack/react-query";
 import { t } from "i18next";
 import { useCallback, useContext, useEffect, useState } from "react";
@@ -26,6 +27,7 @@ export default function DataSourceList({
   onRefresh: () => void;
 }) {
   const queryClient = useQueryClient();
+  const { theme } = useTheme();
   const { isRefreshing: isRefreshingUser, refetch: refetchUser } = useContext(UserContext);
   const devices = useDevices();
   const { data, isLoading, refetch } = devices;
@@ -151,7 +153,15 @@ export default function DataSourceList({
         ListEmptyComponent={
           <StatusIndicator isError errorText={t("screens.device_overview.device_list.empty_collection")} />
         }
-        refreshControl={<RefreshControl enabled onRefresh={refreshData} refreshing={isFetchingAny} />}
+        refreshControl={
+          <RefreshControl
+            enabled
+            onRefresh={refreshData}
+            refreshing={isFetchingAny}
+            tintColor={theme.colors.tint}
+            colors={[theme.colors.primary]}
+          />
+        }
         scrollEnabled={scrollEnabled}
       />
     </View>

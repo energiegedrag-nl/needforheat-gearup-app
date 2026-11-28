@@ -199,7 +199,7 @@ export default function SearchDeviceScreen({ navigation, route }: SearchDeviceSc
           <>
             {isBluetoothResetting ? (
               <>
-                <ActivityIndicator size="large" />
+                <ActivityIndicator size="large" color={theme.colors.tint} />
                 <Text style={styles.text}>{t("screens.home_stack.search_device.bluetooth.enabling")}</Text>
                 <View style={{ marginTop: 20 }} />
                 <Button
@@ -223,7 +223,7 @@ export default function SearchDeviceScreen({ navigation, route }: SearchDeviceSc
           <>
             {isScanning && (
               <>
-                <ActivityIndicator size="large" />
+                <ActivityIndicator size="large" color={theme.colors.tint} />
                 <Text style={styles.text}>
                   {t("screens.home_stack.search_device.scanning.message", { name: normalName })}
                 </Text>
@@ -255,7 +255,7 @@ export default function SearchDeviceScreen({ navigation, route }: SearchDeviceSc
         <Button
           containerStyle={{ width: "100%" }}
           disabled={isScanningDisabled}
-          icon={<Icon name="refresh" color={theme.colors.grey4} containerStyle={{ marginRight: 5 }} />}
+          icon={<Icon name="refresh" color={theme.colors.onPrimary} containerStyle={{ marginRight: 5 }} />}
           title="Scan"
           onPress={scanDevices}
         />

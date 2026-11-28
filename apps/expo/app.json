@@ -8,11 +8,11 @@
     "newArchEnabled": false,
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#12304F"
+      "backgroundColor": "#071330"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -47,7 +47,7 @@
       "icon": "./assets/icon.png",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#12304F"
+        "backgroundColor": "#071330"
       },
       "package": "nl.energiegedrag.app",
       "permissions": [
@@ -82,7 +82,7 @@
       [
         "expo-notifications",
         {
-          "color": "#12304F"
+          "color": "#1D4FE0"
         }
       ],
       "react-native-wifi-reborn",

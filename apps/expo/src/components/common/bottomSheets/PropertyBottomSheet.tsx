@@ -8,6 +8,7 @@ import useTranslation from "@/hooks/translation/useTranslation";
 import useProperties from "@/hooks/upload/useProperties";
 import { Property } from "@/types/api";
 import { ListItemTouchableOpacity } from "@/lib/listItemTouchables";
+import useSheetStyle from "@/hooks/theme/useSheetStyle";
 
 type PropertyBottomSheetProps = {
   bottomSheetRef: React.RefObject<BottomSheetModalMethods | null>;
@@ -22,6 +23,7 @@ export default function PropertyBottomSheet({
   onPropertySelect,
   propertyId,
 }: PropertyBottomSheetProps) {
+  const sheetStyle = useSheetStyle();
   const { data: properties } = useProperties(deviceName, "device");
   const { t } = useTranslation();
 
@@ -41,6 +43,7 @@ export default function PropertyBottomSheet({
 
   return (
     <BottomSheetModal
+      {...sheetStyle}
       snapPoints={["25%", "70%"]}
       ref={bottomSheetRef}
       enablePanDownToClose

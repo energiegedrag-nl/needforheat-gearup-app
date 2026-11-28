@@ -4,6 +4,8 @@ import { createNativeStackNavigator, NativeStackNavigationOptions } from "@react
 import { Platform } from "react-native";
 
 import HelpHeaderButton from "@/components/common/HelpHeaderButton";
+import useStackScreenOptions from "./useStackScreenOptions";
+
 import useTranslation from "@/hooks/translation/useTranslation";
 import ActivateDeviceScreen from "@/screens/home/ActivateDeviceScreen";
 import AddDeviceScreen from "@/screens/home/AddDeviceScreen";
@@ -33,10 +35,11 @@ const disableNavigation: Partial<NativeStackNavigationOptions> = {
 
 export default function HomeRouter() {
   const { t } = useTranslation();
+  const screenOptions = useStackScreenOptions();
   const navigation = useNavigation();
 
   return (
-    <HomeStack.Navigator initialRouteName="HomeScreen">
+    <HomeStack.Navigator initialRouteName="HomeScreen" screenOptions={screenOptions}>
       <HomeStack.Screen
         name="HomeScreen"
         options={{ title: t("screens.device_overview.title") as string }}

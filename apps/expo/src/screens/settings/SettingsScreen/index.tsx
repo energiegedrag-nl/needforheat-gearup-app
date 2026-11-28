@@ -7,16 +7,20 @@ import Constants from "expo-constants";
 import { useRef } from "react";
 import { Alert, FlatList, Linking } from "react-native";
 
+import AppearanceBottomSheet from "./_appearanceBottomSheet";
 import LanguageBottomSheet from "./_languageBottomSheet";
 import SettingListItem, { SettingItem } from "./_settingListItem";
 
 import Box from "@/components/elements/Box";
 import { deleteWifiNetworks } from "@/constants";
 import useTranslation from "@/hooks/translation/useTranslation";
+import { useAppearance } from "@/providers/AppearanceProvider";
 export default function SettingsScreen() {
   const styles = useStyles();
   const { t, languages, resolvedLanguage } = useTranslation();
   const bottomSheetRef = useRef<BottomSheetModalMethods>(null);
+  const appearanceSheetRef = useRef<BottomSheetModalMethods>(null);
+  const { preference } = useAppearance();
 
   const onDeleteWifiPasswords = () => {
     Alert.alert(
@@ -55,6 +59,13 @@ export default function SettingsScreen() {
       },
     },
     {
+      title: t("screens.settings_stack.settings_screen.appearance.title"),
+      value: t(`screens.settings_stack.settings_screen.appearance.${preference}`),
+      onPress: () => {
+        appearanceSheetRef.current?.present();
+      },
+    },
+    {
       title: t("screens.settings_stack.settings_screen.wifi_passwords.title"),
       value: "",
       onPress: onDeleteWifiPasswords,
@@ -71,16 +82,17 @@ export default function SettingsScreen() {
       <FlatList data={data} renderItem={({ item }) => <SettingListItem item={item} />} />
 
       <Box fullWidth style={styles.centerContainer}>
-        <Text>
+        <Text style={styles.meta}>
           {t("screens.settings_stack.settings_screen.app_info", {
             version: Constants.expoConfig?.version ?? "N/A",
             build: nativeBuildVersion,
           })}
         </Text>
-        <Text style={{ fontSize: 14 }}>API: {API_URL}</Text>
-        {BUILD_COMMIT ? <Text style={{ fontSize: 14 }}>Build: {BUILD_COMMIT}</Text> : null}
+        <Text style={styles.meta}>API: {API_URL}</Text>
+        {BUILD_COMMIT ? <Text style={styles.meta}>Build: {BUILD_COMMIT}</Text> : null}
       </Box>
       <LanguageBottomSheet bottomSheetRef={bottomSheetRef} />
+      <AppearanceBottomSheet bottomSheetRef={appearanceSheetRef} />
     </Box>
   );
 }
@@ -93,5 +105,9 @@ const useStyles = makeStyles(theme => ({
   centerContainer: {
     alignItems: "center",
     paddingVertical: theme.spacing.sm,
+  },
+  meta: {
+    fontSize: 13,
+    color: theme.colors.grey2,
   },
 }));

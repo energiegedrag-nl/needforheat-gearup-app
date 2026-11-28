@@ -1,5 +1,5 @@
 import NetInfo from "@react-native-community/netinfo";
-import { makeStyles } from "@rneui/themed";
+import { makeStyles, useTheme } from "@rneui/themed";
 import { onlineManager } from "@tanstack/react-query";
 import { useFonts } from "expo-font";
 import * as Notifications from "expo-notifications";
@@ -15,6 +15,7 @@ import AppRouter from "./src/components/routers/AppRouter";
 import Providers from "./src/providers";
 
 import { useOnAppStateChange } from "@/hooks/useOnAppStateChange";
+import { useAppearance } from "@/providers/AppearanceProvider";
 import LANG_EN_US from "@/lang/en-US.json";
 import LANG_NL_NL from "@/lang/nl-NL.json";
 import { LanguageDetector } from "@/lib/languageDetector";
@@ -45,7 +46,6 @@ onlineManager.setEventListener(setOnline => {
 
 export default function App() {
   useOnAppStateChange();
-  const styles = useStyles();
   const [networkConnected, setNetworkConnected] = useState(false);
   const [fontsLoaded] = useFonts({
     RobotoThin: require("./assets/fonts/Roboto-Thin.ttf"),
@@ -77,17 +77,30 @@ export default function App() {
 
   return (
     <Providers>
-      <StatusBar style="dark" />
+      <ThemedStatusBar />
 
-      {!networkConnected && (
-        <View style={styles.networkAlert}>
-          <Ionicons name="wifi" size={24} color="black" />
-          <View style={styles.lineThrough} />
-        </View>
-      )}
+      {!networkConnected && <NetworkAlert />}
 
       <AppRouter fontsLoaded={fontsLoaded} />
     </Providers>
+  );
+}
+
+/** Light icons on the dark scheme, dark icons on the light one. */
+function ThemedStatusBar() {
+  const { scheme } = useAppearance();
+  return <StatusBar style={scheme === "dark" ? "light" : "dark"} />;
+}
+
+/** A crossed-out Wi-Fi symbol in the corner while there is no internet. */
+function NetworkAlert() {
+  const styles = useStyles();
+  const { theme } = useTheme();
+  return (
+    <View style={styles.networkAlert}>
+      <Ionicons name="wifi" size={24} color={theme.colors.text} />
+      <View style={styles.lineThrough} />
+    </View>
   );
 }
 
@@ -111,7 +124,7 @@ const useStyles = makeStyles(theme => ({
     left: 0,
     width: "100%",
     height: 2,
-    backgroundColor: "red",
+    backgroundColor: theme.colors.error,
     transform: [{ translateY: -1 }, { rotate: "-45deg" }],
   },
 }));

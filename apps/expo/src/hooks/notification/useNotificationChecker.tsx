@@ -74,7 +74,7 @@ export default function useSuperLateDataSourceNotifier() {
           subtitle: Platform.OS === "ios" ? undefined : (t("notifications.subText") as string),
           badge: badgeCounter,
           sound: !silentNotification,
-          color: BRAND.navy,
+          color: BRAND.volt,
         },
         // Show immediately; on Android in channel "777" (created in index.js).
         trigger: Platform.OS === "android" ? { channelId: "777" } : null,

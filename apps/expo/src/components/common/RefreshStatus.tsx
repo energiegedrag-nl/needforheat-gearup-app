@@ -32,7 +32,7 @@ export default function RefreshStatus({ fetching, updatedAt, failed }: RefreshSt
   if (!text) return null;
   return (
     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", paddingVertical: 4 }}>
-      {fetching && <ActivityIndicator size="small" style={{ marginRight: 6 }} />}
+      {fetching && <ActivityIndicator size="small" color={theme.colors.tint} style={{ marginRight: 6 }} />}
       <Text style={{ fontSize: 12, color: failed ? theme.colors.error : theme.colors.grey2 }}>{text}</Text>
     </View>
   );

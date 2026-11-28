@@ -1,9 +1,9 @@
 import { useIsFocused } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { makeStyles, Button } from "@rneui/themed";
+import { makeStyles, Button, Text } from "@rneui/themed";
 import { CameraView, BarcodeScanningResult } from "expo-camera";
 import { useEffect, useState } from "react";
-import { Alert, Text } from "react-native";
+import { Alert } from "react-native";
 import { openSettings } from "react-native-permissions";
 
 import Box from "@/components/elements/Box";

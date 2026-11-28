@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, useTheme } from "@rneui/themed";
+import { StyleSheet, View } from "react-native";
 import Svg, { Circle } from "react-native-svg";
 
 interface TimeProgressBarProps {
@@ -11,6 +12,7 @@ interface TimeProgressBarProps {
 
 const TimeProgressBar: React.FC<TimeProgressBarProps> = ({ progress, onTimePassedByMinute, notificationSent }) => {
   const { t } = useTranslation();
+  const { theme } = useTheme();
   const [elapsedTime, totalTime] = progress.split("/").map(Number);
   const [remainingTime, setRemainingTime] = useState(elapsedTime);
   const [tooLate, setTooLate] = useState(false);
@@ -65,20 +67,20 @@ const TimeProgressBar: React.FC<TimeProgressBarProps> = ({ progress, onTimePasse
   return (
     <View style={styles.container}>
       <Svg width="50%" height="50%" viewBox="0 0 42 42">
-        <Circle cx="21" cy="21" r="15.91549430918954" strokeWidth="4" stroke="#ccc" fill="none" />
+        <Circle cx="21" cy="21" r="15.91549430918954" strokeWidth="4" stroke={theme.colors.surfaceAlt} fill="none" />
         <Circle
           cx="21"
           cy="21"
           r="15.91549430918954"
           strokeWidth="4"
-          stroke={superLate ? "red" : tooLate ? "orange" : "green"}
+          stroke={superLate ? theme.colors.error : tooLate ? theme.colors.warning : theme.colors.success}
           strokeDasharray={`${progressPercentage}, 100`}
           strokeLinecap="round"
           fill="none"
           transform="rotate(-90, 21, 21)"
         />
       </Svg>
-      <Text style={{ ...styles.progressText, fontSize: getFontSize(remainingTime) }}>
+      <Text style={{ ...styles.progressText, fontSize: getFontSize(remainingTime), color: theme.colors.grey1 }}>
         {superLate
           ? t("screens.device_overview.device_list.super_late")
           : tooLate

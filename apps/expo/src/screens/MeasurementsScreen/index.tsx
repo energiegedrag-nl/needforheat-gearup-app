@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
-import { Text, makeStyles } from "@rneui/themed";
+import { Text, makeStyles, useTheme } from "@rneui/themed";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useIsFetching, useQueryClient } from "@tanstack/react-query";
 import { RefreshControl, ScrollView, TouchableOpacity } from "react-native";
@@ -22,6 +22,7 @@ import { capitalizeFirstLetter, getManualUrl } from "@/utils/tools";
 
 export default function MeasurementsScreen() {
   const styles = useStyles();
+  const { theme } = useTheme();
   const { t, resolvedLanguage } = useTranslation();
   const { isLoading } = useContext(UserContext);
   const { user } = useContext(UserContext);
@@ -95,7 +96,16 @@ export default function MeasurementsScreen() {
   return (
     <Screen>
       <RefreshStatus fetching={isFetchingAny} updatedAt={devicesQuery.dataUpdatedAt} failed={devicesQuery.isError} />
-      <ScrollView refreshControl={<RefreshControl refreshing={isFetchingAny} onRefresh={refreshAll} />}>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={isFetchingAny}
+            onRefresh={refreshAll}
+            tintColor={theme.colors.tint}
+            colors={[theme.colors.primary]}
+          />
+        }
+      >
         <Box style={{ flex: 1 }} padded>
           <TouchableOpacity
             disabled={deviceDropdownDisabled}
@@ -111,7 +121,7 @@ export default function MeasurementsScreen() {
                 ? capitalizeFirstLetter(fetchedData?.[resolvedLanguage]) || t("screens.measurements.graph.no_devices")
                 : capitalizeFirstLetter(displayName) || t("screens.measurements.graph.no_devices")}
             </Text>
-            <Icon name="chevron-down" size={16} />
+            <Icon name="chevron-down" size={16} color={theme.colors.grey2} />
           </TouchableOpacity>
           <TouchableOpacity
             disabled={deviceDropdownDisabled}
@@ -123,7 +133,7 @@ export default function MeasurementsScreen() {
                 ? t(`hooks.property_translation.${property.name}`, { defaultValue: property.name })
                 : null}
             </Text>
-            <Icon name="chevron-down" size={16} />
+            <Icon name="chevron-down" size={16} color={theme.colors.grey2} />
           </TouchableOpacity>
 
           {/* Data of last 14, 30 & 90 days */}
@@ -163,8 +173,11 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: theme.spacing.lg,
-    paddingVertical: theme.spacing.sm,
-    backgroundColor: "#ebebeb",
-    borderRadius: 8,
+    paddingVertical: theme.spacing.md,
+    alignItems: "center",
+    backgroundColor: theme.colors.surface,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    borderRadius: 14,
   },
 }));

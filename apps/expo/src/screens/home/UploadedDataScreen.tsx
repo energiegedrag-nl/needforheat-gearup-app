@@ -1,8 +1,8 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Button, makeStyles, useTheme } from "@rneui/themed";
+import { Button, makeStyles, useTheme, Text } from "@rneui/themed";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
-import { ActivityIndicator, ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, ScrollView, View } from "react-native";
 
 import Box from "@/components/elements/Box";
 import useEnergyQuery from "@/hooks/energyquery/useEnergyQuery";
@@ -52,17 +52,19 @@ export default function UploadedDataScreen({ navigation, route }: UploadedDataSc
   const rows = useMemo(() => screenRows(measurements ?? []), [measurements]);
   const latest = rows.length ? Math.max(...rows.map(m => m.time)) : undefined;
   const when = isDevice ? latest : query?.activated_at ?? latest;
-  const subtitle = isDevice ? "subtitle_device" : "subtitle_energy_query";
+  const subtitle = isDevice ? "latest_at" : "sent_at";
 
   return (
     <Box padded style={{ flex: 1 }}>
       <Text style={style.subtitle}>
         {when
-          ? `${t(`screens.home_stack.uploaded_screen.${subtitle}`)}\n${readableDateTime(toLocalDateTime(when), locale)}`
+          ? t(`screens.home_stack.uploaded_screen.${subtitle}`, {
+              date: readableDateTime(toLocalDateTime(when), locale),
+            })
           : ""}
       </Text>
       {isLoading ? (
-        <ActivityIndicator style={{ marginTop: theme.spacing.lg }} />
+        <ActivityIndicator color={theme.colors.tint} style={{ marginTop: theme.spacing.lg }} />
       ) : rows.length === 0 ? (
         <Text style={style.empty}>
           {t(isDevice ? "screens.home_stack.uploaded_screen.empty_device" : "screens.home_stack.uploaded_screen.empty")}
@@ -87,9 +89,9 @@ export default function UploadedDataScreen({ navigation, route }: UploadedDataSc
         <Button
           containerStyle={{ flex: 1 }}
           title={t("screens.home_stack.uploaded_screen.back_button") as string}
-          color="grey2"
+          type="outline"
           onPress={() => navigation.navigate("HomeScreen")}
-          icon={{ name: "arrow-back-circle-outline", type: "ionicon", color: theme.colors.white }}
+          icon={{ name: "arrow-back-circle-outline", type: "ionicon", color: theme.colors.tint }}
         />
       </Box>
     </Box>
@@ -98,10 +100,10 @@ export default function UploadedDataScreen({ navigation, route }: UploadedDataSc
 
 const useStyles = makeStyles(theme => ({
   subtitle: {
-    fontWeight: "bold",
     textAlign: "center",
     alignSelf: "center",
-    fontSize: 14,
+    fontSize: 13,
+    color: theme.colors.grey2,
     marginBottom: theme.spacing.md,
   },
   empty: {

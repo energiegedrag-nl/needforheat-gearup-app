@@ -238,8 +238,8 @@
       },
       "uploaded_screen": {
         "title": "Verzonden gegevens",
-        "subtitle_energy_query": "U heeft onderstaande gegevens verzonden op",
-        "subtitle_device": "Laatste metingen, de nieuwste van",
+        "sent_at": "Verzonden op {{date}}",
+        "latest_at": "Nieuwste meting: {{date}}",
         "empty": "De server heeft (nog) geen gegevens van deze vraag.",
         "empty_device": "De server heeft van dit apparaat de afgelopen twee dagen geen metingen.",
         "back_button": "Ga terug",
@@ -270,7 +270,7 @@
         "weather_location_result_screen": {
           "title": "Te verzenden weerzone",
           "time_zone": "Tijdzone van uw telefoon: {{timeZone}} (wordt meegestuurd)",
-          "subtitle": "Dit is de weerzone voor uw woning. Voor uw privacy verschuiven we de locatie willekeurig (meestal minder dan 10 tot 20 km), dus uw huis hoeft er niet precies in te liggen. Ligt deze zone in uw regio?",
+          "subtitle": "Voor uw privacy is uw locatie een stukje verschoven. Ligt deze zone in uw regio?",
           "send_button": "Ja (verzenden)",
           "back_button": "Nee (opnieuw)",
           "marker": "Geselecteerde locatie",
@@ -291,9 +291,8 @@
         },
         "weather_location_posted_screen": {
           "title": "Verzonden weerzone",
-          "subtitle": "U heeft onderstaande weerzone verzonden op",
-          "back_button": "Ga terug",
-          "time_zone": "Tijdzone"
+          "sent_at": "Verzonden op {{date}}",
+          "back_button": "Ga terug"
         },
         "location_permission": {
           "alert": {
@@ -384,6 +383,12 @@
       "settings_screen": {
         "title": "Instellingen",
         "app_language": "Taal selecteren",
+        "appearance": {
+          "title": "Weergave",
+          "system": "Zoals de telefoon",
+          "light": "Licht",
+          "dark": "Donker"
+        },
         "wifi_passwords": {
           "title": "Opgeslagen wifiwachtwoorden verwijderen",
           "message": "Weet u het zeker? Na het verwijderen van de opgeslagen wifiwachtwoorden uit deze app zult u bij het koppelen van een nieuw meetapparaatje het wifiwachtwoord opnieuw moeten intypen.",

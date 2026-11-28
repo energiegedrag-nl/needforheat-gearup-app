@@ -1,9 +1,10 @@
-import { makeStyles, useTheme } from "@rneui/themed";
+import { makeStyles, Text, useTheme } from "@rneui/themed";
 import { useEffect, useRef, useState } from "react";
-import { Animated, Easing, Text, View } from "react-native";
+import { Animated, Easing, View } from "react-native";
 
 import useTranslation from "@/hooks/translation/useTranslation";
 import { progressFraction, showProgress, timeLeft } from "@/lib/progress/progress";
+import { withAlpha } from "@/lib/theme";
 
 const SHINE_WIDTH = 40;
 
@@ -83,7 +84,7 @@ const useStyles = makeStyles(theme => ({
   track: {
     height: 6,
     borderRadius: 3,
-    backgroundColor: theme.colors.grey4,
+    backgroundColor: theme.colors.surfaceAlt,
     overflow: "hidden",
   },
   fill: {
@@ -98,7 +99,7 @@ const useStyles = makeStyles(theme => ({
     top: 0,
     bottom: 0,
     width: SHINE_WIDTH,
-    backgroundColor: "rgba(255, 255, 255, 0.55)",
+    backgroundColor: withAlpha(theme.colors.accent, 0.55),
   },
   label: {
     marginTop: 4,

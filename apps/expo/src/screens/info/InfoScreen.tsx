@@ -1,7 +1,7 @@
 import { MANUAL_URL } from "@env";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ListItem, makeStyles, Text, useTheme } from "@rneui/themed";
-import { Alert, FlatList, Linking } from "react-native";
+import { Alert, FlatList, Linking, View } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import Box from "@/components/elements/Box";
@@ -25,10 +25,12 @@ function InfoListItem({ item, onPress }: InfoItemProps) {
   const styles = useStyles();
 
   return (
-    <ListItem Component={ListItemTouchableOpacity} onPress={onPress} style={styles.item}>
-      <Ionicons style={styles.icon} name={item.icon} size={theme.spacing.xl} />
+    <ListItem Component={ListItemTouchableOpacity} onPress={onPress} style={styles.item} containerStyle={styles.card}>
+      <View style={styles.iconBadge}>
+        <Ionicons name={item.icon} size={22} color={theme.colors.tint} />
+      </View>
       <ListItem.Content>
-        <Text h4>{item.title}</Text>
+        <Text style={{ fontFamily: "RobotoMedium", fontSize: 17 }}>{item.title}</Text>
       </ListItem.Content>
       <ListItem.Chevron />
     </ListItem>
@@ -39,6 +41,7 @@ type InfoScreenProps = NativeStackScreenProps<InfoStackParamList, "InfoScreen">;
 
 export default function InfoScreen({ navigation }: InfoScreenProps) {
   const styles = useStyles();
+  const { theme } = useTheme();
   const { t, resolvedLanguage } = useTranslation();
   const { user } = useUser();
 
@@ -83,9 +86,13 @@ export default function InfoScreen({ navigation }: InfoScreenProps) {
   };
   return (
     <Box style={{ flex: 1 }}>
-      <FlatList data={data} renderItem={({ item }) => <InfoListItem item={item} onPress={() => onPress(item)} />} />
+      <FlatList
+        contentContainerStyle={{ paddingTop: 8 }}
+        data={data}
+        renderItem={({ item }) => <InfoListItem item={item} onPress={() => onPress(item)} />}
+      />
       <Box fullWidth style={styles.centerContainer}>
-        <Text>
+        <Text style={{ color: theme.colors.grey2, fontSize: 14 }}>
           {t("screens.info_stack.info.campaign")}: {user?.campaign.name}
         </Text>
       </Box>
@@ -99,8 +106,21 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  icon: {
-    paddingRight: theme.spacing.lg,
+  card: {
+    backgroundColor: theme.colors.surface,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    marginHorizontal: theme.spacing.md,
+    marginVertical: 5,
+  },
+  iconBadge: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    backgroundColor: theme.colors.primarySoft,
+    justifyContent: "center",
+    alignItems: "center",
   },
   centerContainer: {
     alignItems: "center",

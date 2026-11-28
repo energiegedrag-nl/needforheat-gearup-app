@@ -1,6 +1,5 @@
 import { ListItem, makeStyles, Text } from "@rneui/themed";
 
-
 import Box from "../../../components/elements/Box";
 import { ListItemTouchableOpacity } from "@/lib/listItemTouchables";
 
@@ -19,7 +18,12 @@ export default function SettingListItem({ item }: SettingItemProps) {
   const styles = useStyles(item);
 
   return (
-    <ListItem Component={ListItemTouchableOpacity} onPress={item.onPress} style={styles.item}>
+    <ListItem
+      Component={ListItemTouchableOpacity}
+      onPress={item.onPress}
+      style={styles.item}
+      containerStyle={styles.card}
+    >
       <ListItem.Content>
         <Box fullWidth style={styles.content}>
           <Text style={styles.title}>{item.title}</Text>
@@ -36,11 +40,20 @@ const useStyles = makeStyles((theme, props: SettingItem) => ({
     justifyContent: "space-between",
     alignItems: "center",
   },
+  card: {
+    backgroundColor: theme.colors.surface,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    marginVertical: 5,
+  },
   content: {
     flexDirection: "row",
     justifyContent: "space-between",
   },
   title: {
+    flexShrink: 1,
+    marginRight: theme.spacing.md,
     color: props.isDangerous ? theme.colors.error : theme.colors.black,
   },
   value: {

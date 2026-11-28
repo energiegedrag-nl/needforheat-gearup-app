@@ -1,9 +1,9 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Button, Icon, makeStyles, useTheme } from "@rneui/themed";
+import { Button, Icon, makeStyles, useTheme, Text } from "@rneui/themed";
 import { FeatureCollection } from "geojson";
 import { latLngToCell, cellToBoundary, CoordPair } from "h3-js";
 import { useEffect, useRef, useState } from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 import Box from "@/components/elements/Box";
@@ -15,6 +15,7 @@ import { UserLocation } from "@/types/energyquery";
 import { HomeStackParamList } from "@/types/navigation";
 import { WEATHER_H3_RESOLUTION } from "@/utils/weatherLocation";
 import { readableDateTime, toLocalDateTime } from "@/utils/tools";
+import { withAlpha } from "@/lib/theme";
 
 /**
  * The cell takes about this share of the map area, so the map shows where the cell lies; the map is
@@ -39,7 +40,7 @@ export default function WeatherLocationPostedScreen({ navigation }: WeatherLocat
     longitudeDelta: 1,
   });
   const [h3Cell, setH3Cell] = useState<FeatureCollection>();
-  const timeZone = measurements?.find(measurement => measurement.property.name === "device_timezone__tmz")?.value;
+  const dateLocale = resolvedLanguage === "nl-NL" ? "nl-NL" : "en-US";
 
   useEffect(() => {
     //Set location to measurements
@@ -134,10 +135,9 @@ export default function WeatherLocationPostedScreen({ navigation }: WeatherLocat
       <Box padded style={{ flex: 1 }}>
         <View style={{ width: "100%" }}>
           <Text style={style.subtitle}>
-            {`${t("screens.home_stack.energy_query.weather_location_posted_screen.subtitle")}\n${readableDateTime(
-              toLocalDateTime(query?.activated_at),
-              resolvedLanguage === "nl-NL" ? "nl-NL" : "en-US"
-            )}${timeZone ? `\n${t("screens.home_stack.energy_query.weather_location_posted_screen.time_zone")}: ${timeZone}` : ""}`}
+            {t("screens.home_stack.energy_query.weather_location_posted_screen.sent_at", {
+              date: readableDateTime(toLocalDateTime(query?.activated_at), dateLocale),
+            })}
           </Text>
         </View>
         <View style={style.mapcontainer}>
@@ -150,18 +150,18 @@ export default function WeatherLocationPostedScreen({ navigation }: WeatherLocat
             {h3Cell ? (
               <GeoJsonOverlay
                 geojson={h3Cell}
-                strokeColor="#3388ff"
+                strokeColor={theme.colors.tint}
                 strokeWidth={3}
-                fillColor="rgba(51, 136, 255, 0.2)"
+                fillColor={withAlpha(theme.colors.tint, 0.2)}
               />
             ) : null}
           </OpenMap>
           <View style={style.zoomControls}>
             <TouchableOpacity onPress={handleZoomIn} style={style.zoomButton}>
-              <Icon name="add" color="white" size={30} />
+              <Icon name="add" color={theme.colors.onPrimary} size={30} />
             </TouchableOpacity>
             <TouchableOpacity onPress={handleZoomOut} style={style.zoomButton}>
-              <Icon name="remove" color="white" size={30} />
+              <Icon name="remove" color={theme.colors.onPrimary} size={30} />
             </TouchableOpacity>
           </View>
         </View>
@@ -170,12 +170,12 @@ export default function WeatherLocationPostedScreen({ navigation }: WeatherLocat
           <Button
             containerStyle={{ flex: 1, marginLeft: theme.spacing.md }}
             title={t("screens.home_stack.energy_query.weather_location_posted_screen.back_button") as string}
-            color="grey2"
+            type="outline"
             onPress={onBack}
             icon={{
               name: "arrow-back-circle-outline",
               type: "ionicon",
-              color: theme.colors.white,
+              color: theme.colors.tint,
             }}
           />
         </Box>
@@ -211,11 +211,9 @@ const useStyles = makeStyles(theme => ({
     marginBottom: 5,
   },
   subtitle: {
-    justifyContent: "center",
-    alignItems: "center",
-    fontWeight: "bold",
     textAlign: "center",
     alignSelf: "center",
-    fontSize: 14,
+    fontSize: 13,
+    color: theme.colors.grey2,
   },
 }));

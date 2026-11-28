@@ -21,6 +21,7 @@ import { capitalizeFirstLetter, checkMissedUpload, getManualUrl, toLocalDateTime
 import "intl";
 import "intl/locale-data/jsonp/en";
 import { ListItemTouchableHighlight } from "@/lib/listItemTouchables";
+import { withAlpha } from "@/lib/theme";
 
 type WifiNetworkListItemProps = {
   item: AllDataSourcesResponse;
@@ -213,6 +214,30 @@ export default function DeviceListItem(props: WifiNetworkListItemProps) {
     }
   };
 
+  const category = item.data_source?.category;
+  const categoryIcon = category === "energy_query_type" ? "flash" : category === "cloud_feed_type" ? "cloud" : "layers";
+  const done = item.connected === 2;
+  const locked = item.connected === 1;
+  // Done: green when on schedule, amber when an upload is late, red when it is very late. An energy query is
+  // done once sent.
+  const doneColor =
+    category === "energy_query_type" || missed === 0
+      ? theme.colors.success
+      : missed === -1 || missed >= 1
+      ? theme.colors.warning
+      : theme.colors.error;
+  const badgeColor = done ? doneColor : locked ? theme.colors.disabled : theme.colors.tint;
+  const badgeBackground = done
+    ? withAlpha(doneColor, 0.16)
+    : locked
+    ? theme.colors.surfaceAlt
+    : theme.colors.primarySoft;
+  const cardBackground = locked
+    ? theme.colors.surfaceAlt
+    : done && !allItemsDone
+    ? theme.colors.successSoft
+    : theme.colors.surface;
+
   return (
     <>
       <ListItem.Swipeable
@@ -239,82 +264,22 @@ export default function DeviceListItem(props: WifiNetworkListItemProps) {
                 <Button
                   title={t("screens.device_overview.device_list.reset_device") as string}
                   onPress={() => onReset(close)}
+                  containerStyle={style.resetContainer}
                   buttonStyle={{ minHeight: "100%", backgroundColor: theme.colors.primary }}
                 />
               )
             : null
         }
         style={[style.listItem]}
-        containerStyle={[
-          {
-            backgroundColor:
-              item.connected === 0
-                ? "white"
-                : item.connected === 1
-                ? "#e3e3e3"
-                : item.connected === 2 && allItemsDone
-                ? "white"
-                : item.connected === 2
-                ? "#aef2b7"
-                : "initial",
-          },
-          { borderTopLeftRadius: 0 },
-          { borderBottomLeftRadius: 0 },
-          { borderBottomWidth: 1 },
-          { borderBottomColor: "#dbdbd9" },
-        ]}
+        containerStyle={[style.card, { backgroundColor: cardBackground }]}
         Component={ListItemTouchableHighlight}
       >
+        <View style={[style.badge, { backgroundColor: badgeBackground }]}>
+          <Icon name={done ? categoryIcon : `${categoryIcon}-outline`} color={badgeColor} size={20} />
+        </View>
         <ListItem.Content>
-          <ListItem.Title style={{ color: item.connected === 1 ? "#cccccc" : "black" }}>
-            {item.connected === 2 ? (
-              <>
-                {item.data_source?.category === "device_type" && (
-                  <>
-                    {missed === 0 ? (
-                      <Icon name="layers" color="green" size={16} />
-                    ) : missed === -1 || missed >= 1 ? (
-                      <Icon name="layers" color="orange" size={16} />
-                    ) : (
-                      <Icon name="layers" color="red" size={16} />
-                    )}
-                  </>
-                )}
-                {item.data_source?.category === "energy_query_type" && (
-                  <>
-                    {item.connected === 2 ? (
-                      <Icon name="flash" color="green" size={16} />
-                    ) : (
-                      <Icon name="flash" color="red" size={16} />
-                    )}
-                  </>
-                )}
-                {item.data_source?.category === "cloud_feed_type" && (
-                  <>
-                    {missed === 0 ? (
-                      <Icon name="cloud" color="green" size={16} />
-                    ) : missed === -1 || missed >= 1 ? (
-                      <Icon name="cloud" color="orange" size={16} />
-                    ) : (
-                      <Icon name="cloud" color="red" size={16} />
-                    )}
-                  </>
-                )}
-              </> //changes the colors of the icons if the item is enabled or disabled
-            ) : item.connected === 0 ? (
-              <>
-                {item.data_source?.category === "device_type" && <Icon name="layers" color="black" size={16} />}
-                {item.data_source?.category === "energy_query_type" && <Icon name="flash" color="black" size={16} />}
-                {item.data_source?.category === "cloud_feed_type" && <Icon name="cloud" color="black" size={16} />}
-              </>
-            ) : item.connected === 1 ? (
-              <>
-                {item.data_source?.category === "device_type" && <Icon name="layers" color="#cccccc" size={16} />}
-                {item.data_source?.category === "energy_query_type" && <Icon name="flash" color="#cccccc" size={16} />}
-                {item.data_source?.category === "cloud_feedType" && <Icon name="cloud" color="#cccccc" size={16} />}
-              </>
-            ) : null}
-            {" " + getNormalName()}
+          <ListItem.Title style={{ color: locked ? theme.colors.grey3 : theme.colors.text }}>
+            {getNormalName()}
           </ListItem.Title>
           {item.connected === 2 && item.data_source?.category !== "energy_query_type" ? (
             <ListItem.Subtitle style={[style.listItemSubtitle]}>
@@ -339,8 +304,8 @@ export default function DeviceListItem(props: WifiNetworkListItemProps) {
         </ListItem.Content>
         <View style={{ flexDirection: "column" }}>
           {item.data_source?.faq_url !== "" ? (
-            <TouchableOpacity onPress={openHelpUrl}>
-              <Icon name="help-circle-outline" size={32} />
+            <TouchableOpacity onPress={openHelpUrl} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+              <Icon name="help-circle-outline" size={28} color={locked ? theme.colors.grey3 : theme.colors.grey2} />
             </TouchableOpacity>
           ) : null}
         </View>
@@ -350,7 +315,7 @@ export default function DeviceListItem(props: WifiNetworkListItemProps) {
           <Icon
             name="reorder-three-outline"
             size={10}
-            color="gray"
+            color={theme.colors.grey3}
             style={{ transform: [{ rotate: "90deg" }, { scaleX: 2 }, { scaleY: 2 }], marginLeft: -10 }}
           />
         ) : null}
@@ -366,7 +331,27 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center",
     justifyContent: "space-between",
   },
+  card: {
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    marginVertical: 5,
+    overflow: "hidden",
+  },
+  badge: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   listItemSubtitle: {
     marginRight: 24,
+    marginTop: 2,
+  },
+  resetContainer: {
+    marginVertical: 5,
+    borderRadius: 16,
+    overflow: "hidden",
   },
 }));

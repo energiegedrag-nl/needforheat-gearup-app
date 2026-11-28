@@ -1,3 +1,10 @@
+## [4.1.1](https://github.com/energiegedrag-nl/needforheat-gearup-app/compare/v4.1.0...v4.1.1) (2026-11-28)
+
+
+### Bug Fixes
+
+* weerzone tweede keer veel te ver ingezoomd ([a11ea33](https://github.com/energiegedrag-nl/needforheat-gearup-app/commit/a11ea332c87c8218fbe36e6ec02c68aa84d0fa44))
+
 # [4.1.0](https://github.com/energiegedrag-nl/needforheat-gearup-app/compare/v4.0.0...v4.1.0) (2026-11-28)
 
 
